@@ -801,9 +801,11 @@
             }
         }
 
-        // Artists data (all 46!)
+הבעיה היא שורות 2-3 — יש כפול `const artists = [`. הנה הגרסה המתוקנת, העתק והחלף הכל:
+
+```javascript
+        // Artists data
         const artists = [
-const artists = [
 {"name":"Tomer Yair Zemel","genres":"Drama","spotify":"https://www.facebook.com/groups/1601365750504814/posts/1963423267632392/","youtube":"https://youtu.be/AwBSa8lY2Yw","instagram":"","facebook":"","tiktok":""},
 {"name":"Victor Grassiano","genres":"Blues, Rock, Metal","spotify":"https://open.spotify.com/artist/0458kjUiexIlTTGBs6Pc9I","youtube":"https://www.youtube.com/watch?v=vrLoYe22Z9k","instagram":"https://www.instagram.com/victor_grassiano/","facebook":"https://www.facebook.com/victor.grassiano/","tiktok":""},
 {"name":"Froggy Green","genres":"Rock, Blues","spotify":"https://open.spotify.com/artist/1vNK3MrPhWacqSL0lBt6DH","youtube":"https://www.youtube.com/@soulmakar","instagram":"","facebook":"https://www.facebook.com/profile.php?id=61571880722756","tiktok":""},
@@ -852,6 +854,7 @@ const artists = [
 {"name":"Sara & Yoss F","genres":"Rap, Soul","spotify":"","youtube":"https://youtube.com/@sarayossf-musicproject","instagram":"https://www.instagram.com/sarayossfmusic","facebook":"https://www.facebook.com/share/1CDfHkunRf/","tiktok":""},
 {"name":"H@git.R.M","genres":"Pop, R&B","spotify":"","youtube":"","instagram":"","facebook":"","tiktok":""}
         ];
+```
 
         function loadArtists() {
             const grid = document.getElementById('artistsGrid');
