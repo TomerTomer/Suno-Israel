@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>סונו ישראל | קהילת יוצרי הבינה המוזיקלית הגדולה בישראל</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75'>🎵</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Heebo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -340,6 +341,7 @@
             <button class="tab-btn active" onclick="openTab('links')">🔗 קישורים מרכזיים</button>
             <button class="tab-btn" onclick="openTab('artists')">🎤 אמני סונו</button>
             <button class="tab-btn" onclick="openTab('prompts')">🎨 פרומפט זון</button>
+            <button class="tab-btn" onclick="openTab('premium')">💎 שירותים פרימיום</button>
             <button class="tab-btn" onclick="openTab('mastering')">🎛️ מאסטרינג מקצועי</button>
             <a href="https://rizel.live" class="tab-btn rizel-tab" target="_blank">📻 ריזל רדיו - בטא</a>
         </nav>
@@ -485,6 +487,124 @@
             <div id="promptsContainer"></div>
         </div>
 
+        <div id="tab-premium" class="tab-content">
+            <h2 class="section-title">💎 שירותים פרימיום</h2>
+            <p class="section-subtitle">שירותים מקצועיים לאמני סונו ישראל</p>
+
+            <div class="links-grid">
+                <div class="link-card" style="border: 2px solid rgba(255, 0, 110, 0.3);">
+                    <div class="link-card-content">
+                        <span class="link-icon">🎛️</span>
+                        <div class="link-title">מאסטרינג מקצועי</div>
+                        <div class="link-desc">עיבוד צליל ברמה הגבוהה ביותר</div>
+                        <div style="margin-top: 20px; font-size: 2rem; font-weight: 900; color: var(--fire);">₪99</div>
+                        <div style="color: rgba(248, 249, 250, 0.5); font-size: 0.9rem;">לשיר</div>
+                        <div style="margin-top: 20px;">
+                            <a href="/cdn-cgi/l/email-protection#8ae9e5e4feebe9fecaf9ffe4e5e3f9f8ebefe6a4e9e5e7b5f9ffe8e0efe9feb75d1b5d2d5d235d1eaa5d165d145d1a5d2b5d125d225d135d2a5d18" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                                📧 הזמן עכשיו
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="link-card" style="border: 2px solid rgba(131, 56, 236, 0.3);">
+                    <div class="link-card-content">
+                        <span class="link-icon">💬</span>
+                        <div class="link-title">ייעוץ אישי 1-על-1</div>
+                        <div class="link-desc">שיחה אישית עם מומחי סונו</div>
+                        <div style="margin-top: 20px; font-size: 2rem; font-weight: 900; color: var(--purple);">₪199</div>
+                        <div style="color: rgba(248, 249, 250, 0.5); font-size: 0.9rem;">לשעה</div>
+                        <div style="margin-top: 20px;">
+                            <a href="/cdn-cgi/l/email-protection#670408091306041327141209080e141506020b4904080a581412050d0204135ab0f6b0c0b0ceb0f347b0fbb0feb0feb0c5b0f2b0c247b0f7b0feb0ceb0fe" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                                📞 קבע שיחה
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="link-card" style="border: 2px solid rgba(0, 245, 255, 0.3);">
+                    <div class="link-card-content">
+                        <span class="link-icon">👑</span>
+                        <div class="link-title">מנוי VIP</div>
+                        <div class="link-desc">גישה לקבוצת פרימיום + תוכן בלעדי</div>
+                        <div style="margin-top: 20px; font-size: 2rem; font-weight: 900; color: var(--cyan);">₪49</div>
+                        <div style="color: rgba(248, 249, 250, 0.5); font-size: 0.9rem;">לחודש</div>
+                        <div style="margin-top: 20px;">
+                            <button class="btn btn-secondary" style="width: 100%; justify-content: center; cursor: not-allowed; opacity: 0.6;">
+                                🔜 בקרוב
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="link-card" style="border: 2px solid rgba(255, 190, 11, 0.3);">
+                    <div class="link-card-content">
+                        <span class="link-icon">🎨</span>
+                        <div class="link-title">פרומפטים פרימיום</div>
+                        <div class="link-desc">גישה לבנק פרומפטים מתקדמים</div>
+                        <div style="margin-top: 20px; font-size: 2rem; font-weight: 900; color: #FFBE0B;">₪99</div>
+                        <div style="color: rgba(248, 249, 250, 0.5); font-size: 0.9rem;">לשנה</div>
+                        <div style="margin-top: 20px;">
+                            <button class="btn btn-secondary" style="width: 100%; justify-content: center; cursor: not-allowed; opacity: 0.6;">
+                                🔜 בקרוב
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="link-card" style="border: 2px solid rgba(251, 86, 7, 0.3);">
+                    <div class="link-card-content">
+                        <span class="link-icon">📣</span>
+                        <div class="link-title">קידום ושיווק</div>
+                        <div class="link-desc">פוסט ממומן בקהילה + פרסום בפלייליסטים</div>
+                        <div style="margin-top: 20px; font-size: 2rem; font-weight: 900; color: #FB5607;">₪150</div>
+                        <div style="color: rgba(248, 249, 250, 0.5); font-size: 0.9rem;">לפוסט</div>
+                        <div style="margin-top: 20px;">
+                            <a href="/cdn-cgi/l/email-protection#c4a7abaab0a5a7b084b7b1aaabadb7b6a5a1a8eaa7aba9fbb7b1a6aea1a7b0f913551363136d1350e413581363135d135713511359e41351136d135d135113511363" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                                🚀 התחל קמפיין
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="link-card" style="border: 2px solid rgba(6, 214, 160, 0.3);">
+                    <div class="link-card-content">
+                        <span class="link-icon">🎓</span>
+                        <div class="link-title">קורס סונו למתחילים</div>
+                        <div class="link-desc">מאפס ועד הצלחה - קורס מקיף</div>
+                        <div style="margin-top: 20px; font-size: 2rem; font-weight: 900; color: #06D6A0;">₪299</div>
+                        <div style="color: rgba(248, 249, 250, 0.5); font-size: 0.9rem;">קורס מלא</div>
+                        <div style="margin-top: 20px;">
+                            <button class="btn btn-secondary" style="width: 100%; justify-content: center; cursor: not-allowed; opacity: 0.6;">
+                                🔜 בקרוב
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-section" style="margin-top: 80px;">
+                <h3 class="action-title">💡 למה לבחור בנו?</h3>
+                <div class="links-grid" style="margin-top: 40px;">
+                    <div class="link-card"><div class="link-card-content">
+                        <span class="link-icon">⚡</span>
+                        <div class="link-title">מהירות</div>
+                        <div class="link-desc">מענה תוך 24 שעות</div>
+                    </div></div>
+                    <div class="link-card"><div class="link-card-content">
+                        <span class="link-icon">🏆</span>
+                        <div class="link-title">מקצועיות</div>
+                        <div class="link-desc">צוות מנוסה ומוכשר</div>
+                    </div></div>
+                    <div class="link-card"><div class="link-card-content">
+                        <span class="link-icon">❤️</span>
+                        <div class="link-title">תמיכה</div>
+                        <div class="link-desc">ליווי אישי לכל אורך הדרך</div>
+                    </div></div>
+                </div>
+            </div>
+        </div>
+
         <div id="tab-mastering" class="tab-content">
             <h2 class="section-title">🎛️ מאסטרינג מקצועי</h2>
             <p class="section-subtitle">הפוך את השיר שלך למקצועי ומושלם</p>
@@ -536,7 +656,7 @@
         </footer>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // הגנה מפני העתקה
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('selectstart', e => e.preventDefault());
@@ -579,6 +699,7 @@
                 loadPrompts();
             }
 
+        
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
@@ -824,11 +945,4 @@ const promptsData = {
             tempInput.value = text;
             tempInput.style.position = 'absolute';
             tempInput.style.left = '-9999px';
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
-            
-            const originalBg = element.style.background;
-            element.style.background = 'rgba(0, 255, 100, 0.2)';
-            element.style.borderColor = 'rgba(0, 255, 100, 0.5)';
+            document.body.appendCh
