@@ -734,7 +734,7 @@ const artists = [
             // Load all artists
             grid.innerHTML = '';
             
-            artists.forEach((artist, i) => {
+       artists.forEach((artist, i) => {
                 const card = document.createElement('div');
                 card.className = 'artist-card';
                 card.setAttribute('data-name', artist.name.toLowerCase());
@@ -747,13 +747,16 @@ const artists = [
                 if (artist.facebook) links.push({icon: '📘', text: 'Facebook', url: artist.facebook});
                 if (artist.tiktok) links.push({icon: '🎵', text: 'TikTok', url: artist.tiktok});
                 
-                const firstLetter = artist.name.charAt(0).toUpperCase();
                 const avatarColor = getColorForName(artist.name);
+                const instruments = ["🎸","🎹","🎺","🎻","🥁","🎷","🪗","🎤","🪘","🎶","🪈","🎵"];
+                let hash = 0;
+                for (let i = 0; i < artist.name.length; i++) hash += artist.name.charCodeAt(i);
+                const artistEmoji = instruments[hash % instruments.length];
                 
                 card.innerHTML = `
                     <div class="artist-content">
                         <div class="artist-avatar" style="background: ${avatarColor}">
-                            ${firstLetter}
+                            ${artistEmoji}
                         </div>
                         <div class="artist-name">${artist.name}</div>
                         <div class="artist-genre">${artist.genres}</div>
@@ -768,7 +771,6 @@ const artists = [
             
             window.artistsLoaded = true;
         }
-
         function getColorForName(name) {
             const colors = [
                 'linear-gradient(135deg, #FF006E, #FF3E9D)',
@@ -792,6 +794,9 @@ const artists = [
             for (let i = 0; i < name.length; i++) {
                 hash += name.charCodeAt(i);
             }
+            
+            return colors[hash % colors.length];
+        }
             
             return colors[hash % colors.length];
         }
