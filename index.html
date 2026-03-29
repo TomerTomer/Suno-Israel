@@ -721,7 +721,7 @@ const artists = [
 {"name":"Riley Flynn","genres":"Alternative, Rock, Grunge","spotify":"https://open.spotify.com/artist/3A2tmSuTFDNIogVRwyDGvN","youtube":"","other":"","instagram":"","facebook":"","tiktok":"","suno":"","image":""},
 {"name":"Refael Peretz","genres":"Diverse","spotify":"","youtube":"","other":"","instagram":"","facebook":"","tiktok":"","suno":"","image":""},
 {"name":"SHAI","genres":"דאנס פופ","spotify":"https://open.spotify.com/artist/0eFGSSk2DJj85DGxeVUQNI","youtube":"https://music.youtube.com/channel/UCng432Qh3bX4dY-Sk9E7slw","other":"https://on.soundcloud.com/640uw4NoEEWztFillw","instagram":"","facebook":"","tiktok":"","suno":"","image":""},
-{"name":"Omer","genres":"All Kinds of Genres","spotify":"","youtube":"","other":"https://soundcloud.com/omer-barbash","instagram":"","facebook":"","tiktok":"","suno":"https://suno.com/@mixedupsoundfx085","image":""},
+{"name":"Omer","genres":"All Kinds of Genres","spotify":"","youtube":"","other":"https://suno.com/song/173f9e54-3afe-4a56-a1b5-120b21dbd13e?sh=rYz2lqnEkc3B7hKA","instagram":"","facebook":"","tiktok":"","suno":"https://suno.com/@mixedupsoundfx085","image":""},
 {"name":"Hanna Shalala","genres":"Rock, Metal, Electronic","spotify":"","youtube":"https://youtube.com/@hannashalala6728","other":"","instagram":"https://www.instagram.com/shalalahanna","facebook":"","tiktok":"","suno":"https://suno.com/@hanna9shalala","image":""},
 {"name":"Bamutar.O.S","genres":"פופ, ים תיכוני, שירי אמונה","spotify":"","youtube":"https://youtube.com/@bamutar.o.s-ai-music","other":"https://youtube.com/@producer.ai-o.s","instagram":"","facebook":"https://www.facebook.com/share/17vmKfYiWv/","tiktok":"","suno":"","image":""},
 {"name":"Nathan Yakobovitch","genres":"Country, Soul, Pop, Blues, Funk","spotify":"","youtube":"","other":"","instagram":"","facebook":"","tiktok":"","suno":"https://suno.com/s/qysIELUXkTMbQUQf","image":""},
@@ -744,7 +744,8 @@ const artists = [
             
             const hitLinksEl = document.getElementById('hitLinks');
             const hitLinks = [];
-            if (hotArtist.spotify) hitLinks.push({icon: '🎵', text: 'שמע בספוטיפיי', url: hotArtist.spotify});
+            if (hotArtist.youtube) hitLinks.push({icon: '🎬', text: 'צפה ביוטיוב', url: hotArtist.youtube});
+            if (hotArtist.other) hitLinks.push({icon: '🎵', text: 'האזן בסונו', url: hotArtist.other});
             if (hotArtist.youtube) hitLinks.push({icon: '🎬', text: 'צפה ביוטיוב', url: hotArtist.youtube});
             hitLinksEl.innerHTML = hitLinks.map(l => `<a href="${l.url}" class="btn btn-primary" target="_blank">${l.icon} ${l.text}</a>`).join('');
             
