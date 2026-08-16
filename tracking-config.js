@@ -4,6 +4,6 @@
  * Tracking scripts are loaded only after the visitor grants the relevant consent.
  */
 window.AIMA_TRACKING_CONFIG = {
-  gaMeasurementId: "",
+  gaMeasurementId: "G-6T7W3F4133",
   metaPixelId: ""
 };
