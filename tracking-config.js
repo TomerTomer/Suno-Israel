@@ -7,3 +7,4 @@ window.AIMA_TRACKING_CONFIG = {
   gaMeasurementId: "G-6T7W3F4133",
   metaPixelId: ""
 };
+window.dispatchEvent(new Event("aima:tracking-config-ready"));

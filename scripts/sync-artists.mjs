@@ -156,7 +156,27 @@ for (const artist of sourceRows) {
   }
 }
 
-const artists = order.map((key) => merged.get(key));
-if (!artists.length) throw new Error("Artist sync returned an empty directory");
+const submittedArtists = order.map((key) => merged.get(key));
+if (!submittedArtists.length) throw new Error("Artist sync returned an empty directory");
+
+let approvedArtists = [];
+try {
+  const current = JSON.parse(await readFile(outputPath, "utf8"));
+  if (Array.isArray(current)) approvedArtists = current.filter((artist) => artist?.name);
+} catch {
+  approvedArtists = [];
+}
+
+const approvedByKey = new Map(approvedArtists.map((artist) => [artistKey(artist.name), artist]));
+const submittedKeys = new Set();
+const artists = submittedArtists.map((artist) => {
+  const key = artistKey(artist.name);
+  submittedKeys.add(key);
+  return approvedByKey.get(key) ?? artist;
+});
+for (const artist of approvedArtists) {
+  if (!submittedKeys.has(artistKey(artist.name))) artists.push(artist);
+}
+
 await writeFile(outputPath, `${JSON.stringify(artists, null, 2)}\n`, "utf8");
-console.log(JSON.stringify({ sourceNamedRows: sourceRows.length, continuationRowsMerged: continuationRows, duplicateEntriesMerged: duplicateEntries, finalArtists: artists.length }));
+console.log(JSON.stringify({ sourceNamedRows: sourceRows.length, continuationRowsMerged: continuationRows, duplicateEntriesMerged: duplicateEntries, protectedProfiles: approvedByKey.size, finalArtists: artists.length }));
