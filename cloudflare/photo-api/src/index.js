@@ -1,5 +1,8 @@
 const MAX_UPLOAD_BYTES = 6 * 1024 * 1024;
 const MAX_APPROVED_BYTES = 2 * 1024 * 1024;
+const GLOBAL_REQUEST_LIMIT_PER_24_HOURS = 50;
+const GLOBAL_PENDING_REQUEST_LIMIT = 100;
+const SITE_ORIGIN = "https://sunoisrael.com";
 const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/avif"]);
 
 function json(value, status = 200, extraHeaders = {}) {
@@ -23,9 +26,9 @@ function validEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/u.test(value);
 }
 
-function requestOriginAllowed(request, env) {
+function requestOriginAllowed(request) {
   const origin = request.headers.get("origin");
-  return !origin || origin === env.SITE_ORIGIN;
+  return !origin || origin === SITE_ORIGIN;
 }
 
 function adminEmail(request) {
@@ -44,8 +47,8 @@ async function fingerprint(request, env) {
   return [...new Uint8Array(digest)].slice(0, 16).map((byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
-async function knownArtistName(name, env) {
-  const response = await fetch(new URL("/content/artists.json", env.SITE_ORIGIN), {
+async function knownArtistName(name) {
+  const response = await fetch(new URL("/content/artists.json", SITE_ORIGIN), {
     headers: { accept: "application/json" },
     cf: { cacheEverything: true, cacheTtl: 300 },
   });
@@ -59,7 +62,7 @@ function extensionFor(type) {
 }
 
 async function submitPhotoRequest(request, env) {
-  if (!requestOriginAllowed(request, env)) return json({ message: "מקור הבקשה אינו מורשה." }, 403);
+  if (!requestOriginAllowed(request)) return json({ message: "\u05de\u05e7\u05d5\u05e8 \u05d4\u05d1\u05e7\u05e9\u05d4 \u05d0\u05d9\u05e0\u05d5 \u05de\u05d5\u05e8\u05e9\u05d4." }, 403);
   const data = await request.formData();
   if (clean(data.get("website"), 50)) return json({ ok: true }, 202);
   const artistName = clean(data.get("artistName"), 140);
@@ -68,25 +71,56 @@ async function submitPhotoRequest(request, env) {
   const note = clean(data.get("note"), 300);
   const consent = data.get("consent") === "yes";
   const image = data.get("image");
-  if (!artistName || !submitterName || !validEmail(email) || !consent) return json({ message: "חסרים פרטים או אישור לפרסום התמונה." }, 400);
-  if (!(await knownArtistName(artistName, env))) return json({ message: "פרופיל האמן שנבחר אינו קיים כרגע במאגר." }, 400);
-  if (!(image instanceof File) || !ALLOWED_IMAGE_TYPES.has(image.type) || image.size === 0 || image.size > MAX_UPLOAD_BYTES) return json({ message: "קובץ התמונה אינו תקין או גדול מ־6MB." }, 400);
+  if (!artistName || !submitterName || !validEmail(email) || !consent) return json({ message: "\u05d7\u05e1\u05e8\u05d9\u05dd \u05e4\u05e8\u05d8\u05d9\u05dd \u05d0\u05d5 \u05d0\u05d9\u05e9\u05d5\u05e8 \u05dc\u05e4\u05e8\u05e1\u05d5\u05dd \u05d4\u05ea\u05de\u05d5\u05e0\u05d4." }, 400);
+  if (!(await knownArtistName(artistName))) return json({ message: "\u05e4\u05e8\u05d5\u05e4\u05d9\u05dc \u05d4\u05d0\u05de\u05df \u05e9\u05e0\u05d1\u05d7\u05e8 \u05d0\u05d9\u05e0\u05d5 \u05e7\u05d9\u05d9\u05dd \u05db\u05e8\u05d2\u05e2 \u05d1\u05de\u05d0\u05d2\u05e8." }, 400);
+  if (!(image instanceof File) || !ALLOWED_IMAGE_TYPES.has(image.type) || image.size === 0 || image.size > MAX_UPLOAD_BYTES) return json({ message: "\u05e7\u05d5\u05d1\u05e5 \u05d4\u05ea\u05de\u05d5\u05e0\u05d4 \u05d0\u05d9\u05e0\u05d5 \u05ea\u05e7\u05d9\u05df \u05d0\u05d5 \u05d2\u05d3\u05d5\u05dc \u05de-6MB." }, 400);
 
   const clientFingerprint = await fingerprint(request, env);
   const recent = await env.DB.prepare("SELECT COUNT(*) AS count FROM photo_requests WHERE client_fingerprint = ? AND submitted_at > datetime('now', '-1 day')").bind(clientFingerprint).first();
-  if (Number(recent?.count || 0) >= 5) return json({ message: "נשלחו יותר מדי בקשות מהמכשיר הזה. אפשר לנסות שוב מחר." }, 429);
+  if (Number(recent?.count || 0) >= 5) return json({ message: "\u05e0\u05e9\u05dc\u05d7\u05d5 \u05d9\u05d5\u05ea\u05e8 \u05de\u05d3\u05d9 \u05d1\u05e7\u05e9\u05d5\u05ea \u05de\u05d4\u05de\u05db\u05e9\u05d9\u05e8 \u05d4\u05d6\u05d4. \u05d0\u05e4\u05e9\u05e8 \u05dc\u05e0\u05e1\u05d5\u05ea \u05e9\u05d5\u05d1 \u05de\u05d7\u05e8." }, 429);
 
   const id = crypto.randomUUID();
   const pendingKey = `pending/${id}.${extensionFor(image.type)}`;
-  await env.IMAGES.put(pendingKey, image.stream(), {
-    httpMetadata: { contentType: image.type, cacheControl: "private, no-store" },
-    customMetadata: { requestId: id },
-  });
+  const reservation = await env.DB.prepare(`
+    INSERT INTO photo_requests (
+      id, artist_name, submitter_name, email, note,
+      pending_object_key, original_type, client_fingerprint
+    )
+    SELECT ?, ?, ?, ?, ?, ?, ?, ?
+    WHERE (
+      SELECT COUNT(*)
+      FROM photo_requests
+      WHERE submitted_at > datetime('now', '-1 day')
+    ) < ?
+    AND (
+      SELECT COUNT(*)
+      FROM photo_requests
+      WHERE status = 'pending'
+    ) < ?
+  `).bind(
+    id,
+    artistName,
+    submitterName,
+    email,
+    note,
+    pendingKey,
+    image.type,
+    clientFingerprint,
+    GLOBAL_REQUEST_LIMIT_PER_24_HOURS,
+    GLOBAL_PENDING_REQUEST_LIMIT,
+  ).run();
+
+  if (Number(reservation.meta?.changes || 0) !== 1) {
+    return json({ message: "\u05de\u05db\u05e1\u05ea \u05d4\u05d1\u05d8\u05d9\u05d7\u05d5\u05ea \u05e9\u05dc \u05de\u05e2\u05e8\u05db\u05ea \u05d4\u05d1\u05e7\u05e9\u05d5\u05ea \u05d4\u05ea\u05de\u05dc\u05d0\u05d4. \u05d0\u05e4\u05e9\u05e8 \u05dc\u05e0\u05e1\u05d5\u05ea \u05e9\u05d5\u05d1 \u05de\u05d0\u05d5\u05d7\u05e8 \u05d9\u05d5\u05ea\u05e8." }, 429, { "retry-after": "3600" });
+  }
+
   try {
-    await env.DB.prepare("INSERT INTO photo_requests (id, artist_name, submitter_name, email, note, pending_object_key, original_type, client_fingerprint) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
-      .bind(id, artistName, submitterName, email, note, pendingKey, image.type, clientFingerprint).run();
+    await env.IMAGES.put(pendingKey, image.stream(), {
+      httpMetadata: { contentType: image.type, cacheControl: "private, no-store" },
+      customMetadata: { requestId: id },
+    });
   } catch (error) {
-    await env.IMAGES.delete(pendingKey);
+    await env.DB.prepare("DELETE FROM photo_requests WHERE id = ?").bind(id).run();
     throw error;
   }
   return json({ ok: true, id }, 201);
@@ -98,7 +132,7 @@ async function listArtistImages(env) {
     artistName: row.artist_name,
     image: `/api/public/artist-images/${encodeURIComponent(String(row.object_key).replace(/^approved\//u, ""))}?v=${row.version}`,
   }));
-  return json({ items }, 200, { "cache-control": "public, max-age=60, stale-while-revalidate=300" });
+  return json({ items });
 }
 
 async function serveApprovedImage(filename, env) {
@@ -143,12 +177,12 @@ async function servePendingImage(id, env) {
 }
 
 async function approveRequest(request, id, env) {
-  if (!requestOriginAllowed(request, env)) return json({ message: "מקור הבקשה אינו מורשה." }, 403);
-  if (request.headers.get("content-type") !== "image/webp") return json({ message: "התמונה המאושרת חייבת להיות WebP." }, 415);
+  if (!requestOriginAllowed(request)) return json({ message: "\u05de\u05e7\u05d5\u05e8 \u05d4\u05d1\u05e7\u05e9\u05d4 \u05d0\u05d9\u05e0\u05d5 \u05de\u05d5\u05e8\u05e9\u05d4." }, 403);
+  if (request.headers.get("content-type") !== "image/webp") return json({ message: "\u05d4\u05ea\u05de\u05d5\u05e0\u05d4 \u05d4\u05de\u05d0\u05d5\u05e9\u05e8\u05ea \u05d7\u05d9\u05d9\u05d1\u05ea \u05dc\u05d4\u05d9\u05d5\u05ea WebP." }, 415);
   const record = await pendingRecord(id, env);
-  if (!record) return json({ message: "הבקשה כבר טופלה או שאינה קיימת." }, 404);
+  if (!record) return json({ message: "\u05d4\u05d1\u05e7\u05e9\u05d4 \u05db\u05d1\u05e8 \u05d8\u05d5\u05e4\u05dc\u05d4 \u05d0\u05d5 \u05e9\u05d0\u05d9\u05e0\u05d4 \u05e7\u05d9\u05d9\u05de\u05ea." }, 404);
   const image = await request.arrayBuffer();
-  if (!image.byteLength || image.byteLength > MAX_APPROVED_BYTES) return json({ message: "התמונה המעובדת אינה תקינה." }, 400);
+  if (!image.byteLength || image.byteLength > MAX_APPROVED_BYTES) return json({ message: "\u05d4\u05ea\u05de\u05d5\u05e0\u05d4 \u05d4\u05de\u05e2\u05d5\u05d1\u05d3\u05ea \u05d0\u05d9\u05e0\u05d4 \u05ea\u05e7\u05d9\u05e0\u05d4." }, 400);
   const previous = await env.DB.prepare("SELECT object_key FROM artist_images WHERE artist_name = ? COLLATE NOCASE").bind(record.artist_name).first();
   const approvedKey = `approved/artist-${crypto.randomUUID()}.webp`;
   const version = Date.now();
@@ -168,9 +202,9 @@ async function approveRequest(request, id, env) {
 }
 
 async function rejectRequest(request, id, env) {
-  if (!requestOriginAllowed(request, env)) return json({ message: "מקור הבקשה אינו מורשה." }, 403);
+  if (!requestOriginAllowed(request)) return json({ message: "\u05de\u05e7\u05d5\u05e8 \u05d4\u05d1\u05e7\u05e9\u05d4 \u05d0\u05d9\u05e0\u05d5 \u05de\u05d5\u05e8\u05e9\u05d4." }, 403);
   const record = await pendingRecord(id, env);
-  if (!record) return json({ message: "הבקשה כבר טופלה או שאינה קיימת." }, 404);
+  if (!record) return json({ message: "\u05d4\u05d1\u05e7\u05e9\u05d4 \u05db\u05d1\u05e8 \u05d8\u05d5\u05e4\u05dc\u05d4 \u05d0\u05d5 \u05e9\u05d0\u05d9\u05e0\u05d4 \u05e7\u05d9\u05d9\u05de\u05ea." }, 404);
   await env.DB.prepare("UPDATE photo_requests SET status = 'rejected', submitter_name = '', email = '', note = '', decided_at = datetime('now'), decided_by = ? WHERE id = ? AND status = 'pending'").bind(adminEmail(request), id).run();
   await env.IMAGES.delete(record.pending_object_key);
   return json({ ok: true });
@@ -187,7 +221,7 @@ const worker = {
       if (request.method === "GET" && approvedMatch) return serveApprovedImage(approvedMatch[1], env);
 
       if (path.startsWith("/api/admin/")) {
-        if (!requireAdmin(request, env)) return json({ message: "נדרשת כניסת מנהל דרך Cloudflare Access." }, 401);
+        if (!requireAdmin(request, env)) return json({ message: "\u05e0\u05d3\u05e8\u05e9\u05ea \u05db\u05e0\u05d9\u05e1\u05ea \u05de\u05e0\u05d4\u05dc \u05d3\u05e8\u05da Cloudflare Access." }, 401);
         if (request.method === "GET" && path === "/api/admin/photo-requests") return listPending(env);
         const imageMatch = path.match(/^\/api\/admin\/photo-requests\/([a-f0-9-]+)\/image$/u);
         if (request.method === "GET" && imageMatch) return servePendingImage(imageMatch[1], env);
@@ -199,7 +233,7 @@ const worker = {
       return json({ message: "Not found" }, 404);
     } catch (error) {
       console.error("AIMA photo API error", error);
-      return json({ message: "אירעה תקלה זמנית. נסו שוב מאוחר יותר." }, 500);
+      return json({ message: "\u05d0\u05d9\u05e8\u05e2\u05d4 \u05ea\u05e7\u05dc\u05d4 \u05d6\u05de\u05e0\u05d9\u05ea. \u05e0\u05e1\u05d5 \u05e9\u05d5\u05d1 \u05de\u05d0\u05d5\u05d7\u05e8 \u05d9\u05d5\u05ea\u05e8." }, 500);
     }
   },
 };
