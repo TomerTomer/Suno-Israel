@@ -7,7 +7,7 @@
 - Latest ChatGPT Sites version: 8, now private and not used as the public website
 - Version ID: `appgprj_6a7dd70eea408191810c522977a027e0~appgver_0dae134b2364819194eb07d6b74e4e85`
 
-- Latest GitHub package: `AIMA-GitHub-final-v12.zip`
+- Latest GitHub package: `AIMA-GitHub-final-v14.zip`
 - The public website is hosted from the user's GitHub repository and Suno domain.
 
 ## Artists source
@@ -31,3 +31,5 @@ Version 11 is the complete August 2026 update. It adds the corrected Tomer parag
 Version 12 adds a complete moderated artist-photo workflow. Artists submit from `/photo-update/`; requests are stored in private Cloudflare R2 with metadata in D1; the Access-protected Studio displays each request already matched to an artist and provides Approve or Reject actions. Approval creates a 640px WebP and updates the public artist card immediately without a GitHub commit. Rejection deletes the submitted image. The public site remains open, while both `/studio/*` and `/api/admin/*` must use the `Tomer only` Cloudflare Access policy.
 
 Version 13 improves approved artist-photo presentation and consistency. The upload callout now appears before the directory controls, artist cards use a balanced 4:3 image frame, the home-page monthly artist and weekly song artist use the same approved image mapping, and the mapping response is fetched without stale caching so replaced images remain consistent across browsers.
+
+Version 14 adds per-artist native sharing, a daily audience vote with server-side abuse limits and a popularity sort, a true daily artist sync that refreshes existing public profile fields while preserving approved images, a 4:3 zoom-and-position crop editor in the protected Studio, and an Analytics debug mode. The Google Sheet export must be readable without login for the scheduled GitHub Action to sync; the current source contains public artist names and profile links only. The Worker creates the voting tables automatically on first use, so no manual D1 migration is required.

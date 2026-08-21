@@ -22,3 +22,20 @@ CREATE TABLE IF NOT EXISTS artist_images (
   version INTEGER NOT NULL,
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
+
+CREATE TABLE IF NOT EXISTS artist_vote_totals (
+  artist_name TEXT PRIMARY KEY COLLATE NOCASE,
+  votes INTEGER NOT NULL DEFAULT 0,
+  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS artist_vote_receipts (
+  artist_name TEXT NOT NULL COLLATE NOCASE,
+  voter_key TEXT NOT NULL,
+  vote_day TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  PRIMARY KEY (artist_name, voter_key, vote_day)
+);
+
+CREATE INDEX IF NOT EXISTS artist_vote_receipts_voter_day ON artist_vote_receipts(voter_key, vote_day);
+CREATE INDEX IF NOT EXISTS artist_vote_receipts_day ON artist_vote_receipts(vote_day);

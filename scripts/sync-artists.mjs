@@ -172,7 +172,8 @@ const submittedKeys = new Set();
 const artists = submittedArtists.map((artist) => {
   const key = artistKey(artist.name);
   submittedKeys.add(key);
-  return approvedByKey.get(key) ?? artist;
+  const current = approvedByKey.get(key);
+  return current ? { ...artist, image: current.image || artist.image } : artist;
 });
 for (const artist of approvedArtists) {
   if (!submittedKeys.has(artistKey(artist.name))) artists.push(artist);
