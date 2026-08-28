@@ -5,21 +5,21 @@
   let editingId = null;
 
   const template = () => `<section class="panel pulse-admin" id="pulse-admin">
-    <div class="pulse-admin-head"><div><small class="eyebrow">AIMA PULSE · LIVE CONTENT</small><h2>מה חדש, למה זה משנה.</h2><p>העדכונים החדשים של Suno נכנסים לכאן כטיוטות בעברית. אפשר לערוך הכול לפני הפרסום, וגם להוסיף עדכונים וקישורים משלכם.</p></div><button class="save" id="pulse-import" type="button">בדיקה חדשה ב-Suno</button></div>
-    <div class="pulse-admin-status" id="pulse-admin-status" aria-live="polite">מתחבר למערכת התוכן...</div>
+    <div class="pulse-admin-head"><div><small class="eyebrow">AIMA PULSE Â· LIVE CONTENT</small><h2>×ž×” ×—×“×©, ×œ×ž×” ×–×” ×ž×©× ×”.</h2><p>×”×¢×“×›×•× ×™×  ×”×—×“×©×™×  ×©×œ Suno × ×›× ×¡×™×  ×œ×›× ×Ÿ ×›×˜×™×•×˜×•×ª ×‘×¢×‘×¨×™×ª. × ×¤×©×¨ ×œ×¢×¨×•×š ×”×›×•×œ ×œ×¤× ×™ ×”×¤×¨×¡×•× , ×•×’×  ×œ×”×•×¡×™×£ ×¢×“×›×•× ×™×  ×•×§×™×©×•×¨×™×  ×ž×©×œ×›× .</p></div><button class="save" id="pulse-import" type="button">×‘×“×™×§×” ×—×“×©×” ×‘-Suno</button></div>
+    <div class="pulse-admin-status" id="pulse-admin-status" aria-live="polite">×ž×ª×—×‘×¨ ×œ×ž×¢×¨×›×ª ×”×ª×•×›×Ÿ...</div>
     <div class="pulse-admin-grid">
-      <form class="pulse-admin-card" id="pulse-admin-form"><h3 id="pulse-form-title">עדכון חדש</h3>
-        <label>כותרת בעברית<input name="title" required maxlength="180"></label>
-        <label>תקציר קצר<textarea name="summary" maxlength="1200"></textarea></label>
-        <label>מה המשמעות ליוצר?<textarea name="impact" maxlength="900"></textarea></label>
-        <label>מה כדאי לנסות עכשיו?<textarea name="action" maxlength="600"></textarea></label>
-        <label>קישור למקור<input name="url" type="url" dir="ltr" placeholder="https://..."></label>
-        <div class="pulse-admin-form-row"><label>תאריך<input name="publishedAt" type="date" required></label><label>תגית<input name="label" value="AIMA UPDATE"></label></div>
-        <div class="pulse-admin-form-row"><label>סוג תוכן<select name="contentType"><option value="news">חדשות ועדכונים</option><option value="resource">קישור חשוב / משאב</option></select></label><label>סטטוס<select name="status"><option value="draft">טיוטה</option><option value="published">פרסום באתר</option></select></label></div>
-        <label>סדר תצוגה<input name="position" type="number" value="0"></label>
-        <div class="pulse-admin-actions"><button class="save" type="submit">שמירה</button><button class="save" id="pulse-cancel" type="button">ניקוי</button></div>
+      <form class="pulse-admin-card" id="pulse-admin-form"><h3 id="pulse-form-title">×¢×“×›×•×Ÿ ×—×“×©</h3>
+        <label>×›×•×ª×¨×ª ×‘×¢×‘×¨×™×ª<input name="title" required maxlength="180"></label>
+        <label>×ª×§×¦×™×¨ ×§×¦×¨<textarea name="summary" maxlength="1200"></textarea></label>
+        <label>×ž×” ×”×ž×©×ž×¢×•×ª ×œ×™×•×¦×¨?<textarea name="impact" maxlength="900"></textarea></label>
+        <label>×ž×” ×›×“× ×™ ×œ× ×¡×•×ª ×¢×›×©×™×•?<textarea name="action" maxlength="600"></textarea></label>
+        <label>×§×™×©×•×¨ ×œ×ž×§×•×¨<input name="url" type="url" dir="ltr" placeholder="https://..."></label>
+        <div class="pulse-admin-form-row"><label>×ª× ×¨×™×š<input name="publishedAt" type="date" required></label><label>×ª×’×™×ª<input name="label" value="AIMA UPDATE"></label></div>
+        <div class="pulse-admin-form-row"><label>×¡×•×’ ×ª×•×›×Ÿ<select name="contentType"><option value="news">×—×“×©×•×ª ×•×¢×“×›×•× ×™× </option><option value="resource">×§×™×©×•×¨ ×—×©×•×‘ / ×ž×©× ×‘</option></select></label><label>×¡×˜×˜×•×¡<select name="status"><option value="draft">×˜×™×•×˜×”</option><option value="published">×¤×¨×¡×•×  ×‘× ×ª×¨</option></select></label></div>
+        <label>×¡×“×¨ ×ª×¦×•×’×”<input name="position" type="number" value="0"></label>
+        <div class="pulse-admin-actions"><button class="save" type="submit">×©×ž×™×¨×”</button><button class="save" id="pulse-cancel" type="button">× ×™×§×•×™</button></div>
       </form>
-      <section class="pulse-admin-card"><h3>ממתינים ופורסמו</h3><div class="pulse-admin-list" id="pulse-admin-list"></div></section>
+      <section class="pulse-admin-card"><h3>×ž×ž×ª×™× ×™×  ×•×¤×•×¨×¡×ž×•</h3><div class="pulse-admin-list" id="pulse-admin-list"></div></section>
     </div>
   </section>`;
 
@@ -33,34 +33,34 @@
     editor().elements.label.value = "AIMA UPDATE";
     editor().elements.contentType.value = "news";
     editor().elements.position.value = "0";
-    document.querySelector("#pulse-form-title").textContent = "עדכון חדש";
+    document.querySelector("#pulse-form-title").textContent = "×¢×“×›×•×Ÿ ×—×“×©";
   }
 
   function render() {
     const list = document.querySelector("#pulse-admin-list");
-    if (!contentItems.length) { list.innerHTML = '<div class="empty">עוד אין עדכונים. לחצו על בדיקה חדשה ב-Suno.</div>'; return; }
-    list.innerHTML = contentItems.map((item) => `<article class="pulse-admin-item is-${escapeHtml(item.status)}" data-id="${item.id}"><small>${escapeHtml(item.label)} · ${escapeHtml(item.publishedAt)} · ${item.contentType === "resource" ? "משאב" : "חדשות"} · ${item.status === "published" ? "מפורסם" : "ממתין לאישור"}</small><h4>${escapeHtml(item.title)}</h4><p>${escapeHtml(item.summary)}</p>${item.impact ? `<p><b>המשמעות:</b> ${escapeHtml(item.impact)}</p>` : ""}${item.sourceKind === "suno" ? `<div class="pulse-admin-original"><b>Original:</b> ${escapeHtml(item.originalTitle)}</div>` : ""}<div class="pulse-admin-item-actions"><button data-action="edit">עריכה</button><button class="publish" data-action="toggle">${item.status === "published" ? "החזרה לטיוטה" : "פרסום עכשיו"}</button><button class="delete" data-action="delete">מחיקה</button></div></article>`).join("");
+    if (!contentItems.length) { list.innerHTML = '<div class="empty">×¢×•×“ × ×™×Ÿ ×¢×“×›×•× ×™× . ×œ×—×¦×• ×¢×œ ×‘×“×™×§×” ×—×“×©×” ×‘-Suno.</div>'; return; }
+    list.innerHTML = contentItems.map((item) => `<article class="pulse-admin-item is-${escapeHtml(item.status)}" data-id="${item.id}"><small>${escapeHtml(item.label)} Â· ${escapeHtml(item.publishedAt)} Â· ${item.contentType === "resource" ? "×ž×©× ×‘" : "×—×“×©×•×ª"} Â· ${item.status === "published" ? "×ž×¤×•×¨×¡× " : "×ž×ž×ª×™×Ÿ ×œ× ×™×©×•×¨"}</small><h4>${escapeHtml(item.title)}</h4><p><b>×ž×” ×”×ª×—×“×©:</b> ${escapeHtml(item.summary)}</p>${item.impact ? `<p><b>×”×ž×©×ž×¢×•×ª:</b> ${escapeHtml(item.impact)}</p>` : ""}${item.action ? `<p><b>×ž×” ×œ× ×¡×•×ª:</b> ${escapeHtml(item.action)}</p>` : ""}${item.sourceKind === "suno" ? `<div class="pulse-admin-original"><b>Original:</b> ${escapeHtml(item.originalTitle)}</div>` : ""}<div class="pulse-admin-item-actions"><button data-action="edit">×¢×¨×™×›×” ×ž×œ× ×”</button><button class="publish" data-action="toggle">${item.status === "published" ? "×”×—×–×¨×” ×œ×˜×™×•×˜×”" : "×¤×¨×¡×•×  ×¢×›×©×™×•"}</button><button class="delete" data-action="delete">×ž×—×™×§×”</button></div></article>`).join("");
   }
 
   async function load() {
     const response = await fetch(`${api}?fresh=${Date.now()}`, { cache: "no-store", headers: { accept: "application/json" } });
-    if (!response.ok) throw new Error("לא הצלחתי להתחבר. ודאו שנכנסתם לסטודיו דרך Cloudflare Access.");
+    if (!response.ok) throw new Error("×œ×  ×”×¦×œ×—×ª×™ ×œ×”×ª×—×‘×¨. ×•×“× ×• ×©× ×›× ×¡×ª×  ×œ×¡×˜×•×“×™×• ×“×¨×š Cloudflare Access.");
     contentItems = (await response.json()).items || [];
     render();
-    status(`נטענו ${contentItems.length} עדכונים. ${contentItems.filter((item) => item.status === "draft").length} ממתינים לאישור.`);
+    status(`× ×˜×¢× ×• ${contentItems.length} ×¢×“×›×•× ×™× . ${contentItems.filter((item) => item.status === "draft").length} ×ž×ž×ª×™× ×™×  ×œ× ×™×©×•×¨.`);
   }
 
   function edit(item) {
     editingId = item.id;
     const form = editor();
     ["title", "summary", "impact", "action", "url", "publishedAt", "label", "contentType", "status", "position"].forEach((name) => { form.elements[name].value = item[name] ?? ""; });
-    document.querySelector("#pulse-form-title").textContent = "עריכת עדכון";
+    document.querySelector("#pulse-form-title").textContent = "×¢×¨×™×›×ª ×¢×“×›×•×Ÿ";
     form.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   async function patchItem(item, changes) {
     const response = await fetch(`${api}/${item.id}`, { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify({ ...item, ...changes }) });
-    if (!response.ok) throw new Error((await response.json().catch(() => ({}))).message || "השמירה נכשלה.");
+    if (!response.ok) throw new Error((await response.json().catch(() => ({}))).message || "×”×©×ž×™×¨×” × ×›×©×œ×”.");
   }
 
   document.addEventListener("DOMContentLoaded", () => {
@@ -70,13 +70,17 @@
 
     document.querySelector("#pulse-import").addEventListener("click", async (event) => {
       event.currentTarget.disabled = true;
-      status("בודק את עמוד העדכונים הרשמי של Suno ומכין הסברים בעברית...");
+      status("×‘×•×“×§ × ×ª ×¢×ž×•×“ ×”×¢×“×›×•× ×™×  ×”×¨×©×ž×™ ×©×œ Suno ×•×ž×›×™×Ÿ ×”×¡×‘×¨×™×  ×‘×¢×‘×¨×™×ª...");
       try {
+        const previousIds = new Set(contentItems.map((item) => item.id));
         const response = await fetch(`${api}/import-suno`, { method: "POST", headers: { accept: "application/json" } });
         const result = await response.json().catch(() => ({}));
-        if (!response.ok) throw new Error(result.message || "הבדיקה נכשלה.");
+        if (!response.ok) throw new Error(result.message || "×”×‘×“×™×§×” × ×›×©×œ×”.");
         await load();
-        status(result.imported ? `נמצאו ${result.imported} עדכונים חדשים. הם ממתינים לעריכה ולאישור.` : "הכול מעודכן. לא נמצאו עדכונים חדשים.");
+        const readyDraft = contentItems.find((item) => !previousIds.has(item.id) && item.status === "draft") || contentItems.find((item) => item.status === "draft");
+        if (readyDraft) edit(readyDraft);
+        const changed = Number(result.imported || 0) + Number(result.enriched || 0);
+        status(changed ? `×”×•×›× ×• ${changed} ×˜×™×•×˜×•×ª ×ž×œ× ×•×ª ×‘×¢×‘×¨×™×ª. ×”×¨× ×©×•× ×” ×›×‘×¨ ×¤×ª×•×—×” ×œ×¢×¨×™×›×” ×•×œ× ×™×©×•×¨.` : "×”×›×•×œ ×ž×¢×•×“×›×Ÿ. ×œ×  × ×ž×¦× ×• ×¢×“×›×•× ×™×  ×—×“×©×™× .");
       } catch (error) { status(error.message); }
       finally { event.currentTarget.disabled = false; }
     });
@@ -84,14 +88,14 @@
     editor().addEventListener("submit", async (event) => {
       event.preventDefault();
       const data = Object.fromEntries(new FormData(editor()));
-      status("שומר את העדכון...");
+      status("×©×•×ž×¨ × ×ª ×”×¢×“×›×•×Ÿ...");
       try {
         const response = await fetch(editingId ? `${api}/${editingId}` : api, { method: editingId ? "PATCH" : "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(data) });
         const result = await response.json().catch(() => ({}));
-        if (!response.ok) throw new Error(result.message || "השמירה נכשלה.");
+        if (!response.ok) throw new Error(result.message || "×”×©×ž×™×¨×” × ×›×©×œ×”.");
         resetForm();
         await load();
-        status(data.status === "published" ? "נשמר ופורסם באתר." : "נשמר בטיוטות.");
+        status(data.status === "published" ? "× ×©×ž×¨ ×•×¤×•×¨×¡×  ×‘× ×ª×¨." : "× ×©×ž×¨ ×‘×˜×™×•×˜×•×ª.");
       } catch (error) { status(error.message); }
     });
     document.querySelector("#pulse-cancel").addEventListener("click", resetForm);
@@ -105,9 +109,9 @@
       try {
         if (button.dataset.action === "toggle") await patchItem(item, { status: item.status === "published" ? "draft" : "published" });
         if (button.dataset.action === "delete") {
-          if (!window.confirm("למחוק את העדכון הזה?")) return;
+          if (!window.confirm("×œ×ž×—×•×§ × ×ª ×”×¢×“×›×•×Ÿ ×”×–×”?")) return;
           const response = await fetch(`${api}/${item.id}`, { method: "DELETE" });
-          if (!response.ok) throw new Error("המחיקה נכשלה.");
+          if (!response.ok) throw new Error("×”×ž×—×™×§×” × ×›×©×œ×”.");
         }
         await load();
       } catch (error) { status(error.message); }
