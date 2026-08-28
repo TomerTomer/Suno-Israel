@@ -274,6 +274,251 @@ async function rejectRequest(request, id, env) {
   return json({ ok: true });
 }
 
+let contentSchemaReady;
+function ensureContentSchema(env) {
+  contentSchemaReady ||= env.DB.batch([
+    env.DB.prepare(`CREATE TABLE IF NOT EXISTS content_items (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      source_id TEXT NOT NULL UNIQUE,
+      source_kind TEXT NOT NULL DEFAULT 'manual',
+      content_type TEXT NOT NULL DEFAULT 'news',
+      original_title TEXT NOT NULL DEFAULT '',
+      original_summary TEXT NOT NULL DEFAULT '',
+      title TEXT NOT NULL,
+      summary TEXT NOT NULL DEFAULT '',
+      impact TEXT NOT NULL DEFAULT '',
+      action TEXT NOT NULL DEFAULT '',
+      url TEXT NOT NULL DEFAULT '',
+      published_at TEXT NOT NULL,
+      label TEXT NOT NULL DEFAULT 'AIMA UPDATE',
+      status TEXT NOT NULL DEFAULT 'draft',
+      position INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+    )`),
+    env.DB.prepare("CREATE INDEX IF NOT EXISTS content_items_status_date ON content_items(status, published_at DESC)"),
+  ]).catch((error) => {
+    contentSchemaReady = undefined;
+    throw error;
+  });
+  return contentSchemaReady;
+}
+
+function contentRow(row) {
+  return {
+    id: Number(row.id),
+    sourceId: row.source_id,
+    sourceKind: row.source_kind,
+    contentType: row.content_type || "news",
+    originalTitle: row.original_title,
+    originalSummary: row.original_summary,
+    title: row.title,
+    summary: row.summary,
+    impact: row.impact,
+    action: row.action,
+    url: row.url,
+    publishedAt: row.published_at,
+    label: row.label,
+    status: row.status,
+    position: Number(row.position || 0),
+    updatedAt: row.updated_at,
+  };
+}
+
+async function listPublishedContent(request, env) {
+  await ensureContentSchema(env);
+  const url = new URL(request.url);
+  const limit = Math.min(30, Math.max(1, Number(url.searchParams.get("limit")) || 12));
+  const contentType = clean(url.searchParams.get("type"), 30) || "news";
+  const result = await env.DB.prepare("SELECT * FROM content_items WHERE status = 'published' AND content_type = ? ORDER BY position ASC, published_at DESC, id DESC LIMIT ?").bind(contentType, limit).all();
+  return json({ items: result.results.map(contentRow) });
+}
+
+async function listAdminContent(env) {
+  await ensureContentSchema(env);
+  const result = await env.DB.prepare("SELECT * FROM content_items ORDER BY CASE status WHEN 'draft' THEN 0 ELSE 1 END, published_at DESC, id DESC LIMIT 100").all();
+  return json({ items: result.results.map(contentRow) });
+}
+
+function contentStatus(value) {
+  return value === "published" ? "published" : "draft";
+}
+
+async function createAdminContent(request, env) {
+  if (!requestOriginAllowed(request)) return json({ message: "מקור הבקשה אינו מורשה." }, 403);
+  const body = await request.json().catch(() => ({}));
+  const title = clean(body.title, 180);
+  const publishedAt = clean(body.publishedAt, 30) || new Date().toISOString().slice(0, 10);
+  if (!title) return json({ message: "נדרשת כותרת לעדכון." }, 400);
+  await ensureContentSchema(env);
+  const result = await env.DB.prepare(`INSERT INTO content_items (
+    source_id, source_kind, content_type, title, summary, impact, action, url,
+    published_at, label, status, position
+  ) VALUES (?, 'manual', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+    .bind(
+      `manual:${crypto.randomUUID()}`,
+      clean(body.contentType, 30) === "resource" ? "resource" : "news",
+      title,
+      clean(body.summary, 1200),
+      clean(body.impact, 900),
+      clean(body.action, 600),
+      clean(body.url, 700),
+      publishedAt,
+      clean(body.label, 60) || "AIMA UPDATE",
+      contentStatus(body.status),
+      Number.isFinite(Number(body.position)) ? Number(body.position) : 0,
+    ).run();
+  const row = await env.DB.prepare("SELECT * FROM content_items WHERE id = ?").bind(result.meta.last_row_id).first();
+  return json({ item: contentRow(row) }, 201);
+}
+
+async function updateAdminContent(request, id, env) {
+  if (!requestOriginAllowed(request)) return json({ message: "מקור הבקשה אינו מורשה." }, 403);
+  const body = await request.json().catch(() => ({}));
+  const current = await env.DB.prepare("SELECT * FROM content_items WHERE id = ?").bind(id).first();
+  if (!current) return json({ message: "העדכון לא נמצא." }, 404);
+  const title = clean(body.title, 180) || current.title;
+  await env.DB.prepare(`UPDATE content_items SET
+    content_type = ?, title = ?, summary = ?, impact = ?, action = ?, url = ?,
+    published_at = ?, label = ?, status = ?, position = ?, updated_at = datetime('now')
+    WHERE id = ?`)
+    .bind(
+      clean(body.contentType, 30) === "resource" ? "resource" : (current.content_type || "news"),
+      title,
+      body.summary === undefined ? current.summary : clean(body.summary, 1200),
+      body.impact === undefined ? current.impact : clean(body.impact, 900),
+      body.action === undefined ? current.action : clean(body.action, 600),
+      body.url === undefined ? current.url : clean(body.url, 700),
+      clean(body.publishedAt, 30) || current.published_at,
+      clean(body.label, 60) || current.label,
+      contentStatus(body.status === undefined ? current.status : body.status),
+      Number.isFinite(Number(body.position)) ? Number(body.position) : Number(current.position || 0),
+      id,
+    ).run();
+  const row = await env.DB.prepare("SELECT * FROM content_items WHERE id = ?").bind(id).first();
+  return json({ item: contentRow(row) });
+}
+
+async function deleteAdminContent(request, id, env) {
+  if (!requestOriginAllowed(request)) return json({ message: "מקור הבקשה אינו מורשה." }, 403);
+  await env.DB.prepare("DELETE FROM content_items WHERE id = ?").bind(id).run();
+  return json({ ok: true });
+}
+
+function appendReleaseText(state, value) {
+  if (!state.current) return;
+  const text = String(value || "").replace(/\s+/gu, " ").trim();
+  if (text) state.current.body += `${state.current.body ? " " : ""}${text}`;
+}
+
+async function fetchSunoReleaseNotes() {
+  const response = await fetch("https://suno.com/release-notes", {
+    headers: { accept: "text/html", "user-agent": "AIMA Community release monitor/1.0" },
+  });
+  if (!response.ok) throw new Error(`Suno release notes returned ${response.status}`);
+  const state = { items: [], current: null, heading: null };
+  const rewriter = new HTMLRewriter()
+    .on("h2", {
+      element() {
+        state.heading = { title: "", body: "", url: "" };
+      },
+      text(text) { if (state.heading) state.heading.title += text.text; },
+    })
+    .on("h2 a", {
+      element(element) {
+        if (!state.heading) return;
+        const href = element.getAttribute("href");
+        if (!href) return;
+        state.heading.url = new URL(href, "https://suno.com/release-notes").href;
+        state.current = state.heading;
+        state.items.push(state.current);
+      },
+    })
+    .on("p", { text(text) { appendReleaseText(state, text.text); } })
+    .on("li", { text(text) { appendReleaseText(state, text.text); } })
+    .on("button", { text(text) { appendReleaseText(state, text.text); } });
+  await rewriter.transform(response).arrayBuffer();
+  const datePattern = /\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2},\s+\d{4}\b/u;
+  return state.items
+    .map((item) => {
+      const title = clean(item.title, 180);
+      const dateLabel = item.body.match(datePattern)?.[0] || "";
+      const publishedAt = dateLabel ? new Date(`${dateLabel} 12:00:00 UTC`).toISOString().slice(0, 10) : "";
+      const body = clean(item.body.replace(datePattern, ""), 2200);
+      return { title, body, url: item.url, publishedAt };
+    })
+    .filter((item) => item.title && item.publishedAt && item.body)
+    .slice(0, 8);
+}
+
+function parseAiJson(value) {
+  const text = typeof value === "string" ? value : value?.response;
+  if (!text) return null;
+  try {
+    return JSON.parse(String(text).replace(/^```(?:json)?\s*|\s*```$/gu, ""));
+  } catch {
+    return null;
+  }
+}
+
+async function hebrewReleaseDraft(note, env) {
+  const fallback = {
+    title: `חדש ב-Suno: ${note.title}`,
+    summary: "Suno פרסמה עדכון חדש למוצר. אפשר לערוך כאן הסבר קצר בעברית לפני הפרסום באתר.",
+    impact: "כדאי לבדוק אם העדכון משנה את תהליך היצירה, העריכה או השיתוף שלכם.",
+    action: "פתחו את המקור הרשמי, נסו את היכולת החדשה ועדכנו את ההסבר לפני הפרסום.",
+    label: "SUNO UPDATE",
+  };
+  if (!env.AI?.run) return fallback;
+  try {
+    const result = await env.AI.run("@cf/qwen/qwen3-30b-a3b-fp8", {
+      messages: [
+        { role: "system", content: "אתה עורך תוכן ישראלי מומחה ל-Suno ולמוזיקה עם AI. החזר JSON בלבד עם השדות title, summary, impact, action, label. כתוב בעברית טבעית, קצרה וברורה. title עד 90 תווים, summary עד 220, impact עד 180, action עד 160, label עד 24. אל תמציא יכולות, מחירים או זמינות שלא מופיעים במקור." },
+        { role: "user", content: `כותרת מקור: ${note.title}\nתאריך: ${note.publishedAt}\nתוכן מקור: ${note.body}` },
+      ],
+      max_tokens: 420,
+      temperature: 0.2,
+      response_format: { type: "json_object" },
+    });
+    const parsed = parseAiJson(result);
+    if (!parsed) return fallback;
+    return {
+      title: clean(parsed.title, 180) || fallback.title,
+      summary: clean(parsed.summary, 1200) || fallback.summary,
+      impact: clean(parsed.impact, 900) || fallback.impact,
+      action: clean(parsed.action, 600) || fallback.action,
+      label: clean(parsed.label, 60) || fallback.label,
+    };
+  } catch (error) {
+    console.warn("AIMA Hebrew release draft fallback", error);
+    return fallback;
+  }
+}
+
+async function importSunoReleases(env) {
+  await ensureContentSchema(env);
+  const notes = await fetchSunoReleaseNotes();
+  let imported = 0;
+  for (const note of notes) {
+    const sourceId = `suno:${note.url}:${note.publishedAt}`;
+    const exists = await env.DB.prepare("SELECT id FROM content_items WHERE source_id = ?").bind(sourceId).first();
+    if (exists) continue;
+    const draft = await hebrewReleaseDraft(note, env);
+    const result = await env.DB.prepare(`INSERT OR IGNORE INTO content_items (
+      source_id, source_kind, content_type, original_title, original_summary,
+      title, summary, impact, action, url, published_at, label, status
+    ) VALUES (?, 'suno', 'news', ?, ?, ?, ?, ?, ?, ?, ?, ?, 'draft')`)
+      .bind(sourceId, note.title, note.body, draft.title, draft.summary, draft.impact, draft.action, note.url, note.publishedAt, draft.label).run();
+    imported += Number(result.meta?.changes || 0);
+  }
+  return { imported, checked: notes.length };
+}
+
+async function importSunoForAdmin(request, env) {
+  if (!requestOriginAllowed(request)) return json({ message: "מקור הבקשה אינו מורשה." }, 403);
+  return json({ ok: true, ...(await importSunoReleases(env)) });
+}
+
 const worker = {
   async fetch(request, env) {
     try {
@@ -283,12 +528,19 @@ const worker = {
       if (request.method === "GET" && path === "/api/public/artist-images") return listArtistImages(env);
       if (request.method === "GET" && path === "/api/public/artist-votes") return listArtistVotes(env);
       if (request.method === "POST" && path === "/api/public/artist-votes") return submitArtistVote(request, env);
+      if (request.method === "GET" && path === "/api/public/content") return listPublishedContent(request, env);
       const approvedMatch = path.match(/^\/api\/public\/artist-images\/(artist-[a-f0-9-]+\.webp)$/u);
       if (request.method === "GET" && approvedMatch) return serveApprovedImage(approvedMatch[1], env);
 
       if (path.startsWith("/api/admin/")) {
         if (!requireAdmin(request, env)) return json({ message: "\u05e0\u05d3\u05e8\u05e9\u05ea \u05db\u05e0\u05d9\u05e1\u05ea \u05de\u05e0\u05d4\u05dc \u05d3\u05e8\u05da Cloudflare Access." }, 401);
         if (request.method === "GET" && path === "/api/admin/photo-requests") return listPending(env);
+        if (request.method === "GET" && path === "/api/admin/content") return listAdminContent(env);
+        if (request.method === "POST" && path === "/api/admin/content") return createAdminContent(request, env);
+        if (request.method === "POST" && path === "/api/admin/content/import-suno") return importSunoForAdmin(request, env);
+        const contentMatch = path.match(/^\/api\/admin\/content\/(\d+)$/u);
+        if (request.method === "PATCH" && contentMatch) return updateAdminContent(request, Number(contentMatch[1]), env);
+        if (request.method === "DELETE" && contentMatch) return deleteAdminContent(request, Number(contentMatch[1]), env);
         const imageMatch = path.match(/^\/api\/admin\/photo-requests\/([a-f0-9-]+)\/image$/u);
         if (request.method === "GET" && imageMatch) return servePendingImage(imageMatch[1], env);
         const approveMatch = path.match(/^\/api\/admin\/photo-requests\/([a-f0-9-]+)\/approve$/u);
@@ -301,6 +553,9 @@ const worker = {
       console.error("AIMA photo API error", error);
       return json({ message: "\u05d0\u05d9\u05e8\u05e2\u05d4 \u05ea\u05e7\u05dc\u05d4 \u05d6\u05de\u05e0\u05d9\u05ea. \u05e0\u05e1\u05d5 \u05e9\u05d5\u05d1 \u05de\u05d0\u05d5\u05d7\u05e8 \u05d9\u05d5\u05ea\u05e8." }, 500);
     }
+  },
+  async scheduled(_controller, env, context) {
+    context.waitUntil(importSunoReleases(env));
   },
 };
 

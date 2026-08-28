@@ -1,7 +1,15 @@
 {
   "news": [],
   "events": [],
-  "resources": [],
+  "resources": [
+    {
+      "title": "מגה פוסט על טיפים ",
+      "description": "כל הטיפים, כל הפרומפטים, כולם",
+      "href": "https://www.facebook.com/groups/1601365750504814/posts/2142695279705189/",
+      "category": "טיפים",
+      "platform": "מגה טיפים , סונו ישראל, AIMA , פרומפטים, סונו, קהילת סונו ישראל"
+    }
+  ],
   "monthlyArtist": {
     "name": "MALKAI",
     "genre": "Dark Pop · Rock · Cinematic",

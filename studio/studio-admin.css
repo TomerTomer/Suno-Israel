@@ -1,0 +1,15 @@
+.pulse-admin { margin-top: 16px; background: #11110f; color: #fff; }
+.pulse-admin .eyebrow { color: #d8ff3e; font-weight: 900; letter-spacing: .12em; }
+.pulse-admin-head { display: flex; justify-content: space-between; gap: 30px; align-items: end; margin-bottom: 25px; }
+.pulse-admin-head h2 { margin: 7px 0; font-size: 35px; }.pulse-admin-head p { max-width: 690px; margin: 0; color: #c5c0b9; }
+.pulse-admin-head button { width: auto; min-width: 190px; margin: 0; border: 1px solid #fff; background: #d8ff3e; color: #11110f; }
+.pulse-admin-status { min-height: 45px; padding: 12px 15px; border: 1px solid #ffffff35; border-radius: 12px; color: #d8ff3e; }
+.pulse-admin-grid { margin-top: 18px; display: grid; grid-template-columns: .85fr 1.15fr; gap: 16px; align-items: start; }
+.pulse-admin-card { padding: 22px; border: 1px solid #ffffff38; border-radius: 18px; background: #ffffff0a; }.pulse-admin-card h3 { margin: 0 0 18px; font-size: 25px; }.pulse-admin-card label { color: #fff; }.pulse-admin-card input, .pulse-admin-card textarea, .pulse-admin-card select { color: #11110f; }.pulse-admin-card textarea { min-height: 88px; }
+.pulse-admin-form-row, .pulse-admin-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }.pulse-admin-actions button:last-child { background: transparent; border: 1px solid #fff; }
+.pulse-admin-list { display: grid; gap: 10px; max-height: 850px; overflow-y: auto; padding-left: 4px; }
+.pulse-admin-item { padding: 18px; border: 1px solid #ffffff30; border-radius: 15px; background: #fff; color: #11110f; }.pulse-admin-item.is-draft { border-right: 7px solid #ff3f73; }.pulse-admin-item.is-published { border-right: 7px solid #d8ff3e; }
+.pulse-admin-item small { color: #767069; font-weight: 900; }.pulse-admin-item h4 { margin: 6px 0 8px; font-size: 22px; }.pulse-admin-item p { margin: 5px 0; color: #5f5a55; }
+.pulse-admin-original { margin-top: 12px; padding: 10px 12px; border-radius: 9px; background: #f3efe6; font-size: 12px; direction: ltr; text-align: left; }
+.pulse-admin-item-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }.pulse-admin-item-actions button { border: 1px solid #11110f; border-radius: 8px; padding: 7px 10px; background: #fff; font-weight: 900; cursor: pointer; }.pulse-admin-item-actions .publish { background: #11110f; color: #fff; }.pulse-admin-item-actions .delete { color: #a51f45; }
+@media(max-width:760px){.pulse-admin-head{align-items:flex-start;flex-direction:column}.pulse-admin-head button{width:100%}.pulse-admin-grid,.pulse-admin-form-row,.pulse-admin-actions{grid-template-columns:1fr}.pulse-admin-list{max-height:none}}
