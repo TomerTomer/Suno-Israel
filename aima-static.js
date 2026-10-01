@@ -67,3 +67,24 @@
     })
     .catch(() => {});
 })();
+
+// AIMA guides navigation. Keep the existing site and backend intact.
+(() => {
+  const root = new URL('./', document.currentScript.src);
+  const addGuidesLink = () => {
+    document.querySelectorAll('nav[aria-label="ניווט ראשי"]').forEach(nav => {
+      if (nav.querySelector('[data-aima-guides]')) return;
+      const model = nav.querySelector('a');
+      if (!model) return;
+      const link = model.cloneNode(false);
+      link.removeAttribute('aria-current');
+      link.href = new URL('guides.html', root).href;
+      link.textContent = 'מדריכים';
+      link.dataset.aimaGuides = 'true';
+      nav.append(link);
+    });
+  };
+  addGuidesLink();
+  const observer = new MutationObserver(addGuidesLink);
+  observer.observe(document.body, {childList:true,subtree:true});
+})();
