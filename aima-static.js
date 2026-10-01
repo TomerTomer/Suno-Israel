@@ -131,7 +131,7 @@
       const h=card.querySelector('h2,h3');if(!h)return;
       if(!card.dataset.aimaSourceTitle)card.dataset.aimaSourceTitle=h.textContent.trim();
       const title=card.dataset.aimaSourceTitle;
-      if(duplicateTitles.has(title)){card.remove();return;}
+      if(duplicateTitles.has(title)){if(card.style.display!=='none')card.style.display='none';return;}
       const change=fixes[title];if(change){if(h.textContent!==change[0])h.textContent=change[0];const p=card.querySelector('p');if(p&&p.textContent!==change[1])p.textContent=change[1];}
     });
     if(!document.querySelector('.aima-resource-guide-entry')){
