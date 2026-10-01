@@ -141,3 +141,19 @@
   };
   refresh();new MutationObserver(refresh).observe(document.body,{childList:true,subtree:true});
 })();
+
+// Homepage anchor jumps are one-time navigation, not a permanent scroll lock.
+(() => {
+  if (!(location.pathname === '/' || location.pathname === '/index.html')) return;
+  const consumeAnchorAfterMoving = () => {
+    if (!['#aima-pulse', '#community-spotlight', '#resources'].includes(location.hash)) return;
+    const target = document.getElementById(location.hash.slice(1));
+    if (!target) return;
+    // Leave the original jump intact. Once the reader moves away, do not let
+    // iOS browser-toolbar resizing snap the page back to the fragment target.
+    if (Math.abs(target.getBoundingClientRect().top) < 120) return;
+    const state = { ...(history.state || {}), __vinext_scrollX: scrollX, __vinext_scrollY: scrollY };
+    history.replaceState(state, '', location.pathname + location.search);
+  };
+  window.addEventListener('scroll', consumeAnchorAfterMoving, { passive: true });
+})();
