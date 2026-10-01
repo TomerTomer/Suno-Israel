@@ -78,6 +78,7 @@
       if (!model) return;
       const link = model.cloneNode(false);
       link.removeAttribute('aria-current');
+      link.classList.remove('active');
       link.href = new URL('guides.html', root).href;
       link.textContent = 'מדריכים';
       link.dataset.aimaGuides = 'true';
@@ -117,4 +118,26 @@
     }
   };
   update();new MutationObserver(update).observe(document.body,{childList:true,subtree:true});
+})();
+
+// Phase 3: label community archives honestly and remove duplicate resource cards.
+(() => {
+  if (!/\/resources(?:\/index\.html)?\/?$/.test(location.pathname)) return;
+  const fixes = {"עדכוני Suno 5.5": ["אתגר \"החיים שלנו טילים\"", "ארכיון יצירה קולקטיבית של הקהילה, לא עדכון מוצר."], "האשטגים וקידום": ["תגיות לפרומפט ב-Suno", "רעיונות לתיאור מבנה וביצוע, לא האשטגים לקידום ברשתות."], "הוקרה למאסטרו": ["שרשור הוקרה למתי כספי", "שרשור קהילתי של שירים וזיכרונות, לא מדריך."], "תוכנות וידאו מומלצות": ["שאלה מהקהילה: כלי וידאו", "דיון עם בקשת המלצות, לא השוואת כלים שנבדקה."], "זכויות ו-ACUM": ["שאלה מהקהילה: זכויות ואקו\"ם", "דיון קהילתי, לא ייעוץ משפטי או מדיניות רשמית."], "מתחילים מאסטרינג": ["ארכיון: מיזם מאסטרינג בקהילה", "הודעה על מיזם ושירות. זמינות, מחירים ותנאים לא אומתו."], "שיווק בלי לאבד את עצמכם": ["דעה: האם יצירה עם Suno היא מוזיקה?", "פוסט דעה ודיון, לא מדריך שיווק."], "חדשות ואותות מ-Suno": ["ארכיון: שיחה עם Suno", "דיווח קהילתי מהזמן שבו נכתב. אינו התחייבות או מדיניות עדכנית."], "ספר הקאברים": ["ארכיון: קאברים והפצה", "טענות משפטיות, מחירים ותנאי הפצה לא אומתו כעת."], "העלאת מוזיקה ל-Spotify": ["ארכיון: הפצה ל-Spotify", "מסלולים, מחירים וזכויות במקור דורשים בדיקה עדכנית."], "מדריך וידאו וליפ-סינק": ["ארכיון: וידאו וליפ-סינק", "רעיונות מהקהילה. זמינות כלים, מחירים ותוצאות לא אומתו."], "תגיות מורחבות": ["קובץ תגיות בתוך הקבוצה", "קישור לפוסט בקבוצה בלבד. תוכן הקובץ לא הועתק לאתר."], "בניית שיר שלב אחר שלב": ["תיאורי קול וכלים לפרומפט", "מאגר רעיונות מתוך ניסויי הקהילה. לא הוראות מוצר רשמיות."]};
+  const duplicateTitles = new Set(['מדריך המאסטר של הקהילה','העברית ב-Suno','הטיפים החמים','ליפ-סינק, עוד שיטות']);
+  const refresh = () => {
+    const grid=document.querySelector('.resource-grid'); if(!grid)return;
+    grid.querySelectorAll('.resource-card').forEach(card=>{
+      const h=card.querySelector('h2,h3');if(!h)return;
+      if(!card.dataset.aimaSourceTitle)card.dataset.aimaSourceTitle=h.textContent.trim();
+      const title=card.dataset.aimaSourceTitle;
+      if(duplicateTitles.has(title)){if(card.style.display!=='none')card.style.display='none';return;}
+      const change=fixes[title];if(change){if(h.textContent!==change[0])h.textContent=change[0];const p=card.querySelector('p');if(p&&p.textContent!==change[1])p.textContent=change[1];}
+    });
+    if(!document.querySelector('.aima-resource-guide-entry')){
+      const entry=document.createElement('a');entry.className='resource-card featured aima-resource-guide-entry';entry.href='../guides.html';
+      entry.innerHTML='<div class="resource-card-top"><span>מדריכים</span><b>AIMA</b></div><h2>איפה מתחילים עם Suno?</h2><p>המסלול הקצר: שיר ראשון, עברית, מבנה ועריכה. המקורות והקרדיטים במקום אחד.</p><div class="resource-card-bottom"><small>חינמי ונגיש</small><strong>למדריכים ←</strong></div>';grid.prepend(entry);
+    }
+  };
+  refresh();new MutationObserver(refresh).observe(document.body,{childList:true,subtree:true});
 })();
