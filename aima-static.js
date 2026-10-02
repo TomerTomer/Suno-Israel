@@ -274,6 +274,13 @@
     card.href = FORM; card.target = '_blank'; card.rel = 'noreferrer';
     card.innerHTML = '<div class="event-date"><span>08</span><small>אוקטובר, חמישי 20:00</small></div><div><b>מפגש</b><h2>AIMA בסלון: ערב האזנה ראשון</h2><p>מפגש קטן ואינטימי בסלון בצפון הישן בתל אביב. מביאים קטע אחד להשמעה ברמקול, בירה, פיצה והיכרות. שריון מקום 30 ₪ בביט. הכתובת נשלחת בפרטי למאושרים.</p></div><strong>להרשמה ↗</strong>';
     grid.insertBefore(card, grid.firstElementChild);
+    if (!grid.querySelector('a[href*="workshop"]')) {
+      const ws = document.createElement('a');
+      ws.className = 'event-card aima-workshop-card';
+      ws.href = '/workshop/';
+      ws.innerHTML = '<div class="event-date"><span>05</span><small>נובמבר, חמישי 20:00</small></div><div><b>סדנה</b><h2>איך היצירות שלנו יכולות להפוך למקור הכנסה נוסף מיוטיוב?</h2><p>סדנה מעשית עם אלעד אביגן, בהנחיית תומר יאיר זמל. מספר המקומות מוגבל.</p></div><strong>לפרטים ↗</strong>';
+      card.insertAdjacentElement('afterend', ws);
+    }
   };
   add();
   new MutationObserver(add).observe(document.body, { childList: true, subtree: true });
