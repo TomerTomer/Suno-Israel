@@ -156,7 +156,23 @@ for (const artist of sourceRows) {
   }
 }
 
-const submittedArtists = order.map((key) => merged.get(key));
+// Manual corrections that must survive the daily sheet sync (match = name as it appears in the sheet).
+const manualCorrections = [
+  {
+    match: "ליאור הלפרין שושני (שירי מחאה)",
+    set: {
+      name: "ליאור הלפרין שושני (ליקוי מאורות)",
+      genres: "מטאל, שירי מחאה",
+      spotify: "https://open.spotify.com/artist/1Vf5QGCpCnewYFA7Dmpamo?si=kzXpbHO5RpG9ZhRoVgol0A&utm_source=copy-link",
+      youtube: "https://youtube.com/channel/UCfCvQgWdW1I1a40c9lWAF4Q?si=3lzpuzoQHZYi72Pc",
+    },
+  },
+];
+const submittedArtists = order.map((key) => {
+  const artist = merged.get(key);
+  const fix = manualCorrections.find((item) => artistKey(item.match) === key);
+  return fix ? { ...artist, ...fix.set } : artist;
+});
 if (!submittedArtists.length) throw new Error("Artist sync returned an empty directory");
 
 let approvedArtists = [];
