@@ -259,3 +259,22 @@
   add();
   new MutationObserver(add).observe(document.body, { childList: true, subtree: true });
 })();
+
+
+// Events page: add the AIMA salon evening (published details only; no address).
+(() => {
+  if (!/\/events(?:\/index\.html)?\/?$/.test(location.pathname)) return;
+  const FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSciZgpocZdq-jw9Z7L1bP71XSBqFF0PP-uTQwUOrAblRncAfQ/viewform';
+  const add = () => {
+    if (document.querySelector('.aima-salon-card')) return;
+    const grid = document.querySelector('.event-grid');
+    if (!grid) return;
+    const card = document.createElement('a');
+    card.className = 'event-card aima-salon-card';
+    card.href = FORM; card.target = '_blank'; card.rel = 'noreferrer';
+    card.innerHTML = '<div class="event-date"><span>08</span><small>אוקטובר, חמישי 20:00</small></div><div><b>מפגש</b><h2>AIMA בסלון: ערב האזנה ראשון</h2><p>מפגש קטן ואינטימי בסלון בצפון הישן בתל אביב. מביאים קטע אחד להשמעה ברמקול, בירה, פיצה והיכרות. שריון מקום 30 ₪ בביט. הכתובת נשלחת בפרטי למאושרים.</p></div><strong>להרשמה ↗</strong>';
+    grid.insertBefore(card, grid.firstElementChild);
+  };
+  add();
+  new MutationObserver(add).observe(document.body, { childList: true, subtree: true });
+})();
