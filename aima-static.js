@@ -228,6 +228,8 @@
     .then((data) => {
       if (!data || !Array.isArray(data.items)) return;
       photos = new Map(data.items.filter((i) => i && typeof i.artistName === 'string' && /^\/api\/public\/artist-images\/artist-[a-f0-9-]+\.webp\?v=\d+$/i.test(i.image || '')).map((i) => [norm(i.artistName), i.image]));
+      const oldLior = photos.get(norm('ליאור הלפרין שושני (שירי מחאה)'));
+      if (oldLior && !photos.has(norm('ליאור הלפרין שושני (ליקוי מאורות)'))) photos.set(norm('ליאור הלפרין שושני (ליקוי מאורות)'), oldLior);
       apply();
     }).catch(() => {});
   load();
@@ -284,4 +286,34 @@
   };
   add();
   new MutationObserver(add).observe(document.body, { childList: true, subtree: true });
+})();
+
+
+
+// Homepage weekly song: show the artist's approved photo (when there is one) instead of initials.
+(() => {
+  if (!(location.pathname === '/' || /\/index\.html$/.test(location.pathname) && location.pathname.split('/').length === 2)) return;
+  const norm = (value) => String(value || '').trim().toLocaleLowerCase('he');
+  let photos = null;
+  const style = document.createElement('style');
+  style.textContent = '.week-record span[data-field="song-initials"].has-photo{display:block;width:100%;height:100%;border-radius:50%;overflow:hidden;font-size:0}.week-record span.has-photo img{width:100%;height:100%;object-fit:cover;display:block}';
+  document.head.append(style);
+  const apply = () => {
+    if (!photos) return;
+    const span = document.querySelector('[data-weekly-song] [data-field="song-initials"]');
+    const artist = norm(document.querySelector('[data-weekly-song] [data-field="song-artist"]')?.textContent);
+    if (!span || !artist) return;
+    let src = photos.get(artist);
+    if (!src) for (const [name, image] of photos) { if (name.startsWith(artist) || artist.startsWith(name)) { src = image; break; } }
+    if (!src || span.querySelector('img')) return;
+    span.classList.add('has-photo');
+    span.innerHTML = `<img src="${src}" alt="" onerror="this.parentNode.classList.remove('has-photo');this.remove()">`;
+  };
+  fetch(`/api/public/artist-images?fresh=${Date.now()}`, { cache: 'no-store', headers: { accept: 'application/json' } })
+    .then((r) => (r.ok ? r.json() : Promise.reject(new Error('photos'))))
+    .then((data) => {
+      photos = new Map((data.items || []).filter((i) => i && typeof i.artistName === 'string' && /^\/api\/public\/artist-images\/artist-[a-f0-9-]+\.webp\?v=\d+$/i.test(i.image || '')).map((i) => [norm(i.artistName), i.image]));
+      apply();
+      [600, 1500, 3500].forEach((ms) => setTimeout(apply, ms));
+    }).catch(() => {});
 })();
