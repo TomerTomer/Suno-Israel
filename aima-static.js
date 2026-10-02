@@ -246,3 +246,27 @@
   let queued = false;
   new MutationObserver(() => { if (queued) return; queued = true; requestAnimationFrame(() => { queued = false; apply(); }); }).observe(document.body, { childList: true, subtree: true });
 })();
+
+
+// Homepage: make artist registration easy to see.
+(() => {
+  if (!(location.pathname === '/' || /\/index\.html$/.test(location.pathname) && location.pathname.split('/').length === 2)) return;
+  const FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSfzCzlnnUf7rre6cR0HmpHOFyJypyrF_117DPCcn8c_nqKLoA/viewform';
+  const css = document.createElement('style');
+  css.textContent = '.aima-join{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;background:#ff3f73;color:#fff;border-radius:22px;padding:26px 30px;margin:20px auto 30px;width:min(1100px,calc(100% - 32px))}.aima-join h2{margin:0 0 6px;font-size:clamp(26px,4vw,38px);line-height:1.15}.aima-join p{margin:0;font-size:17px;line-height:1.5;opacity:.95}.aima-join a{background:#111;color:#d8ff3e;font-weight:900;border-radius:999px;padding:15px 28px;text-decoration:none;white-space:nowrap;font-size:18px}@media(max-width:700px){.aima-join{flex-direction:column;align-items:flex-start;padding:22px}.aima-join a{width:100%;text-align:center;box-sizing:border-box}}';
+  document.head.append(css);
+  const add = () => {
+    if (document.querySelector('.aima-join')) return;
+    const hero = document.querySelector('.hero');
+    if (!hero) return;
+    const box = document.createElement('section');
+    box.className = 'aima-join';
+    box.innerHTML = '<div><h2>רוצים להירשם כאמן? מלאו את הטופס</h2><p>דקה אחת, והפרופיל שלכם מצטרף לספריית האמנים של הקהילה.</p></div>';
+    const link = document.createElement('a');
+    link.href = FORM; link.target = '_blank'; link.rel = 'noreferrer'; link.textContent = 'לטופס ההרשמה ↗';
+    box.append(link);
+    hero.insertAdjacentElement('afterend', box);
+  };
+  add();
+  new MutationObserver(add).observe(document.body, { childList: true, subtree: true });
+})();
