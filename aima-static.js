@@ -313,6 +313,8 @@
     .then((r) => (r.ok ? r.json() : Promise.reject(new Error('photos'))))
     .then((data) => {
       photos = new Map((data.items || []).filter((i) => i && typeof i.artistName === 'string' && /^\/api\/public\/artist-images\/artist-[a-f0-9-]+\.webp\?v=\d+$/i.test(i.image || '')).map((i) => [norm(i.artistName), i.image]));
+      const oldLior = photos.get(norm('ליאור הלפרין שושני (שירי מחאה)'));
+      if (oldLior && !photos.has(norm('ליאור הלפרין שושני (ליקוי מאורות)'))) photos.set(norm('ליאור הלפרין שושני (ליקוי מאורות)'), oldLior);
       apply();
       [600, 1500, 3500].forEach((ms) => setTimeout(apply, ms));
     }).catch(() => {});
