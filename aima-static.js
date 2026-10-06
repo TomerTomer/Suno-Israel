@@ -319,3 +319,22 @@
       [600, 1500, 3500].forEach((ms) => setTimeout(apply, ms));
     }).catch(() => {});
 })();
+// Events: replace the generic challenge placeholder with the competition page.
+(() => {
+  if (!/^\/events(?:\/index\.html)?\/?$/.test(location.pathname)) return;
+  const apply = () => {
+    const grid = document.querySelector('.event-grid');
+    if (!grid || grid.querySelector('.aima-blow-us-away-card')) return;
+    const placeholder = [...grid.querySelectorAll('.event-card')].find(card =>
+      card.querySelector('h2')?.textContent.trim() === 'אתגר היצירה הקהילתי'
+    );
+    if (!placeholder) return;
+    const card = document.createElement('a');
+    card.className = 'event-card aima-blow-us-away-card';
+    card.href = '/blow-us-away/';
+    card.innerHTML = '<div class="event-date"><span>✦</span><small>סיכום התחרות</small></div><div><b>תחרות שהסתיימה</b><h2 dir="ltr">Blow Us Away</h2><p>תחרות מוזיקה בינלאומית עם AI, בהשתתפות יוצרים מהקהילה.</p></div><strong>לעמוד התחרות ←</strong>';
+    placeholder.replaceWith(card);
+  };
+  apply();
+  new MutationObserver(apply).observe(document.body, { childList: true, subtree: true });
+})();
