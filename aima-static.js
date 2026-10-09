@@ -266,22 +266,27 @@
 // Events page: add the AIMA salon evening (published details only; no address).
 (() => {
   if (!/\/events(?:\/index\.html)?\/?$/.test(location.pathname)) return;
-  const FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSciZgpocZdq-jw9Z7L1bP71XSBqFF0PP-uTQwUOrAblRncAfQ/viewform';
   const add = () => {
     if (document.querySelector('.aima-salon-card')) return;
     const grid = document.querySelector('.event-grid');
     if (!grid) return;
-    const card = document.createElement('a');
+    const card = document.createElement('article');
     card.className = 'event-card aima-salon-card';
-    card.href = FORM; card.target = '_blank'; card.rel = 'noreferrer';
-    card.innerHTML = '<div class="event-date"><span>08</span><small>אוקטובר, חמישי 20:00</small></div><div><b>מפגש</b><h2>AIMA בסלון: ערב האזנה ראשון</h2><p>מפגש קטן ואינטימי בסלון בצפון הישן בתל אביב. מביאים קטע אחד להשמעה ברמקול, בירה, פיצה והיכרות. שריון מקום 30 ₪ בביט. הכתובת נשלחת בפרטי למאושרים.</p></div><strong>להרשמה ↗</strong>';
-    grid.insertBefore(card, grid.firstElementChild);
+    card.innerHTML = '<div class="event-date"><span>08</span><small>8.10.2026 · חמישי 20:00</small></div><div><b>האירוע הסתיים</b><h2>AIMA בסלון: ערב האזנה ראשון</h2><p>ערב ההאזנה הראשון של הקהילה התקיים ב-8 באוקטובר. ההרשמה לאירוע סגורה. תודה לכל מי שהגיע.</p></div><strong>ההרשמה סגורה</strong>';
+    let archive = document.querySelector('.aima-events-archive');
+    if (!archive) {
+      archive = document.createElement('section');
+      archive.className = 'aima-events-archive';
+      archive.innerHTML = '<div class="events-head"><div><p class="eyebrow">AIMA ARCHIVE</p><h2>אירועים שהסתיימו</h2></div></div><div class="event-grid"></div>';
+      document.querySelector('.events-empty').before(archive);
+    }
+    archive.querySelector('.event-grid').append(card);
     if (!grid.querySelector('a[href*="workshop"]')) {
       const ws = document.createElement('a');
       ws.className = 'event-card aima-workshop-card';
       ws.href = '/workshop/';
       ws.innerHTML = '<div class="event-date"><span>05</span><small>נובמבר, חמישי 20:00</small></div><div><b>סדנה</b><h2>איך היצירות שלנו יכולות להפוך למקור הכנסה נוסף מיוטיוב?</h2><p>סדנה מעשית עם אלעד אביגן, בהנחיית תומר יאיר זמל. מספר המקומות מוגבל.</p></div><strong>לפרטים ↗</strong>';
-      card.insertAdjacentElement('afterend', ws);
+      grid.prepend(ws);
     }
   };
   add();
