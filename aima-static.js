@@ -372,3 +372,62 @@
   addArchive();
   new MutationObserver(addArchive).observe(document.body, {childList:true, subtree:true});
 })();
+
+// News front-end only. Keep publication and ingestion in the existing pipeline.
+(() => {
+  if (!/^\/news(?:\/index\.html)?\/?$/.test(location.pathname)) return;
+  const style = document.createElement('style');
+  style.textContent = `.aima-news-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0}.aima-news-toolbar button,.aima-news-actions button{font:inherit;font-weight:700;min-height:44px;border:1px solid #24241f;border-radius:99px;padding:10px 18px;background:transparent;color:#24241f;cursor:pointer}.aima-news-toolbar button[aria-pressed=true]{background:#24241f;color:#f4f0e7}.news-list:has(.aima-news-item){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.aima-news-item{background:#eeece2;border:1px solid #dfdcd0;border-radius:22px;padding:24px;min-width:0;scroll-margin-top:100px;transition:background .15s}.aima-news-item:hover{background:#e8ecd9}.aima-news-item:nth-child(4n + 1){border-top:4px solid #ff3f73}.aima-news-item:nth-child(4n + 2){border-top:4px solid #bbd946}.aima-news-item[hidden]{display:none!important}.news-list .aima-news-item>a{display:block;border:0;padding:0;color:inherit;text-decoration:none}.news-list .aima-news-item>a>span,.news-list .aima-news-item>a>b{display:none}.aima-news-item small{font-size:13px!important;font-weight:700;line-height:1.7;display:block}.aima-news-item h3{font-size:25px!important;line-height:1.25!important;margin:16px 0!important;overflow-wrap:anywhere}.aima-news-item p{font-size:17px!important;line-height:1.65!important;white-space:pre-line}.aima-news-item:not(.expanded) p{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}.aima-news-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:20px}.news-list .aima-news-actions a{display:inline-flex;align-items:center;gap:5px;flex:0 0 auto;width:auto;padding:10px 12px;min-height:44px;font-weight:700;color:inherit;border:0;white-space:nowrap}.aima-news-actions button{font-size:14px;padding:9px 13px}.aima-news-share{background:#d8ef8e!important}.aima-news-status{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#24241f;color:white;padding:13px 22px;border-radius:99px;z-index:100;max-width:85vw;font-size:16px}.lead-story{margin-bottom:32px}.news-section-head h2{font-size:clamp(30px,5vw,46px)}@media(max-width:700px){.news-list:has(.aima-news-item){grid-template-columns:1fr}.aima-news-item{padding:22px 18px}.aima-news-item h3{font-size:25px!important}.news-intro-grid{display:none!important}}`;
+  document.head.append(style);
+  let activeFilter = 'all';
+  const hash = value => { let n=2166136261; for(const c of value) n=Math.imul(n^c.charCodeAt(0),16777619); return (n>>>0).toString(36); };
+  let notice;
+  const status = message => {
+    if(!notice){ notice=document.createElement('div');notice.className='aima-news-status';notice.setAttribute('role','status');document.body.append(notice); }
+    notice.textContent=message;notice.hidden=false;clearTimeout(notice.timer);notice.timer=setTimeout(()=>notice.hidden=true,3200);
+  };
+  const copy = async url => {
+    try { await navigator.clipboard.writeText(url); status('הקישור הועתק. אפשר לשלוח לחברים.'); }
+    catch { const input=document.createElement('textarea');input.value=url;input.className='allow-copy';document.body.append(input);input.select();const ok=document.execCommand('copy');input.remove();status(ok?'הקישור הועתק.':'לא הצלחנו להעתיק. אפשר להעתיק את הכתובת משורת הדפדפן.'); }
+  };
+  const apply = () => {
+    const lead=document.querySelector('.lead-story');
+    if(lead && !document.querySelector('[data-lead-share]')){
+      lead.id='news-'+hash(lead.href);
+      const actions=document.createElement('div');actions.className='aima-news-actions';actions.dataset.leadShare='true';
+      const url=new URL('news/index.html',location.origin+'/');url.hash=lead.id;
+      const title=lead.querySelector('h2,h3')?.textContent?.trim() || 'חדשות AIMA';
+      const share=document.createElement('button');share.type='button';share.className='aima-news-share';share.textContent='שיתוף הכתבה ↗';share.onclick=async()=>{if(navigator.share){try{await navigator.share({title,text:title+' | AIMA',url:url.href});return;}catch(e){if(e.name==='AbortError')return;}}await copy(url.href);};
+      const cp=document.createElement('button');cp.type='button';cp.textContent='העתקת קישור';cp.onclick=()=>copy(url.href);actions.append(share,cp);lead.after(actions);
+      if(location.hash==='#'+lead.id)requestAnimationFrame(()=>lead.scrollIntoView());
+    }
+    const lists=[...document.querySelectorAll('.news-list')];
+    for(const list of lists){
+      if(!list.previousElementSibling?.classList.contains('aima-news-toolbar')){
+        const toolbar=document.createElement('div');toolbar.className='aima-news-toolbar';toolbar.setAttribute('aria-label','סינון חדשות');
+        for(const [value,label] of [['all','הכול'],['suno','עדכוני Suno'],['industry','מוזיקה ו־AI']]){
+          const button=document.createElement('button');button.type='button';button.textContent=label;button.dataset.filter=value;button.setAttribute('aria-pressed',String(value===activeFilter));
+          button.onclick=()=>{activeFilter=value;document.querySelectorAll('.aima-news-toolbar button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.filter===value)));document.querySelectorAll('.aima-news-item').forEach(item=>item.hidden=value!=='all'&&item.dataset.category!==value);};toolbar.append(button);
+        }
+        list.before(toolbar);
+      }
+      for(const link of [...list.children].filter(x=>x.matches('a[href]'))){
+        const title=link.querySelector('h3')?.textContent?.trim(); if(!title)continue;
+        const source=link.href;
+        if(!/^https?:/.test(source))continue;
+        const item=document.createElement('article');item.className='aima-news-item';item.id='news-'+hash(source);item.dataset.category=new URL(source).hostname.replace(/^www\./,'')==='suno.com'?'suno':'industry';
+        const shareUrl=new URL('news/index.html',new URL('./',document.currentScript?.src || location.origin+'/aima-static.js'));shareUrl.hash=item.id;
+        link.before(item);item.append(link);link.setAttribute('aria-label',title+' - פתיחת המקור');
+        const actions=document.createElement('div');actions.className='aima-news-actions';
+        const read=document.createElement('a');read.href=source;read.target='_blank';read.rel='noopener noreferrer';read.textContent='למקור ↗';actions.append(read);
+        const more=document.createElement('button');more.type='button';more.textContent='עוד על זה';more.setAttribute('aria-expanded','false');more.onclick=()=>{const expanded=item.classList.toggle('expanded');more.setAttribute('aria-expanded',String(expanded));more.textContent=expanded?'פחות':'עוד על זה';};actions.append(more);
+        const share=document.createElement('button');share.type='button';share.className='aima-news-share';share.textContent='שיתוף ↗';share.setAttribute('aria-label','שיתוף: '+title);
+        share.onclick=async()=>{if(navigator.share){try{await navigator.share({title,text:title+' | AIMA',url:shareUrl.href});return;}catch(e){if(e.name==='AbortError')return;}}await copy(shareUrl.href);};actions.append(share);
+        const copyButton=document.createElement('button');copyButton.type='button';copyButton.textContent='העתקת קישור';copyButton.setAttribute('aria-label','העתקת קישור: '+title);copyButton.onclick=()=>copy(shareUrl.href);actions.append(copyButton);item.append(actions);
+        item.hidden=activeFilter!=='all'&&item.dataset.category!==activeFilter;
+        if(location.hash==='#'+item.id){item.classList.add('expanded');more.setAttribute('aria-expanded','true');more.textContent='פחות';requestAnimationFrame(()=>item.scrollIntoView());}
+      }
+    }
+  };
+  apply();new MutationObserver(apply).observe(document.body,{childList:true,subtree:true});
+})();
