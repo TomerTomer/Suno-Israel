@@ -429,5 +429,16 @@
       }
     }
   };
+  const openSharedItem = () => {
+    const target=document.getElementById(location.hash.slice(1));
+    if(!target)return;
+    if(target.classList.contains('aima-news-item')){
+      target.hidden=false;target.classList.add('expanded');
+      const more=target.querySelector('button[aria-expanded]');
+      if(more){more.setAttribute('aria-expanded','true');more.textContent='פחות';}
+    }
+    if(target.classList.contains('aima-news-item')||target.classList.contains('lead-story'))requestAnimationFrame(()=>target.scrollIntoView());
+  };
+  window.addEventListener('hashchange',openSharedItem);
   apply();new MutationObserver(apply).observe(document.body,{childList:true,subtree:true});
 })();
