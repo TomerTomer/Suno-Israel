@@ -343,3 +343,32 @@
   apply();
   new MutationObserver(apply).observe(document.body, { childList: true, subtree: true });
 })();
+
+// AIMA Artist of the Month archive: a permanent home for monthly winners.
+(() => {
+  const root = new URL('./', document.currentScript.src);
+  const home = location.pathname === '/' || location.pathname === '/index.html';
+  if (!home) return;
+  const addArchive = () => {
+    const host = document.querySelector('.spotlight-section .shell') || document.querySelector('.spotlight-section');
+    if (!host || host.querySelector('[data-aima-month-archive]')) return;
+    const box = document.createElement('div');
+    box.dataset.aimaMonthArchive = 'true';
+    box.className = 'aima-guide-start';
+    const text = document.createElement('div');
+    const heading = document.createElement('h3');
+    heading.textContent = 'אמני החודש. מקום לכל קול.';
+    heading.style.margin = '0 0 8px';
+    const description = document.createElement('p');
+    description.textContent = 'היוצרות והיוצרים שקיבלו את הבמה בקהילה, הסיפורים והיצירות שלהם.';
+    text.append(heading, description);
+    const link = document.createElement('a');
+    link.href = new URL('artist-of-the-month/index.html', root).href;
+    link.className = 'button primary';
+    link.textContent = 'לארכיון אמני החודש ↗';
+    box.append(text, link);
+    host.append(box);
+  };
+  addArchive();
+  new MutationObserver(addArchive).observe(document.body, {childList:true, subtree:true});
+})();
