@@ -482,6 +482,17 @@
       set(lead.querySelector('.pulse-summary'), failed ? FAILED_SUB : '');
       show(meta, false); show(impact, false); show(action, false); show(official, false);
     }
+    const cta = lead.querySelector('.pulse-links a.button.primary');
+    if (cta) {
+      if (!cta.dataset.aimaOrigHref) cta.dataset.aimaOrigHref = cta.getAttribute('href') || '';
+      const label = [...cta.childNodes].find((n) => n.nodeType === 3);
+      if (label && !cta.dataset.aimaOrigLabel) cta.dataset.aimaOrigLabel = label.nodeValue;
+      const wantHref = (!latest && failed) ? '/news/' : cta.dataset.aimaOrigHref;
+      const wantLabel = (!latest && failed) ? 'לכל העדכונים ' : cta.dataset.aimaOrigLabel;
+      if (cta.getAttribute('href') !== wantHref) cta.setAttribute('href', wantHref);
+      if (label && wantLabel != null && label.nodeValue !== wantLabel) label.nodeValue = wantLabel;
+      show(cta, true);
+    }
     document.documentElement.classList.add('aima-pulse-ready');
   };
   const load = (attempt) => {
