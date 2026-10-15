@@ -442,3 +442,49 @@
   window.addEventListener('hashchange',openSharedItem);
   apply();new MutationObserver(apply).observe(document.body,{childList:true,subtree:true});
 })();
+
+
+// Homepage Pulse: the page ships an old fallback item and the app only fetches the latest after load.
+// Fetch early, keep the last good copy, retry on failure, and write the newest item into the Pulse lead.
+(() => {
+  if (!(location.pathname === '/' || /\/index\.html$/.test(location.pathname) && location.pathname.split('/').length === 2)) return;
+  const KEY = 'aima-pulse-lead-v1';
+  let latest = null;
+  try { latest = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+  const fmt = (d) => String(d || '').split('-').reverse().join('.');
+  const set = (el, value) => { if (el && value != null && el.textContent !== value) el.textContent = value; };
+  const apply = () => {
+    if (!latest || !latest.title) return;
+    const lead = document.querySelector('#aima-pulse .pulse-lead');
+    if (!lead) return;
+    set(lead.querySelector('.pulse-meta span'), latest.label || 'AIMA UPDATE');
+    set(lead.querySelector('.pulse-meta time'), fmt(latest.publishedAt));
+    set(lead.querySelector('h3'), latest.title);
+    set(lead.querySelector('.pulse-summary'), latest.summary);
+    [['.pulse-impact', latest.impact], ['.pulse-action', latest.action]].forEach(([sel, val]) => {
+      const box = lead.querySelector(sel);
+      if (!box) return;
+      set(box.querySelector('p'), val || '');
+      const want = val ? '' : 'none';
+      if (box.style.display !== want) box.style.display = want;
+    });
+    const link = lead.querySelector('.pulse-links a[target="_blank"]');
+    if (link && latest.url && link.getAttribute('href') !== latest.url) link.setAttribute('href', latest.url);
+  };
+  const load = (attempt) => {
+    fetch('/api/public/content?type=news&limit=1&fresh=' + Date.now(), { cache: 'no-store', headers: { accept: 'application/json' } })
+      .then((r) => r.ok ? r.json() : Promise.reject(new Error('unavailable')))
+      .then((data) => {
+        const item = data && Array.isArray(data.items) && data.items[0];
+        if (!item || !item.title) throw new Error('empty');
+        latest = item;
+        try { localStorage.setItem(KEY, JSON.stringify(item)); } catch (e) {}
+        apply();
+      })
+      .catch(() => { if (attempt < 4) setTimeout(() => load(attempt + 1), [1500, 4000, 9000, 20000][attempt]); });
+  };
+  load(0);
+  apply();
+  new MutationObserver(apply).observe(document.body, { childList: true, subtree: true });
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') load(0); });
+})();
