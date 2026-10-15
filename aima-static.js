@@ -1,5 +1,10 @@
+// Wait for React to finish hydrating before touching the page; editing server HTML earlier
+// makes React throw hydration error #418 and rebuild the page (resets Pulse to its built-in item).
+(function () {
+  var __aimaScript = { src: document.currentScript && document.currentScript.src };
+  var start = function () {
 (() => {
-  const packageRoot = document.currentScript?.src ? new URL("./", document.currentScript.src) : new URL("./", location.href);
+  const packageRoot = __aimaScript?.src ? new URL("./", __aimaScript.src) : new URL("./", location.href);
   const editable = (target) => target instanceof Element && target.closest("input, textarea, select, [contenteditable='true'], .allow-copy");
   document.addEventListener("copy", (event) => { if (!editable(event.target)) event.preventDefault(); });
   document.addEventListener("contextmenu", (event) => { if (!editable(event.target)) event.preventDefault(); });
@@ -70,7 +75,7 @@
 
 // AIMA guides navigation. Keep the existing site and backend intact.
 (() => {
-  const root = new URL('./', document.currentScript.src);
+  const root = new URL('./', __aimaScript.src);
   const addGuidesLink = () => {
     document.querySelectorAll('nav[aria-label="ניווט ראשי"], nav[aria-label="ניווט מהיר"]').forEach(nav => {
       if (nav.querySelector('[data-aima-guides]')) return;
@@ -92,7 +97,7 @@
 
 // Phase 2: simplify home without replacing hydration, tracking or backend behavior.
 (() => {
-  const root = new URL('./', document.currentScript.src);
+  const root = new URL('./', __aimaScript.src);
   const home = location.pathname === '/' || /\/index\.html$/.test(location.pathname) && location.pathname.split('/').length === 2;
   if (!home) return;
   const style = document.createElement('style');
@@ -346,7 +351,7 @@
 
 // AIMA Artist of the Month archive: a permanent home for monthly winners.
 (() => {
-  const root = new URL('./', document.currentScript.src);
+  const root = new URL('./', __aimaScript.src);
   const home = location.pathname === '/' || location.pathname === '/index.html';
   if (!home) return;
   const addArchive = () => {
@@ -416,7 +421,7 @@
         const source=link.href;
         if(!/^https?:/.test(source))continue;
         const item=document.createElement('article');item.className='aima-news-item';item.id='news-'+hash(source);item.dataset.category=new URL(source).hostname.replace(/^www\./,'')==='suno.com'?'suno':'industry';
-        const shareUrl=new URL('news/index.html',new URL('./',document.currentScript?.src || location.origin+'/aima-static.js'));shareUrl.hash=item.id;
+        const shareUrl=new URL('news/index.html',new URL('./',__aimaScript?.src || location.origin+'/aima-static.js'));shareUrl.hash=item.id;
         link.before(item);item.append(link);link.setAttribute('aria-label',title+' - פתיחת המקור');
         const actions=document.createElement('div');actions.className='aima-news-actions';
         const read=document.createElement('a');read.href=source;read.target='_blank';read.rel='noopener noreferrer';read.textContent='למקור ↗';actions.append(read);
@@ -446,30 +451,38 @@
 
 // Homepage Pulse: the page ships an old fallback item and the app only fetches the latest after load.
 // Fetch early, keep the last good copy, retry on failure, and write the newest item into the Pulse lead.
+// Never show the old built-in item as current: show a loading line, then the item, or an honest failure line.
 (() => {
   if (!(location.pathname === '/' || /\/index\.html$/.test(location.pathname) && location.pathname.split('/').length === 2)) return;
   const KEY = 'aima-pulse-lead-v1';
-  let latest = null;
+  const LOADING = 'טוענים את העדכון האחרון…';
+  const FAILED = 'לא הצלחנו לטעון את העדכון האחרון כרגע.';
+  const FAILED_SUB = 'אפשר לראות את כל העדכונים בעמוד החדשות.';
+  let latest = null, failed = false;
   try { latest = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
   const fmt = (d) => String(d || '').split('-').reverse().join('.');
   const set = (el, value) => { if (el && value != null && el.textContent !== value) el.textContent = value; };
+  const show = (el, on) => { if (!el) return; const want = on ? '' : 'none'; if (el.style.display !== want) el.style.display = want; };
   const apply = () => {
-    if (!latest || !latest.title) return;
     const lead = document.querySelector('#aima-pulse .pulse-lead');
     if (!lead) return;
-    set(lead.querySelector('.pulse-meta span'), latest.label || 'AIMA UPDATE');
-    set(lead.querySelector('.pulse-meta time'), fmt(latest.publishedAt));
-    set(lead.querySelector('h3'), latest.title);
-    set(lead.querySelector('.pulse-summary'), latest.summary);
-    [['.pulse-impact', latest.impact], ['.pulse-action', latest.action]].forEach(([sel, val]) => {
-      const box = lead.querySelector(sel);
-      if (!box) return;
-      set(box.querySelector('p'), val || '');
-      const want = val ? '' : 'none';
-      if (box.style.display !== want) box.style.display = want;
-    });
-    const link = lead.querySelector('.pulse-links a[target="_blank"]');
-    if (link && latest.url && link.getAttribute('href') !== latest.url) link.setAttribute('href', latest.url);
+    const meta = lead.querySelector('.pulse-meta'), impact = lead.querySelector('.pulse-impact'), action = lead.querySelector('.pulse-action');
+    const official = lead.querySelector('.pulse-links a[target="_blank"]');
+    if (latest && latest.title) {
+      set(lead.querySelector('.pulse-meta span'), latest.label || 'AIMA UPDATE');
+      set(lead.querySelector('.pulse-meta time'), fmt(latest.publishedAt));
+      set(lead.querySelector('h3'), latest.title);
+      set(lead.querySelector('.pulse-summary'), latest.summary || '');
+      show(meta, true); show(impact, !!latest.impact); show(action, !!latest.action); show(official, !!latest.url);
+      if (impact) set(impact.querySelector('p'), latest.impact || '');
+      if (action) set(action.querySelector('p'), latest.action || '');
+      if (official && latest.url && official.getAttribute('href') !== latest.url) official.setAttribute('href', latest.url);
+    } else {
+      set(lead.querySelector('h3'), failed ? FAILED : LOADING);
+      set(lead.querySelector('.pulse-summary'), failed ? FAILED_SUB : '');
+      show(meta, false); show(impact, false); show(action, false); show(official, false);
+    }
+    document.documentElement.classList.add('aima-pulse-ready');
   };
   const load = (attempt) => {
     fetch('/api/public/content?type=news&limit=1&fresh=' + Date.now(), { cache: 'no-store', headers: { accept: 'application/json' } })
@@ -477,14 +490,30 @@
       .then((data) => {
         const item = data && Array.isArray(data.items) && data.items[0];
         if (!item || !item.title) throw new Error('empty');
-        latest = item;
+        latest = item; failed = false;
         try { localStorage.setItem(KEY, JSON.stringify(item)); } catch (e) {}
         apply();
       })
-      .catch(() => { if (attempt < 4) setTimeout(() => load(attempt + 1), [1500, 4000, 9000, 20000][attempt]); });
+      .catch(() => {
+        if (attempt < 4) setTimeout(() => load(attempt + 1), [1500, 4000, 9000, 20000][attempt]);
+        if (attempt >= 1 && !latest) { failed = true; apply(); }
+      });
   };
   load(0);
   apply();
   new MutationObserver(apply).observe(document.body, { childList: true, subtree: true });
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') load(0); });
+})();
+  };
+  var needsWait = !!document.getElementById('_R_');
+  var hydrated = function () {
+    var el = document.querySelector('main');
+    if (!el) return false;
+    for (var k in el) { if (k.indexOf('__reactFiber$') === 0 || k.indexOf('__reactProps$') === 0) return true; }
+    return false;
+  };
+  if (!needsWait || hydrated()) { start(); return; }
+  var done = false, t0 = Date.now();
+  var go = function () { if (done) return; done = true; clearInterval(iv); start(); };
+  var iv = setInterval(function () { if (hydrated() || Date.now() - t0 > 6000) go(); }, 40);
 })();
