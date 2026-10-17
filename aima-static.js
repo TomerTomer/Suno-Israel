@@ -528,3 +528,53 @@
   var go = function () { if (done) return; done = true; clearInterval(iv); start(); };
   var iv = setInterval(function () { if (hydrated() || Date.now() - t0 > 6000) go(); }, 40);
 })();
+
+// Homepage pulse feed backstop: the React feed renders its empty state forever when its single fetch fails.
+// If the empty state is still present after the component had time to load, fetch the same API and fill it.
+(() => {
+  if (!(location.pathname === '/' || /\/index\.html$/.test(location.pathname) && location.pathname.split('/').length === 2)) return;
+  const fmt = (d) => {
+    const t = new Date(String(d || '') + 'T12:00:00');
+    if (Number.isNaN(t.getTime())) return '';
+    const p = (n) => String(n).padStart(2, '0');
+    return p(t.getDate()) + '.' + p(t.getMonth() + 1) + '.' + t.getFullYear();
+  };
+  const fill = (items) => {
+    const empty = document.querySelector('.pulse-empty');
+    if (!empty) return;
+    const side = empty.closest('.pulse-side');
+    if (!side) return;
+    const anchor = side.querySelector('.pulse-community-link');
+    items.slice(1, 5).forEach((it, i) => {
+      const a = document.createElement('a');
+      a.href = it.url || '/news/';
+      if (it.url) a.target = '_blank';
+      a.rel = 'noreferrer';
+      const b = document.createElement('b');
+      b.textContent = String(i + 2).padStart(2, '0');
+      const div = document.createElement('div');
+      const small = document.createElement('small');
+      small.textContent = (it.label || 'AIMA UPDATE') + ' · ' + fmt(it.publishedAt);
+      const h4 = document.createElement('h4');
+      h4.textContent = it.title;
+      const p = document.createElement('p');
+      p.textContent = it.summary || '';
+      div.append(small, h4, p);
+      a.append(b, div);
+      side.insertBefore(a, anchor);
+    });
+    empty.remove();
+  };
+  const load = (attempt) => {
+    if (!document.querySelector('.pulse-empty')) return;
+    fetch('/api/public/content?type=news&limit=6&fresh=' + Date.now(), { cache: 'no-store', headers: { accept: 'application/json' } })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error('unavailable'))))
+      .then((data) => {
+        const items = data && Array.isArray(data.items) ? data.items.filter((i) => i && i.title) : [];
+        if (items.length > 1) fill(items);
+      })
+      .catch(() => {});
+    if (attempt < 3) setTimeout(() => load(attempt + 1), [4000, 9000, 16000][attempt]);
+  };
+  setTimeout(() => load(0), 4000);
+})();
