@@ -531,8 +531,11 @@
 
 // Homepage pulse feed backstop: the React feed renders its empty state forever when its single fetch fails.
 // If the empty state is still present after the component had time to load, fetch the same API and fill it.
+// The empty node is hidden, not removed, so a late React re-render never hits a missing child; if React's
+// own items arrive later, the backstop items are removed again.
 (() => {
   if (!(location.pathname === '/' || /\/index\.html$/.test(location.pathname) && location.pathname.split('/').length === 2)) return;
+  const MARK = 'aima-feed-fill';
   const fmt = (d) => {
     const t = new Date(String(d || '') + 'T12:00:00');
     if (Number.isNaN(t.getTime())) return '';
@@ -543,10 +546,11 @@
     const empty = document.querySelector('.pulse-empty');
     if (!empty) return;
     const side = empty.closest('.pulse-side');
-    if (!side) return;
+    if (!side || side.querySelector('a.' + MARK)) return;
     const anchor = side.querySelector('.pulse-community-link');
     items.slice(1, 5).forEach((it, i) => {
       const a = document.createElement('a');
+      a.className = MARK;
       a.href = it.url || '/news/';
       if (it.url) a.target = '_blank';
       a.rel = 'noreferrer';
@@ -563,14 +567,27 @@
       a.append(b, div);
       side.insertBefore(a, anchor);
     });
-    empty.remove();
+    empty.style.display = 'none';
   };
+  const cleanup = () => {
+    document.querySelectorAll('.pulse-side').forEach((side) => {
+      const mine = side.querySelectorAll('a.' + MARK);
+      if (!mine.length) return;
+      const theirs = [...side.querySelectorAll('a:not(.' + MARK + ')')].filter((a) => !a.classList.contains('pulse-community-link'));
+      if (theirs.length) {
+        mine.forEach((a) => a.remove());
+        const e = side.querySelector('.pulse-empty');
+        if (e) e.style.display = '';
+      }
+    });
+  };
+  new MutationObserver(cleanup).observe(document.body, { childList: true, subtree: true });
   const load = (attempt) => {
     if (!document.querySelector('.pulse-empty')) return;
     fetch('/api/public/content?type=news&limit=6&fresh=' + Date.now(), { cache: 'no-store', headers: { accept: 'application/json' } })
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error('unavailable'))))
       .then((data) => {
-        const items = data && Array.isArray(data.items) ? data.items.filter((i) => i && i.title) : [];
+        const items = data && Array.isArray(data.items) ? data.items.filter((x) => x && x.title) : [];
         if (items.length > 1) fill(items);
       })
       .catch(() => {});
