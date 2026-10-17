@@ -70,6 +70,10 @@ footer{border-top:1px solid var(--line);padding:34px 0 40px;color:var(--muted);f
 #cb{position:fixed;inset-inline:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:50;background:#111;color:#fff;border-radius:18px;padding:16px;display:none;gap:12px;flex-wrap:wrap;align-items:center;max-width:620px;margin-inline:auto;font-size:15px}#cb.on{display:flex}#cb p{margin:0;flex:1 1 260px}#cb a{color:var(--lime)}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
 
+.app-strip{display:flex;align-items:center;gap:22px;flex-wrap:wrap;border:2px solid var(--ink);border-radius:var(--r);padding:24px 28px;margin:60px auto 0;background:var(--card)}
+.app-strip .kicker{color:var(--pink);margin:0}
+.app-strip h2{margin:0 0 4px}.app-strip p{margin:0;color:var(--muted);max-width:56ch}
+.app-links{display:flex;gap:10px;margin-inline-start:auto;flex-wrap:wrap}
 /* accessibility dock (same storage key + html classes as the React site) */
 .a11y-dock{position:fixed;inset-inline-end:16px;bottom:16px;z-index:60}
 .a11y-dock>button{font:inherit;font-weight:800;min-height:48px;padding:0 18px;border-radius:999px;border:2px solid var(--ink);background:var(--card);color:var(--ink);cursor:pointer;box-shadow:0 6px 24px #0003}
@@ -142,6 +146,7 @@ html.a11y-contrast header{background:#fff!important}
 <a class="ch" href="https://links.payboxapp.com/W1pcrEOf5Zb" target="_blank" rel="noreferrer"><small>GIVE BACK</small><h3>תמיכה בקהילה</h3><p>עוזרים לנו להמשיך ליצור מפגשים ובמות.</p></a>
 </div>
 </section>
+<section class="shell app-strip"><span class="kicker">AIMA SUPPORTS</span><div><h2>שיר בקליק</h2><p>אפליקציה ישראלית חינמית ליצירת שירים מהטלפון או מהדפדפן, בתמיכת קהילת AIMA. נסו את הבטא ושלחו פידבק.</p></div><div class="app-links"><a class="btn ghost" href="https://play.google.com/store/apps/details?id=il.co.djkingteddy.songmaker" target="_blank" rel="noreferrer">Android ↗</a><a class="btn ghost" href="https://songmaker.djkingteddy.co.il/" target="_blank" rel="noreferrer">iPhone ודפדפן ↗</a></div></section>
 <p class="quote shell">“לא באנו לתת לבינה המלאכותית להחליף אמנים.<br>באנו לתת ליותר אנשים <em>להפוך לאמנים.</em>”</p>
 </main>
 <footer><div class="shell"><div class="fl"><a href="./artists/index.html">אמנים</a><a href="./story/index.html">סיפורים</a><a href="./resources/index.html">משאבים</a><a href="./prompts/index.html">Prompt Lab</a><a href="./news/index.html">חדשות</a><a href="./radio/index.html">רדיו</a><a href="./events/index.html">אירועים</a><a href="./photo-update/index.html">עדכון תמונת אמן</a></div>
@@ -217,7 +222,10 @@ Promise.all([fetch('./content/community-overrides.json',{cache:'no-store'}).then
  var sp=$('#spot'),m=o.monthlyArtist,wk=o.weeklySongs||[];
  if(m&&m.name){var a=el('a','card a');a.href=safe(m.href);a.target='_blank';a.rel='noreferrer';a.append(el('span','tag','ARTIST OF THE MONTH · אמן החודש'),el('h3','',m.name),el('small','',m.genre||''),el('p','',m.description||''),el('strong','','להכיר ולהאזין ↗'));sp.append(a)}
  if(wk.length){var w=wk[Math.floor(Date.now()/604800000)%wk.length],b2=el('a','card b');b2.href=safe(w.href);b2.target='_blank';b2.rel='noreferrer';b2.append(el('span','tag','שיר השבוע · מתחלף כל שבוע'),el('h3','',w.artist),el('p','',w.description||''),el('strong','','להאזנה ↗'));sp.append(b2)}
- var pool=arts.filter(function(x){return x.name&&(x.spotify||x.youtube||x.instagram||x.facebook||x.suno)}).sort(function(){return Math.random()-.5}).slice(0,8),g=$('#artists');
+ var cand=arts.filter(function(x){return x.name&&(x.spotify||x.youtube||x.instagram||x.facebook||x.suno)});
+var withImg=cand.filter(function(x){return imgs[x.name.toLowerCase()]}),noImg=cand.filter(function(x){return !imgs[x.name.toLowerCase()]});
+withImg.sort(function(){return Math.random()-.5});noImg.sort(function(){return Math.random()-.5});
+var pool=withImg.concat(noImg).slice(0,8),g=$('#artists');
  pool.forEach(function(x){var l=el('a','art');l.href=safe(x.spotify||x.youtube||x.suno||x.instagram||x.facebook);l.target='_blank';l.rel='noreferrer';
   var av=el('span','av');var im=imgs[x.name.toLowerCase()];if(im){var i=el('img');i.src=im;i.alt='';i.loading='lazy';av.append(i)}else av.textContent=x.name.replace(/[^\p{L}\s]/gu,'').split(/\s+/).filter(Boolean).slice(0,2).map(function(s){return s[0]}).join('').toUpperCase();
   l.append(av,el('b','',x.name),el('small','',String(x.genres||'').replace(/,\s*$/,'')));g.append(l)})});
