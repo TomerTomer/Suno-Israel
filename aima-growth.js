@@ -24,7 +24,7 @@
     var buildSub = function (source) {
       var s = document.createElement("section");
       s.className = "shell aima-sub"; s.setAttribute("data-aima-sub", "1");
-      s.innerHTML = '<div><span class="aima-eyebrow">AIMA UPDATES</span><h2>לא מפספסים עדכון.</h2><p>מייל קצר עם חדשות Suno, אמנים חדשים ואירועי הקהילה. בלי ספאם, ואפשר להסיר בלחיצה.</p></div>' +
+      s.innerHTML = '<div><span class="aima-eyebrow">AIMA UPDATES</span><h2>לא מפספסים עדכון.</h2><p>מייל קצר עם חדשות Suno, אמנים חדשים ואירועי הקהילה. בלי ספאם, ואפשר לבקש הסרה בכל עת.</p></div>' +
         '<form novalidate><input type="email" required autocomplete="email" dir="ltr" placeholder="המייל שלך" aria-label="כתובת מייל">' +
         '<input class="aima-hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">' +
         '<button type="submit">להרשמה ←</button>' +
