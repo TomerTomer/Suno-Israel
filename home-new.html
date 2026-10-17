@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AIMA | AI Music Artists Israel</title>
+<meta name="description" content="הבית הישראלי ליוצרות וליוצרי מוזיקה עם AI. חדשות Suno בעברית, אמנים, שירים, רדיו וקהילה.">
+<meta property="og:title" content="AIMA | AI Music Artists Israel"><meta property="og:description" content="חדשות Suno בעברית, אמנים, שירים, רדיו וקהילה."><meta property="og:type" content="website"><meta property="og:locale" content="he_IL"><meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="./favicon.svg">
+<style>
+:root{--ink:#111;--paper:#fbfaf5;--lime:#d8ff3e;--pink:#ff3f73;--card:#fff;--line:#e4e1d6;--muted:#5d5b52;--r:22px}
+@media(prefers-color-scheme:dark){:root{--paper:#14140f;--card:#1d1d17;--line:#33332a;--muted:#b3b0a2;--ink:#f6f5ee}}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.65 Assistant,"Segoe UI",system-ui,Arial,sans-serif;padding-bottom:env(safe-area-inset-bottom)}
+a{color:inherit}.shell{width:min(1140px,calc(100% - 32px));margin-inline:auto}
+:focus-visible{outline:3px solid var(--pink);outline-offset:3px;border-radius:8px}
+.skip{position:absolute;inset-inline-start:12px;top:-60px;background:var(--lime);color:#111;padding:10px 16px;border-radius:10px;z-index:99;font-weight:800}.skip:focus{top:10px}
+header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
+.bar{display:flex;align-items:center;gap:14px;min-height:64px}
+.brand{font-weight:900;font-size:24px;letter-spacing:.04em;text-decoration:none;display:flex;align-items:center;gap:8px}
+.eq{display:inline-flex;align-items:flex-end;gap:3px;height:22px}.eq i{width:5px;background:var(--pink);border-radius:3px;animation:eq 1s ease-in-out infinite}.eq i:nth-child(2){animation-delay:.2s;background:var(--lime)}.eq i:nth-child(3){animation-delay:.4s}.eq i:nth-child(4){animation-delay:.6s;background:var(--lime)}
+@keyframes eq{0%,100%{height:30%}50%{height:100%}}
+nav{display:flex;gap:6px;margin-inline-start:auto;overflow-x:auto;scrollbar-width:none}nav::-webkit-scrollbar{display:none}
+nav a{white-space:nowrap;text-decoration:none;padding:8px 14px;border-radius:999px;font-weight:700;font-size:15px}nav a:hover{background:var(--line)}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 24px;border-radius:999px;border:2px solid var(--ink);background:var(--lime);color:#111;font:inherit;font-weight:900;text-decoration:none;cursor:pointer}
+.btn.dark{background:var(--ink);color:var(--paper)}.btn.ghost{background:transparent;color:var(--ink)}.join{display:none}
+@media(min-width:900px){.join{display:inline-flex;min-height:42px}}
+.hero{padding:clamp(36px,7vw,90px) 0 30px;position:relative}
+.kicker{font-weight:800;letter-spacing:.14em;font-size:13px;color:var(--pink);margin:0 0 10px}
+h1{font-size:clamp(46px,10vw,112px);line-height:.98;margin:0 0 20px;font-weight:900;letter-spacing:-.02em}
+h1 em{font-style:normal;background:var(--lime);color:#111;padding:0 .12em;border-radius:.18em;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.lede{font-size:clamp(18px,2.4vw,23px);max-width:680px;color:var(--muted);margin:0 0 26px}
+.cta{display:flex;gap:12px;flex-wrap:wrap}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}.stats span{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 16px;font-weight:700;font-size:15px}.stats b{color:var(--pink)}
+.ticker{overflow:hidden;background:var(--ink);color:var(--paper);padding:12px 0;margin:30px 0;white-space:nowrap;font-weight:900;letter-spacing:.12em}
+.ticker div{display:inline-block;animation:tick 28s linear infinite}@keyframes tick{to{transform:translateX(50%)}}
+section.block{padding:clamp(34px,6vw,70px) 0}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:26px}
+h2{font-size:clamp(32px,5.5vw,58px);line-height:1.05;margin:0;font-weight:900}h2 em{font-style:normal;color:var(--pink)}
+.head p{margin:0;max-width:430px;color:var(--muted)}
+.feed{display:grid;gap:16px;grid-template-columns:1fr}
+@media(min-width:860px){.feed{grid-template-columns:1.4fr 1fr 1fr}.feed .lead{grid-row:span 2}}
+.news{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px;display:flex;flex-direction:column;gap:10px}
+.news.lead{background:var(--ink);color:#f6f5ee;border-color:var(--ink)}.news.lead h3{font-size:clamp(26px,3.4vw,40px);color:var(--lime)}
+.meta{display:flex;gap:10px;align-items:center;font-size:13px;font-weight:800;letter-spacing:.08em}.meta span{background:var(--pink);color:#fff;padding:2px 10px;border-radius:999px}.meta time{opacity:.75}
+.news h3{margin:0;font-size:21px;line-height:1.25}.news p{margin:0;opacity:.9}
+details{border-top:1px dashed currentColor;padding-top:10px}summary{cursor:pointer;font-weight:800}details p{margin-top:8px}details b{color:var(--pink)}.lead details b{color:var(--lime)}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:6px}
+.acts a,.acts button{font:inherit;font-weight:700;font-size:14px;min-height:42px;padding:0 16px;border-radius:999px;border:1px solid currentColor;background:transparent;color:inherit;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
+.skel{min-height:150px;border-radius:var(--r);background:linear-gradient(90deg,var(--line),var(--card),var(--line));background-size:200% 100%;animation:sk 1.4s infinite}@keyframes sk{to{background-position:-200% 0}}
+.empty{padding:26px;border:2px dashed var(--line);border-radius:var(--r);text-align:center;color:var(--muted)}
+.sub{background:var(--ink);color:#f6f5ee;border-radius:28px;padding:clamp(24px,5vw,48px);display:grid;gap:24px;grid-template-columns:1fr}
+@media(min-width:860px){.sub{grid-template-columns:1fr 1fr;align-items:center}}
+.sub h2{color:var(--lime)}.sub form{display:grid;gap:10px;grid-template-columns:1fr auto}@media(max-width:560px){.sub form{grid-template-columns:1fr}}
+.sub input[type=email]{font:inherit;min-height:52px;border-radius:999px;border:0;padding:0 22px;min-width:0;color:#111;background:#fff}
+.sub .btn{border-color:var(--lime)}.cons{grid-column:1/-1;display:flex;gap:10px;font-size:14px;opacity:.92}.cons input{width:20px;height:20px;flex:none;margin-top:3px}.cons a{color:var(--lime)}
+.msg{grid-column:1/-1;margin:0;min-height:1.5em;font-weight:800}.hp{position:absolute;left:-9999px}
+.spot{display:grid;gap:16px;grid-template-columns:1fr}@media(min-width:760px){.spot{grid-template-columns:1fr 1fr}}
+.card{border-radius:var(--r);padding:26px;display:flex;flex-direction:column;gap:10px;min-height:260px;text-decoration:none;border:2px solid var(--ink)}
+.card.a{background:var(--pink);color:#fff}.card.b{background:var(--lime);color:#111}
+.card .tag{font-weight:800;letter-spacing:.12em;font-size:13px}.card h3{font-size:clamp(28px,4vw,44px);line-height:1.05;margin:0}.card p{margin:0}.card strong{margin-top:auto}
+.av{width:64px;height:64px;border-radius:50%;background:#111;color:var(--lime);display:grid;place-items:center;font-weight:900;font-size:22px;overflow:hidden;flex:none}.av img{width:100%;height:100%;object-fit:cover}
+.artists{display:grid;gap:12px;grid-template-columns:repeat(2,1fr)}@media(min-width:760px){.artists{grid-template-columns:repeat(4,1fr)}}
+.art{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:10px;text-decoration:none;transition:transform .2s}.art:hover{transform:translateY(-4px)}.art b{line-height:1.2}.art small{color:var(--muted)}
+.chan{display:grid;gap:12px;grid-template-columns:1fr}@media(min-width:640px){.chan{grid-template-columns:1fr 1fr}}@media(min-width:960px){.chan{grid-template-columns:repeat(3,1fr)}}
+.ch{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px;text-decoration:none;display:flex;flex-direction:column;gap:6px;transition:transform .2s,border-color .2s}.ch:hover{transform:translateY(-4px);border-color:var(--pink)}
+.ch small{color:var(--pink);font-weight:800;letter-spacing:.1em}.ch h3{margin:0;font-size:24px}.ch p{margin:0;color:var(--muted)}
+.quote{font-size:clamp(28px,5vw,56px);font-weight:900;line-height:1.15;text-align:center;padding:50px 0}.quote em{font-style:normal;color:var(--pink)}
+footer{border-top:1px solid var(--line);padding:34px 0 40px;color:var(--muted);font-size:15px}.fl{display:flex;flex-wrap:wrap;gap:8px 22px;margin-bottom:12px}
+#cb{position:fixed;inset-inline:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:50;background:#111;color:#fff;border-radius:18px;padding:16px;display:none;gap:12px;flex-wrap:wrap;align-items:center;max-width:620px;margin-inline:auto;font-size:15px}#cb.on{display:flex}#cb p{margin:0;flex:1 1 260px}#cb a{color:var(--lime)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+
+/* accessibility dock (same storage key + html classes as the React site) */
+.a11y-dock{position:fixed;inset-inline-end:16px;bottom:16px;z-index:60}
+.a11y-dock>button{font:inherit;font-weight:800;min-height:48px;padding:0 18px;border-radius:999px;border:2px solid var(--ink);background:var(--card);color:var(--ink);cursor:pointer;box-shadow:0 6px 24px #0003}
+.a11y-panel{position:fixed;inset-inline-end:16px;bottom:76px;z-index:61;width:min(320px,calc(100vw - 32px));background:var(--card);color:var(--ink);border:2px solid var(--ink);border-radius:18px;padding:18px;box-shadow:0 10px 40px #0004}
+.a11y-panel h2{margin:0 0 4px;font-size:20px}.a11y-panel small{color:var(--muted);letter-spacing:.12em;font-weight:800}
+.a11y-opts{display:grid;gap:8px;margin:14px 0}
+.a11y-opts button{font:inherit;font-weight:700;text-align:start;min-height:46px;border:2px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);cursor:pointer;padding:0 14px}
+.a11y-opts button[aria-pressed="true"]{border-color:var(--ink);background:var(--lime);color:#111}
+.a11y-reset{font:inherit;background:none;border:none;color:var(--muted);text-decoration:underline;cursor:pointer}
+.a11y-state{display:inline-block;margin-inline-start:10px;font-weight:700;text-decoration:none;border-bottom:2px solid var(--pink)}
+.a11y-close{position:absolute;top:10px;inset-inline-end:12px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--ink)}
+html.a11y-large body{font-size:20px}
+html.a11y-large main p,html.a11y-large main li,html.a11y-large main a:not(.brand){font-size:max(1.08em,18px);line-height:1.85}
+html.a11y-links a{text-decoration:underline!important;text-underline-offset:4px}
+html.a11y-motion *,html.a11y-motion *:before,html.a11y-motion *:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
+html.a11y-contrast{--paper:#fff;--card:#fff;--ink:#000;--line:#000;--muted:#222;--pink:#9b0037;--lime:#fff200}
+html.a11y-contrast body,html.a11y-contrast footer,html.a11y-contrast .ch,html.a11y-contrast .card,html.a11y-contrast .news,html.a11y-contrast .art{background:#fff!important;color:#000!important}
+html.a11y-contrast .sub,html.a11y-contrast .sub h2,html.a11y-contrast .sub p{background:#000!important;color:#fff!important}
+html.a11y-contrast header{background:#fff!important}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">דלג לתוכן המרכזי</a>
+<header><div class="shell bar">
+<a class="brand" href="./index.html" aria-label="AIMA, דף הבית"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>AIMA</a>
+<nav aria-label="ניווט ראשי"><a href="#pulse">חדשות Suno</a><a href="./artists/index.html">אמנים</a><a href="./resources/index.html">משאבים</a><a href="./prompts/index.html">Prompt Lab</a><a href="./radio/index.html">רדיו</a><a href="./events/index.html">אירועים</a></nav>
+<a class="btn join" href="https://www.facebook.com/groups/1601365750504814" target="_blank" rel="noreferrer">הצטרפות ↗</a>
+</div></header>
+<main id="main">
+<section class="shell hero">
+<p class="kicker">AI MUSIC ARTISTS ISRAEL</p>
+<h1>מוזיקה חדשה<br><em>מקבלת קול.</em></h1>
+<p class="lede">הבית הישראלי ליוצרות וליוצרי מוזיקה עם AI. כל מה שזז ב-Suno בעברית פשוטה, אמנים להכיר, שירים להאזין, וקהילה שמבינה למה עשית עוד 34 גרסאות לפזמון.</p>
+<div class="cta"><a class="btn" href="#pulse">מה חדש ב-Suno ↓</a><a class="btn ghost" href="./artists/index.html">לגלות אמנים ←</a></div>
+<div class="stats"><span><b id="nArt">91</b> אמנים בקהילה</span><span>עדכון יומי מ-Suno</span><span>רדיו ZIK בשידור חי</span></div>
+</section>
+<div class="ticker" aria-hidden="true"><div>CREATE ✦ CONNECT ✦ RELEASE ✦ LEARN ✦ CREATE ✦ CONNECT ✦ RELEASE ✦ LEARN ✦ CREATE ✦ CONNECT ✦ RELEASE ✦ LEARN ✦ CREATE ✦ CONNECT ✦ RELEASE ✦ LEARN ✦</div></div>
+
+<section class="block shell" id="pulse">
+<div class="head"><div><p class="kicker">AIMA PULSE · מתעדכן כל יום</p><h2>מה השתנה.<br><em>למה זה משנה.</em></h2></div><p>עדכוני Suno ועולם מוזיקת ה-AI, בעברית אנושית: מה קרה, מה זה אומר ליוצרים, ומה כדאי לנסות עכשיו.</p></div>
+<div class="feed" id="feed" aria-live="polite"><div class="skel lead"></div><div class="skel"></div><div class="skel"></div></div>
+<p style="margin-top:18px"><a class="btn ghost" href="./news/index.html">לכל החדשות והעדכונים ←</a></p>
+</section>
+
+<section class="block shell"><div class="sub">
+<div><p class="kicker" style="color:var(--pink)">AIMA UPDATES</p><h2>לא מפספסים עדכון.</h2><p>מייל קצר עם חדשות Suno, אמנים חדשים ואירועי הקהילה. בלי ספאם, ואפשר להסיר בלחיצה.</p></div>
+<form id="sf" novalidate><input type="email" required autocomplete="email" dir="ltr" placeholder="המייל שלך" aria-label="כתובת מייל"><input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"><button class="btn" type="submit">להרשמה ←</button>
+<label class="cons"><input type="checkbox"><span>אני מאשר/ת קבלת עדכונים במייל מ-AIMA. המייל ישמש רק לשליחת עדכונים ואפשר להסיר אותו בכל עת. <a href="./privacy/index.html">פרטיות ועוגיות</a></span></label>
+<p class="msg" role="status" aria-live="polite"></p></form>
+</div></section>
+
+<section class="block shell">
+<div class="head"><div><p class="kicker">AIMA SPOTLIGHT</p><h2>הפנים והסאונד<br><em>של הרגע.</em></h2></div></div>
+<div class="spot" id="spot"></div>
+</section>
+
+<section class="block shell">
+<div class="head"><div><p class="kicker">COMMUNITY TALENT</p><h2>הסאונד של <em>הקהילה.</em></h2></div><a class="btn ghost" href="./artists/index.html">לכל האמנים ←</a></div>
+<div class="artists" id="artists"></div>
+</section>
+
+<section class="block shell">
+<div class="head"><div><p class="kicker">START HERE</p><h2>כל מה שצריך.<br><em>במקום אחד.</em></h2></div></div>
+<div class="chan">
+<a class="ch" href="https://chat.whatsapp.com/JJeIaA8gHd50Mmeftvm1Ac" target="_blank" rel="noreferrer"><small>מדברים מוזיקה</small><h3>קהילת WhatsApp</h3><p>שאלות, שיתופי פעולה ואנשים שמבינים אותך.</p></a>
+<a class="ch" href="https://www.facebook.com/groups/1601365750504814" target="_blank" rel="noreferrer"><small>הבית שלנו</small><h3>קבוצת הפייסבוק</h3><p>יצירות, ביקורת בונה וכל מה שקורה עכשיו.</p></a>
+<a class="ch" href="./resources/index.html"><small>ארגז הכלים</small><h3>ספריית המשאבים</h3><p>מדריכים, כלים ושירותים במקום אחד.</p></a>
+<a class="ch" href="https://zikairadio.com/" target="_blank" rel="noreferrer"><small>LIVE NOW</small><h3>רדיו ZIK</h3><p>הרדיו הדיגיטלי של הקהילה.</p></a>
+<a class="ch" href="./story/index.html"><small>סיפורים מהקהילה</small><h3>האנשים שמאחורי הצלילים</h3><p>מסע אישי בין אמני Suno בישראל.</p></a>
+<a class="ch" href="https://links.payboxapp.com/W1pcrEOf5Zb" target="_blank" rel="noreferrer"><small>GIVE BACK</small><h3>תמיכה בקהילה</h3><p>עוזרים לנו להמשיך ליצור מפגשים ובמות.</p></a>
+</div>
+</section>
+<p class="quote shell">“לא באנו לתת לבינה המלאכותית להחליף אמנים.<br>באנו לתת ליותר אנשים <em>להפוך לאמנים.</em>”</p>
+</main>
+<footer><div class="shell"><div class="fl"><a href="./artists/index.html">אמנים</a><a href="./story/index.html">סיפורים</a><a href="./resources/index.html">משאבים</a><a href="./prompts/index.html">Prompt Lab</a><a href="./news/index.html">חדשות</a><a href="./radio/index.html">רדיו</a><a href="./events/index.html">אירועים</a><a href="./photo-update/index.html">עדכון תמונת אמן</a></div>
+<div class="fl"><span>© 2026 AIMA · נבנה באהבה לקהילת המוזיקה החדשה בישראל</span><a href="./privacy/index.html">פרטיות ועוגיות</a><a href="./accessibility/index.html">נגישות</a><a href="#" id="pref">העדפות פרטיות</a></div></div></footer>
+<div id="cb" role="dialog" aria-label="העדפות פרטיות"><p>אפשר להפעיל סטטיסטיקה אנונימית כדי שנבין מה שווה לשפר באתר. בלי הסכמה לא נטען שום כלי מעקב. <a href="./privacy/index.html">פרטים</a></p><button class="btn" id="yes">מאשר/ת</button><button class="btn ghost" id="no" style="color:#fff;border-color:#fff">לא, תודה</button></div>
+<script src="./tracking-config.js"></script>
+<script>
+(function(){
+var $=function(s){return document.querySelector(s)};
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+function safe(u){return /^https?:\/\//i.test(u||'')?u:'#'}
+function copy(t){return navigator.clipboard?navigator.clipboard.writeText(t):Promise.resolve()}
+/* consent + analytics (same storage key as the rest of the site) */
+var KEY='aima-cookie-consent-v1';
+function loadGA(){var id=(window.AIMA_TRACKING_CONFIG||{}).gaMeasurementId;if(!/^G-[A-Z0-9]+$/i.test(id||'')||document.querySelector('script[data-aima-ga]'))return;
+var s=document.createElement('script');s.async=true;s.dataset.aimaGa=id;s.src='https://www.googletagmanager.com/gtag/js?id='+id;document.head.append(s);
+window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag('js',new Date());gtag('config',id,{anonymize_ip:true})}
+function consent(){try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){return null}}
+function setConsent(a){try{localStorage.setItem(KEY,JSON.stringify({analytics:a,marketing:false,version:1,decidedAt:new Date().toISOString()}))}catch(e){}$('#cb').classList.remove('on');if(a)loadGA()}
+var c=consent();if(!c)$('#cb').classList.add('on');else if(c.analytics===true)loadGA();
+$('#yes').onclick=function(){setConsent(true)};$('#no').onclick=function(){setConsent(false)};
+$('#pref').onclick=function(e){e.preventDefault();$('#cb').classList.add('on')};
+
+/* accessibility menu (same key and html classes as the React site) */
+var AKEY='aima-accessibility-v1',ADEF={largeText:false,contrast:false,links:false,motion:false};
+function aGet(){try{return Object.assign({},ADEF,JSON.parse(localStorage.getItem(AKEY)||'null'))}catch(e){return Object.assign({},ADEF)}}
+function aApply(st){var h=document.documentElement;h.classList.toggle('a11y-large',st.largeText);h.classList.toggle('a11y-contrast',st.contrast);h.classList.toggle('a11y-links',st.links);h.classList.toggle('a11y-motion',st.motion)}
+var aState=aGet();aApply(aState);
+var dock=el('div','a11y-dock');var dbtn=el('button');dbtn.type='button';dbtn.setAttribute('aria-expanded','false');dbtn.setAttribute('aria-controls','aima-accessibility-panel');dbtn.innerHTML='<span aria-hidden="true">\u267f</span> \u05e0\u05d2\u05d9\u05e9\u05d5\u05ea';dock.append(dbtn);
+var panel=el('section','a11y-panel');panel.id='aima-accessibility-panel';panel.setAttribute('aria-label','\u05d0\u05e4\u05e9\u05e8\u05d5\u05d9\u05d5\u05ea \u05e0\u05d2\u05d9\05e9\u05d5\u05ea'.replace('\u05d9\05','\u05d9\u05e9'));
+panel.style.display='none';
+panel.innerHTML='<button class="a11y-close" type="button" aria-label="\u05e1\u05d2\u05d9\u05e8\u05ea \u05ea\u05e4\u05e8\u05d9\u05d8 \u05e0\u05d2\u05d9\u05e9\u05d5\u05ea">\u00d7</button><small>AIMA ACCESS</small><h2>\u05d4\u05ea\u05d0\u05d9\u05de\u05d5 \u05d0\u05ea \u05d4\u05d0\u05ea\u05e8 \u05d0\u05dc\u05d9\u05db\u05dd</h2>';
+var opts=el('div','a11y-opts');
+[['largeText','A+ \u05d8\u05e7\u05e1\u05d8 \u05de\u05d5\u05d2\u05d3\u05dc'],['contrast','\u25d0 \u05e0\u05d9\u05d2\u05d5\u05d3\u05d9\u05d5\u05ea \u05d2\u05d1\u05d5\u05d4\u05d4'],['links','_ \u05d4\u05d3\u05d2\u05e9\u05ea \u05e7\u05d9\u05e9\u05d5\u05e8\u05d9\u05dd'],['motion','\u2161 \u05e2\u05e6\u05d9\u05e8\u05ea \u05d0\u05e0\u05d9\u05de\u05e6\u05d9\u05d5\u05ea']].forEach(function(p){
+ var b=el('button','',p[1]);b.type='button';b.setAttribute('aria-pressed',aState[p[0]]?'true':'false');
+ b.onclick=function(){aState[p[0]]=!aState[p[0]];b.setAttribute('aria-pressed',aState[p[0]]?'true':'false');aApply(aState);try{localStorage.setItem(AKEY,JSON.stringify(aState))}catch(e){}};
+ opts.append(b)});
+var rst=el('button','a11y-reset','\u05d0\u05d9\u05e4\u05d5\u05e1 \u05d4\u05ea\u05d0\u05de\u05d5\u05ea');rst.type='button';rst.onclick=function(){aState=Object.assign({},ADEF);aApply(aState);try{localStorage.removeItem(AKEY)}catch(e){};panel.querySelectorAll('.a11y-opts button').forEach(function(b){b.setAttribute('aria-pressed','false')})};
+var stl=el('a','a11y-state','\u05dc\u05d4\u05e6\u05d4\u05e8\u05ea \u05d4\u05e0\u05d2\u05d9\u05e9\u05d5\u05ea \u2190');stl.href='./accessibility/index.html';
+panel.append(opts,rst,stl);
+panel.querySelector('.a11y-close').onclick=function(){panel.style.display='none';dbtn.setAttribute('aria-expanded','false')};
+dbtn.onclick=function(){var open=panel.style.display!=='none';panel.style.display=open?'none':'block';dbtn.setAttribute('aria-expanded',open?'false':'true')};
+document.body.append(dock,panel);
+
+/* Pulse feed */
+function fmt(d){var p=String(d||'').split('-');return p.length===3?p[2]+'.'+p[1]+'.'+p[0]:''}
+function card(it,lead){
+ var a=el('article','news'+(lead?' lead':''));var m=el('div','meta');m.append(el('span','',it.label||'AIMA UPDATE'),el('time','',fmt(it.publishedAt)));
+ a.append(m,el('h3','',it.title));if(it.summary)a.append(el('p','',it.summary));
+ if(it.impact||it.action){var d=el('details');d.append(el('summary','','אז מה זה אומר לי?'));if(it.impact)d.append(el('p','',it.impact));if(it.action){var p=el('p');p.append(el('b','','נסו עכשיו: '),document.createTextNode(it.action));d.append(p)}a.append(d)}
+ var u=new URL('./news/index.html',location.href);u.hash=it.id;var acts=el('div','acts');
+ var sh=el('button','','שיתוף ↗');sh.type='button';sh.onclick=function(){if(navigator.share){navigator.share({title:it.title,text:it.title+' | AIMA',url:u.href}).catch(function(){})}else{copy(u.href);sh.textContent='הקישור הועתק ✓'}};
+ var wa=el('a','','וואטסאפ');wa.href='https://wa.me/?text='+encodeURIComponent(it.title+' | AIMA\n'+u.href);wa.target='_blank';wa.rel='noopener';acts.append(sh,wa);
+ if(it.url){var s=el('a','','למקור ↗');s.href=safe(it.url);s.target='_blank';s.rel='noreferrer';acts.append(s)}
+ a.append(acts);return a}
+fetch('/api/public/content?type=news&limit=5',{headers:{accept:'application/json'}}).then(function(r){return r.ok?r.json():Promise.reject()}).then(function(d){
+ var f=$('#feed');f.textContent='';var items=(d.items||[]).filter(function(i){return i&&i.title});if(!items.length)throw 0;
+ items.forEach(function(it,i){f.append(card(it,i===0))})}).catch(function(){var f=$('#feed');f.textContent='';var e=el('div','empty','העדכון הבא כבר בדרך. בינתיים אפשר לראות את כל הארכיון בעמוד החדשות.');f.append(e)});
+/* subscribe */
+var f=$('#sf'),msg=f.querySelector('.msg'),b=f.querySelector('button');
+f.addEventListener('submit',function(e){e.preventDefault();var em=f.querySelector('input[type=email]').value.trim();
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){msg.textContent='כתובת המייל לא נראית תקינה.';return}
+ if(!f.querySelector('input[type=checkbox]').checked){msg.textContent='צריך לאשר קבלת עדכונים כדי להירשם.';return}
+ b.disabled=true;msg.textContent='שולחים…';
+ fetch('/api/public/subscribe',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email:em,consent:true,source:'home',website:f.querySelector('.hp').value})})
+ .then(function(r){return r.json().catch(function(){return{}}).then(function(j){return{ok:r.ok,j:j}})}).then(function(x){if(x.ok){msg.textContent='נרשמתם. תודה שהצטרפתם!';f.reset()}else{msg.textContent=x.j.message||'משהו השתבש, נסו שוב בעוד רגע.';b.disabled=false}}).catch(function(){msg.textContent='אין חיבור כרגע, נסו שוב.';b.disabled=false})});
+/* spotlight + artists */
+Promise.all([fetch('./content/community-overrides.json',{cache:'no-store'}).then(function(r){return r.json()}).catch(function(){return{}}),
+ fetch('./content/artists.json').then(function(r){return r.json()}).catch(function(){return[]}),
+ fetch('/api/public/artist-images').then(function(r){return r.json()}).catch(function(){return{items:[]}})]).then(function(r){
+ var o=r[0],arts=Array.isArray(r[1])?r[1]:[],imgs={};((r[2]||{}).items||[]).forEach(function(i){imgs[String(i.artistName).toLowerCase()]=i.image});
+ if(arts.length)$('#nArt').textContent=arts.length;
+ var sp=$('#spot'),m=o.monthlyArtist,wk=o.weeklySongs||[];
+ if(m&&m.name){var a=el('a','card a');a.href=safe(m.href);a.target='_blank';a.rel='noreferrer';a.append(el('span','tag','ARTIST OF THE MONTH · אמן החודש'),el('h3','',m.name),el('small','',m.genre||''),el('p','',m.description||''),el('strong','','להכיר ולהאזין ↗'));sp.append(a)}
+ if(wk.length){var w=wk[Math.floor(Date.now()/604800000)%wk.length],b2=el('a','card b');b2.href=safe(w.href);b2.target='_blank';b2.rel='noreferrer';b2.append(el('span','tag','שיר השבוע · מתחלף כל שבוע'),el('h3','',w.artist),el('p','',w.description||''),el('strong','','להאזנה ↗'));sp.append(b2)}
+ var pool=arts.filter(function(x){return x.name&&(x.spotify||x.youtube||x.instagram||x.facebook||x.suno)}).sort(function(){return Math.random()-.5}).slice(0,8),g=$('#artists');
+ pool.forEach(function(x){var l=el('a','art');l.href=safe(x.spotify||x.youtube||x.suno||x.instagram||x.facebook);l.target='_blank';l.rel='noreferrer';
+  var av=el('span','av');var im=imgs[x.name.toLowerCase()];if(im){var i=el('img');i.src=im;i.alt='';i.loading='lazy';av.append(i)}else av.textContent=x.name.replace(/[^\p{L}\s]/gu,'').split(/\s+/).filter(Boolean).slice(0,2).map(function(s){return s[0]}).join('').toUpperCase();
+  l.append(av,el('b','',x.name),el('small','',String(x.genres||'').replace(/,\s*$/,'')));g.append(l)})});
+})();
+</script>
+</body>
+</html>
