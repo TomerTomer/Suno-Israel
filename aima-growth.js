@@ -10,7 +10,7 @@
       ".aima-sub form{display:grid;grid-template-columns:1fr auto;gap:10px}.aima-sub input[type=email]{font:inherit;min-height:50px;border-radius:999px;border:2px solid #d8ff3e;padding:0 20px;background:#fff;color:#111;min-width:0}" +
       ".aima-sub button{font:inherit;font-weight:800;min-height:50px;border:0;border-radius:999px;padding:0 26px;background:#d8ff3e;color:#111;cursor:pointer}.aima-sub button:disabled{opacity:.6}" +
       ".aima-consent{grid-column:1/-1;display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.5;opacity:.92}.aima-consent input{margin-top:3px;width:18px;height:18px;flex:none}.aima-consent a{color:#d8ff3e}" +
-      ".aima-msg{grid-column:1/-1;min-height:1.4em;font-weight:700}.aima-hp{position:absolute!important;left:-9999px!important;width:1px;height:1px;opacity:0}" +
+      ".aima-msg{grid-column:1/-1;min-height:1.4em;font-weight:700}.aima-hp{position:absolute!important;width:1px;height:1px;opacity:0;overflow:hidden;clip:rect(0 0 0 0)}" +
       ".aima-pulse-share{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.aima-pulse-share button{font:inherit;font-weight:700;min-height:44px;border:1px solid #24241f;background:#fff;color:#111;border-radius:999px;padding:0 18px;cursor:pointer}" +
       "@media(max-width:760px){.aima-sub{grid-template-columns:1fr;padding:24px}.aima-sub form{grid-template-columns:1fr}}";
     document.head.append(css);
