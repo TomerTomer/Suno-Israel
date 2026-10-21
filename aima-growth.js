@@ -90,7 +90,13 @@
     return false;
   };
   if (!needsWait || hydrated()) { start(); return; }
+  // Never touch the server HTML before React finishes hydrating: on slow phones the app
+  // bundle can need well over 6s, and early edits make React throw hydration error 418 and
+  // rebuild the whole page, which throws the reader's scroll back to the top. Wait for
+  // hydration without a short deadline; the 60s fallback only covers browsers where the
+  // bundle never loads at all (no React there, so no rebuild risk).
   var done = false, t0 = Date.now();
   var go = function () { if (done) return; done = true; clearInterval(iv); start(); };
-  var iv = setInterval(function () { if (hydrated() || Date.now() - t0 > 6000) go(); }, 40);
+  var iv = setInterval(function () { if (hydrated() || Date.now() - t0 > 60000) go(); }, 40);
 })();
+
