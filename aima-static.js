@@ -524,9 +524,14 @@
     return false;
   };
   if (!needsWait || hydrated()) { start(); return; }
+  // Never touch the server HTML before React finishes hydrating: on slow phones the app
+  // bundle can need well over 6s, and early edits make React throw hydration error 418 and
+  // rebuild the whole page, which throws the reader's scroll back to the top. Wait for
+  // hydration without a short deadline; the 60s fallback only covers browsers where the
+  // bundle never loads at all (no React there, so no rebuild risk).
   var done = false, t0 = Date.now();
   var go = function () { if (done) return; done = true; clearInterval(iv); start(); };
-  var iv = setInterval(function () { if (hydrated() || Date.now() - t0 > 6000) go(); }, 40);
+  var iv = setInterval(function () { if (hydrated() || Date.now() - t0 > 60000) go(); }, 40);
 })();
 
 // Homepage pulse feed backstop: the React feed renders its empty state forever when its single fetch fails.
@@ -596,3 +601,45 @@
   setTimeout(() => load(0), 4000);
 })();
 
+
+
+
+// Scroll guard (runs immediately at script execution, before hydration): if React ever
+// rebuilds the page under the reader (a hydration-fallback re-render replaces <main> and
+// the browser clamps scroll back to the top), put the reader's place back once the
+// content height returns. Detection is the <main> node being replaced; restore only when
+// the reader had a stable position and the current scroll fell far from it. Cancels the
+// moment the reader scrolls on purpose.
+(function () {
+  var lastMain = document.querySelector('main');
+  var curY = window.scrollY, stableY = 0, lastMove = Date.now();
+  var restores = 0, born = Date.now(), cancel = false;
+  window.addEventListener('scroll', function () {
+    var y = window.scrollY;
+    if (Math.abs(y - curY) > 20) { curY = y; lastMove = Date.now(); }
+  }, { passive: true });
+  ['wheel', 'touchstart', 'keydown'].forEach(function (ev) {
+    window.addEventListener(ev, function () { cancel = true; }, { passive: true });
+  });
+  var restore = function (y) {
+    if (restores >= 3) return;
+    restores++;
+    cancel = false;
+    var tries = 0;
+    var fix = setInterval(function () {
+      if (cancel || ++tries > 40) { clearInterval(fix); return; }
+      window.scrollTo(0, y);
+      if (Math.abs(window.scrollY - y) < 60) clearInterval(fix);
+    }, 120);
+  };
+  var check = function () {
+    var m = document.querySelector('main');
+    if (m && lastMain && m !== lastMain && stableY > 400 && window.scrollY < stableY - 300) restore(stableY);
+    if (m) lastMain = m;
+  };
+  new MutationObserver(check).observe(document.documentElement, { childList: true, subtree: true });
+  var watch = setInterval(function () {
+    if (Date.now() - born > 180000) { clearInterval(watch); return; }
+    if (Date.now() - lastMove >= 300) stableY = curY;
+  }, 100);
+})();
