@@ -614,8 +614,8 @@
   style.textContent =
     '.pulse-lead h3{font-weight:800}' +
     '.pulse-side h4{font-weight:800;font-size:21px;line-height:1.22}' +
-    '.news-wrap article h2,.news-wrap article h3,.aima-news-item h2,.aima-news-item h3{font-weight:800;letter-spacing:-.01em}' +
-    '@media(max-width:760px){.news-wrap article h3,.aima-news-item h3{font-size:26px;line-height:1.22}}';
+    '.news-wrap h2,.news-wrap h3,.aima-news-item h2,.aima-news-item h3{font-weight:800;letter-spacing:-.01em}' +
+    '@media(max-width:760px){.news-wrap h3,.aima-news-item h3{font-size:26px;line-height:1.22}}';
   document.head.append(style);
 })();
 
