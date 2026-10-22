@@ -601,23 +601,6 @@
   setTimeout(() => load(0), 4000);
 })();
 
-// News headline emphasis (2026-10-21, Tomer's ask): every news headline was Assistant 400,
-// the same weight as body text, so headlines barely stood out on mobile. Bump item
-// headlines to 800 across the homepage Pulse (lead + side list) and the /news page.
-// Display/brand fonts (hero, section titles, mono) untouched.
-(() => {
-  const onHome = location.pathname === '/' || (/\/index\.html$/.test(location.pathname) && location.pathname.split('/').length === 2);
-  const onNews = /\/news(?:\/index\.html)?\/?$/.test(location.pathname);
-  if (!onHome && !onNews) return;
-  const style = document.createElement('style');
-  style.id = 'aima-news-headline-emphasis';
-  style.textContent =
-    '.pulse-lead h3{font-weight:800}' +
-    '.pulse-side h4{font-weight:800;font-size:21px;line-height:1.22}' +
-    '.news-wrap h2,.news-wrap h3,.aima-news-item h2,.aima-news-item h3{font-weight:800;letter-spacing:-.01em}' +
-    '@media(max-width:760px){.news-wrap h3,.aima-news-item h3{font-size:26px;line-height:1.22}}';
-  document.head.append(style);
-})();
 
 
 
