@@ -317,7 +317,7 @@
     if (!src) for (const [name, image] of photos) { if (name.startsWith(artist) || artist.startsWith(name)) { src = image; break; } }
     if (!src || span.querySelector('img')) return;
     span.classList.add('has-photo');
-    span.innerHTML = `<img src="${src}" alt="" onerror="this.parentNode.classList.remove('has-photo');this.remove()">`;
+    span.innerHTML = `<img src="${src}" alt="" loading="lazy" decoding="async" onerror="this.parentNode.classList.remove('has-photo');this.remove()">`;
   };
   fetch(`/api/public/artist-images?fresh=${Date.now()}`, { cache: 'no-store', headers: { accept: 'application/json' } })
     .then((r) => (r.ok ? r.json() : Promise.reject(new Error('photos'))))
