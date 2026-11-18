@@ -1,0 +1,69 @@
+name: Sync artist directory
+
+on:
+  schedule:
+    - cron: "17 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-artists
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download public registration sheet (CSV)
+        run: |
+          curl -fsSL --retry 3 --retry-delay 10 \
+            "https://docs.google.com/spreadsheets/d/1rArfDxHNYnou_iq1h5M_ZichFrChmMa_50XoMEpjzn4/export?format=csv" \
+            -o "$RUNNER_TEMP/artists.csv"
+
+      - name: Run sync
+        run: |
+          cp content/artists.json "$RUNNER_TEMP/before.json"
+          node scripts/sync-artists.mjs "$RUNNER_TEMP/artists.csv" content/artists.json
+
+      - name: Safety checks
+        run: |
+          node --input-type=module - "$RUNNER_TEMP/before.json" content/artists.json <<'JS'
+          import { readFileSync, writeFileSync } from "node:fs";
+          const [beforePath, afterPath] = process.argv.slice(2);
+          const before = JSON.parse(readFileSync(beforePath, "utf8"));
+          const after = JSON.parse(readFileSync(afterPath, "utf8"));
+          const clean = (value, max) => String(value ?? "").replace(/[<>]/g, "").replace(/\s+/g, " ").trim().slice(0, max);
+          const fields = ["spotify", "youtube", "other", "instagram", "facebook", "tiktok", "suno", "soundcloud"];
+          const safe = after.map((artist) => {
+            const out = { ...artist, name: clean(artist.name, 80), genres: clean(artist.genres, 160) };
+            for (const field of fields) {
+              const value = String(artist[field] ?? "");
+              out[field] = /^https?:\/\//i.test(value) && value.length <= 1000 ? value : "";
+            }
+            return out;
+          });
+          if (safe.some((artist) => !artist.name)) throw new Error("An artist has an empty name");
+          if (safe.length < before.length) throw new Error(`Artist count dropped from ${before.length} to ${safe.length}`);
+          const known = new Set(before.map((artist) => artist.name));
+          const added = safe.filter((artist) => !known.has(artist.name)).length;
+          if (added > 25) throw new Error(`Too many new artists in one run (${added}); needs a manual check`);
+          writeFileSync(afterPath, `${JSON.stringify(safe, null, 2)}\n`, "utf8");
+          console.log(`artists: ${before.length} -> ${safe.length}, new names: ${added}`);
+          JS
+
+      - name: Commit changes
+        run: |
+          if git diff --quiet -- content/artists.json; then
+            echo "No artist changes"
+            exit 0
+          fi
+          git config user.name "aima-artist-sync"
+          git config user.email "actions@users.noreply.github.com"
+          git add content/artists.json
+          git commit -m "Sync artist directory from registration sheet"
+          git pull --rebase origin main
+          git push origin HEAD:main
