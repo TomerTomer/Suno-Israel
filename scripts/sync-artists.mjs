@@ -110,6 +110,7 @@ function artistKey(name) {
     ["רותיחיrutha", "rutihai"],
     ["רותיחי", "rutihai"],
     ["רותיחיrutihai", "rutihai"],
+    ["שלוםשיעראקי", "שיעראקי"],
   ]);
   return aliases.get(key) ?? key;
 }
@@ -197,3 +198,4 @@ for (const artist of approvedArtists) {
 
 await writeFile(outputPath, `${JSON.stringify(artists, null, 2)}\n`, "utf8");
 console.log(JSON.stringify({ sourceNamedRows: sourceRows.length, continuationRowsMerged: continuationRows, duplicateEntriesMerged: duplicateEntries, protectedProfiles: approvedByKey.size, finalArtists: artists.length }));
+
