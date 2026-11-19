@@ -236,7 +236,7 @@
   {
     "name": "חיים ויימן",
     "genres": "הכל מהכל",
-    "spotify": "",
+    "spotify": "https://open.spotify.com/artist/6d3W5tNXabUhLYKlkP10A6?si=ZTF6_E19THy-nJuHQld8Ow&utm_source=copy-link&sci=spotify%3Acard-config%3A5Afbg4P1xVKqH6V5Gwfg8D",
     "youtube": "",
     "other": "",
     "instagram": "",
@@ -1106,12 +1106,12 @@
   },
   {
     "name": "Ameer Jayusi",
-    "genres": "Morrocian Fusion",
-    "spotify": "https://open.spotify.com/user/y7kbkzkxmijowj2zeskvp8xn8",
-    "youtube": "https://www.youtube.com/@AmeerJayusi",
+    "genres": "Marrocian RAI",
+    "spotify": "https://open.spotify.com/user/y7kbkzkxmijowj2zeskvp8xn8?si=3pUzk5wTTAexJAYj-SvW7g&utm_source=copy-link&sci=spotify%3Acard-config%3A1SNFRNDncIwXe1AUjmWCf3",
+    "youtube": "https://youtube.com/@ameerjayusi?si=tB29WSnl4dp8_K8J",
     "other": "",
-    "instagram": "",
-    "facebook": "https://www.facebook.com/ameer.jayusi",
+    "instagram": "https://www.instagram.com/ameerjayusi?evlk=d3llMHY3cjdmeHNq",
+    "facebook": "https://www.facebook.com/share/1Vmo3fyB2x/",
     "tiktok": "",
     "suno": "https://suno.com/@ameerjayusi",
     "soundcloud": "",
@@ -1465,6 +1465,19 @@
     "facebook": "https://www.facebook.com/share/19YZeUALhT/",
     "tiktok": "https://tiktok.com/@trustthedonut",
     "suno": "https://suno.com/@trustthedonut",
+    "soundcloud": "",
+    "image": ""
+  },
+  {
+    "name": "עידן דוייב Idan Douieb",
+    "genres": "Pop rock indie",
+    "spotify": "https://open.spotify.com/artist/6y7fb0RAYY83bAtgnVxu2Z?si=8XsLuaCVTBCH6lPwpflkiA&utm_source=copy-link",
+    "youtube": "",
+    "other": "",
+    "instagram": "https://www.instagram.com/idandouieb?fqnt=ajBqcHZxcTBoNDE5&utm_source=qr",
+    "facebook": "",
+    "tiktok": "",
+    "suno": "https://suno.com/@idandouieb",
     "soundcloud": "",
     "image": ""
   }
