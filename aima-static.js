@@ -644,3 +644,37 @@
     if (Date.now() - lastMove >= 300) stableY = curY;
   }, 100);
 })();
+
+
+
+// Playlist: feature the community's Mediterranean Spotify playlist (ים תיכוני מושלם).
+(() => {
+  const PLAYLIST_URL = 'https://open.spotify.com/playlist/2e6MFxC0UwNeccy14grw0W';
+  const home = location.pathname === '/' || (/\/index\.html$/.test(location.pathname) && location.pathname.split('/').length === 2);
+  const addCard = () => {
+    if (!home) return;
+    const grid = document.querySelector('.channel-grid');
+    if (!grid || grid.querySelector('.aima-playlist-card')) return;
+    const card = document.createElement('a');
+    card.className = 'channel-card mint aima-playlist-card';
+    card.href = PLAYLIST_URL;
+    card.target = '_blank';
+    card.rel = 'noreferrer';
+    card.innerHTML = '<div class="channel-top"><span>פלייליסט חדש בספוטיפיי</span><b>♪</b></div><h3>ים תיכוני מושלם</h3><p>בין הקלאסיקות שבנו את ישראל לחדשנות שמצעידה אותה קדימה. פשוט מוזיקה טובה.</p><span class="card-link">להאזנה ↗</span>';
+    grid.append(card);
+  };
+  const addFooterLink = () => {
+    const existing = document.querySelector('a[href*="open.spotify.com/playlist/4gUqKPnJOkbHm9edItaR88"]');
+    if (!existing || existing.parentElement.querySelector('.aima-playlist-footer')) return;
+    const link = document.createElement('a');
+    link.className = 'aima-playlist-footer';
+    link.href = PLAYLIST_URL;
+    link.target = '_blank';
+    link.rel = 'noreferrer';
+    link.textContent = 'ים תיכוני מושלם';
+    existing.insertAdjacentElement('afterend', link);
+  };
+  const apply = () => { addCard(); addFooterLink(); };
+  apply();
+  new MutationObserver(apply).observe(document.body, { childList: true, subtree: true });
+})();
