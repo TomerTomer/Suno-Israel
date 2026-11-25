@@ -51,7 +51,7 @@
         songCard.href = safeHref(song.href);
         setText('[data-field="song-initials"]', song.initials || "♪");
         setText('[data-field="song-title"]', song.title);
-        setText('[data-field="song-artist"]', song.artist || "AIMA");
+        setText('[data-field="song-artist"]', song.artist || "A.I.M.A");
         setText('[data-field="song-description"]', song.description);
       }
       const eventGrid = document.querySelector(".event-grid");
@@ -61,19 +61,19 @@
 
       const resourceGrid = document.querySelector(".resource-grid");
       if (resourceGrid && Array.isArray(data.resources)) {
-        data.resources.slice().reverse().forEach((item) => resourceGrid.insertAdjacentHTML("afterbegin", `<a class="resource-card featured" href="${safeHref(item.href)}" target="_blank" rel="noreferrer"><div class="resource-card-top"><span>${escapeHtml(item.category || "חדש")}</span><b>${escapeHtml(item.platform || "AIMA")}</b></div><h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.description)}</p><div class="resource-card-bottom"><small>חדש מהסטודיו</small><strong>פתיחה ↗</strong></div></a>`));
+        data.resources.slice().reverse().forEach((item) => resourceGrid.insertAdjacentHTML("afterbegin", `<a class="resource-card featured" href="${safeHref(item.href)}" target="_blank" rel="noreferrer"><div class="resource-card-top"><span>${escapeHtml(item.category || "חדש")}</span><b>${escapeHtml(item.platform || "A.I.M.A")}</b></div><h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.description)}</p><div class="resource-card-bottom"><small>חדש מהסטודיו</small><strong>פתיחה ↗</strong></div></a>`));
       }
 
       const newsAnchor = document.querySelector(".lead-story");
       if (newsAnchor && Array.isArray(data.news) && data.news.length) {
-        const cards = data.news.map((item, index) => `<a href="${safeHref(item.href)}" target="_blank" rel="noreferrer"><span>${String(index + 1).padStart(2, "0")}</span><div><small>${escapeHtml(item.label || "AIMA UPDATE")} · ${escapeHtml(item.date)}</small><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.description)}</p></div><b>↗</b></a>`).join("");
-        newsAnchor.insertAdjacentHTML("afterend", `<section class="managed-news"><div class="news-section-head"><p class="eyebrow">FROM AIMA HQ</p><h2>עדכוני הקהילה</h2></div><div class="news-list">${cards}</div></section>`);
+        const cards = data.news.map((item, index) => `<a href="${safeHref(item.href)}" target="_blank" rel="noreferrer"><span>${String(index + 1).padStart(2, "0")}</span><div><small>${escapeHtml(item.label || "A.I.M.A UPDATE")} · ${escapeHtml(item.date)}</small><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.description)}</p></div><b>↗</b></a>`).join("");
+        newsAnchor.insertAdjacentHTML("afterend", `<section class="managed-news"><div class="news-section-head"><p class="eyebrow">FROM A.I.M.A HQ</p><h2>עדכוני הקהילה</h2></div><div class="news-list">${cards}</div></section>`);
       }
     })
     .catch(() => {});
 })();
 
-// AIMA guides navigation. Keep the existing site and backend intact.
+// A.I.M.A guides navigation. Keep the existing site and backend intact.
 (() => {
   const root = new URL('./', __aimaScript.src);
   const addGuidesLink = () => {
@@ -111,7 +111,7 @@
     const first=document.querySelector('.hero-actions .primary');if(first&&first.textContent!=='מה חדש השבוע? ←')first.textContent='מה חדש השבוע? ←';
     const pulse=document.querySelector('#aima-pulse');
     if(pulse){
-      const eyebrow=pulse.querySelector('.eyebrow');if(eyebrow&&eyebrow.textContent!=='AIMA PULSE · העדכונים האחרונים')eyebrow.textContent='AIMA PULSE · העדכונים האחרונים';
+      const eyebrow=pulse.querySelector('.eyebrow');if(eyebrow&&eyebrow.textContent!=='A.I.M.A PULSE · העדכונים האחרונים')eyebrow.textContent='A.I.M.A PULSE · העדכונים האחרונים';
       const h=pulse.querySelector('h2');if(h&&h.textContent!=='מה חדש השבוע?')h.textContent='מה חדש השבוע?';
       const head=pulse.querySelector('.pulse-heading');
       if(head){const p=head.querySelector(':scope > p');if(p&&p.textContent!=='העדכונים האחרונים שאושרו בקהילה. התאריך מופיע בכל עדכון; לא בכל שבוע מגיע עדכון חדש.')p.textContent='העדכונים האחרונים שאושרו בקהילה. התאריך מופיע בכל עדכון; לא בכל שבוע מגיע עדכון חדש.';}
@@ -141,7 +141,7 @@
     });
     if(!document.querySelector('.aima-resource-guide-entry')){
       const entry=document.createElement('a');entry.className='resource-card featured aima-resource-guide-entry';entry.href='../guides.html';
-      entry.innerHTML='<div class="resource-card-top"><span>מדריכים</span><b>AIMA</b></div><h2>איפה מתחילים עם Suno?</h2><p>המסלול הקצר: שיר ראשון, עברית, מבנה ועריכה. המקורות והקרדיטים במקום אחד.</p><div class="resource-card-bottom"><small>חינמי ונגיש</small><strong>למדריכים ←</strong></div>';grid.before(entry);
+      entry.innerHTML='<div class="resource-card-top"><span>מדריכים</span><b>A.I.M.A</b></div><h2>איפה מתחילים עם Suno?</h2><p>המסלול הקצר: שיר ראשון, עברית, מבנה ועריכה. המקורות והקרדיטים במקום אחד.</p><div class="resource-card-bottom"><small>חינמי ונגיש</small><strong>למדריכים ←</strong></div>';grid.before(entry);
     }
   };
   refresh();new MutationObserver(refresh).observe(document.body,{childList:true,subtree:true});
@@ -182,7 +182,7 @@
   document.head.append(style);
   const hash = (text) => { let h = 2166136261; for (const ch of text) { h ^= ch.codePointAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
   const art = (name) => {
-    const h = hash(name || 'AIMA');
+    const h = hash(name || 'A.I.M.A');
     const hue = h % 360, hue2 = (hue + 35 + ((h >> 8) % 40)) % 360;
     const id = 'g' + h.toString(36);
     const initials = (String(name || '').trim().split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('') || 'AI').toUpperCase();
@@ -268,7 +268,7 @@
 })();
 
 
-// Events page: add the AIMA salon evening (published details only; no address).
+// Events page: add the A.I.M.A salon evening (published details only; no address).
 (() => {
   if (!/\/events(?:\/index\.html)?\/?$/.test(location.pathname)) return;
   const add = () => {
@@ -277,12 +277,12 @@
     if (!grid) return;
     const card = document.createElement('article');
     card.className = 'event-card aima-salon-card';
-    card.innerHTML = '<div class="event-date"><span>08</span><small>8.10.2026 · חמישי 20:00</small></div><div><b>האירוע הסתיים</b><h2>AIMA בסלון: ערב האזנה ראשון</h2><p>ערב ההאזנה הראשון של הקהילה התקיים ב-8 באוקטובר. ההרשמה לאירוע סגורה. תודה לכל מי שהגיע.</p></div><strong>ההרשמה סגורה</strong>';
+    card.innerHTML = '<div class="event-date"><span>08</span><small>8.10.2026 · חמישי 20:00</small></div><div><b>האירוע הסתיים</b><h2>A.I.M.A בסלון: ערב האזנה ראשון</h2><p>ערב ההאזנה הראשון של הקהילה התקיים ב-8 באוקטובר. ההרשמה לאירוע סגורה. תודה לכל מי שהגיע.</p></div><strong>ההרשמה סגורה</strong>';
     let archive = document.querySelector('.aima-events-archive');
     if (!archive) {
       archive = document.createElement('section');
       archive.className = 'aima-events-archive';
-      archive.innerHTML = '<div class="events-head"><div><p class="eyebrow">AIMA ARCHIVE</p><h2>אירועים שהסתיימו</h2></div></div><div class="event-grid"></div>';
+      archive.innerHTML = '<div class="events-head"><div><p class="eyebrow">A.I.M.A ARCHIVE</p><h2>אירועים שהסתיימו</h2></div></div><div class="event-grid"></div>';
       document.querySelector('.events-empty').before(archive);
     }
     archive.querySelector('.event-grid').append(card);
@@ -349,7 +349,7 @@
   new MutationObserver(apply).observe(document.body, { childList: true, subtree: true });
 })();
 
-// AIMA Artist of the Month archive: a permanent home for monthly winners.
+// A.I.M.A Artist of the Month archive: a permanent home for monthly winners.
 (() => {
   const root = new URL('./', __aimaScript.src);
   const home = location.pathname === '/' || location.pathname === '/index.html';
@@ -401,8 +401,8 @@
       lead.id='news-'+hash(lead.href);
       const actions=document.createElement('div');actions.className='aima-news-actions';actions.dataset.leadShare='true';
       const url=new URL('news/index.html',location.origin+'/');url.hash=lead.id;
-      const title=lead.querySelector('h2,h3')?.textContent?.trim() || 'חדשות AIMA';
-      const share=document.createElement('button');share.type='button';share.className='aima-news-share';share.textContent='שיתוף הכתבה ↗';share.onclick=async()=>{if(navigator.share){try{await navigator.share({title,text:title+' | AIMA',url:url.href});return;}catch(e){if(e.name==='AbortError')return;}}await copy(url.href);};
+      const title=lead.querySelector('h2,h3')?.textContent?.trim() || 'חדשות A.I.M.A';
+      const share=document.createElement('button');share.type='button';share.className='aima-news-share';share.textContent='שיתוף הכתבה ↗';share.onclick=async()=>{if(navigator.share){try{await navigator.share({title,text:title+' | A.I.M.A',url:url.href});return;}catch(e){if(e.name==='AbortError')return;}}await copy(url.href);};
       const cp=document.createElement('button');cp.type='button';cp.textContent='העתקת קישור';cp.onclick=()=>copy(url.href);actions.append(share,cp);lead.after(actions);
       if(location.hash==='#'+lead.id)requestAnimationFrame(()=>lead.scrollIntoView());
     }
@@ -427,7 +427,7 @@
         const read=document.createElement('a');read.href=source;read.target='_blank';read.rel='noopener noreferrer';read.textContent='למקור ↗';actions.append(read);
         const more=document.createElement('button');more.type='button';more.textContent='עוד על זה';more.setAttribute('aria-expanded','false');more.onclick=()=>{const expanded=item.classList.toggle('expanded');more.setAttribute('aria-expanded',String(expanded));more.textContent=expanded?'פחות':'עוד על זה';};actions.append(more);
         const share=document.createElement('button');share.type='button';share.className='aima-news-share';share.textContent='שיתוף ↗';share.setAttribute('aria-label','שיתוף: '+title);
-        share.onclick=async()=>{if(navigator.share){try{await navigator.share({title,text:title+' | AIMA',url:shareUrl.href});return;}catch(e){if(e.name==='AbortError')return;}}await copy(shareUrl.href);};actions.append(share);
+        share.onclick=async()=>{if(navigator.share){try{await navigator.share({title,text:title+' | A.I.M.A',url:shareUrl.href});return;}catch(e){if(e.name==='AbortError')return;}}await copy(shareUrl.href);};actions.append(share);
         const copyButton=document.createElement('button');copyButton.type='button';copyButton.textContent='העתקת קישור';copyButton.setAttribute('aria-label','העתקת קישור: '+title);copyButton.onclick=()=>copy(shareUrl.href);actions.append(copyButton);item.append(actions);
         item.hidden=activeFilter!=='all'&&item.dataset.category!==activeFilter;
         if(location.hash==='#'+item.id){item.classList.add('expanded');more.setAttribute('aria-expanded','true');more.textContent='פחות';requestAnimationFrame(()=>item.scrollIntoView());}
@@ -469,7 +469,7 @@
     const meta = lead.querySelector('.pulse-meta'), impact = lead.querySelector('.pulse-impact'), action = lead.querySelector('.pulse-action');
     const official = lead.querySelector('.pulse-links a[target="_blank"]');
     if (latest && latest.title) {
-      set(lead.querySelector('.pulse-meta span'), latest.label || 'AIMA UPDATE');
+      set(lead.querySelector('.pulse-meta span'), latest.label || 'A.I.M.A UPDATE');
       set(lead.querySelector('.pulse-meta time'), fmt(latest.publishedAt));
       set(lead.querySelector('h3'), latest.title);
       set(lead.querySelector('.pulse-summary'), latest.summary || '');
@@ -563,7 +563,7 @@
       b.textContent = String(i + 2).padStart(2, '0');
       const div = document.createElement('div');
       const small = document.createElement('small');
-      small.textContent = (it.label || 'AIMA UPDATE') + ' · ' + fmt(it.publishedAt);
+      small.textContent = (it.label || 'A.I.M.A UPDATE') + ' · ' + fmt(it.publishedAt);
       const h4 = document.createElement('h4');
       h4.textContent = it.title;
       const p = document.createElement('p');

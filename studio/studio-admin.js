@@ -5,7 +5,7 @@
   let editingId = null;
 
   const template = () => `<section class="panel pulse-admin" id="pulse-admin">
-    <div class="pulse-admin-head"><div><small class="eyebrow">AIMA PULSE · LIVE CONTENT</small><h2>מה חדש, למה זה משנה.</h2><p>העדכונים החדשים של Suno נכנסים לכאן כטיוטות בעברית. אפשר לערוך הכול לפני הפרסום, וגם להוסיף עדכונים וקישורים משלכם.</p></div><button class="save" id="pulse-import" type="button">בדיקה חדשה ב-Suno</button></div>
+    <div class="pulse-admin-head"><div><small class="eyebrow">A.I.M.A PULSE · LIVE CONTENT</small><h2>מה חדש, למה זה משנה.</h2><p>העדכונים החדשים של Suno נכנסים לכאן כטיוטות בעברית. אפשר לערוך הכול לפני הפרסום, וגם להוסיף עדכונים וקישורים משלכם.</p></div><button class="save" id="pulse-import" type="button">בדיקה חדשה ב-Suno</button></div>
     <div class="pulse-admin-status" id="pulse-admin-status" aria-live="polite">מתחבר למערכת התוכן...</div>
     <div class="pulse-admin-grid">
       <form class="pulse-admin-card" id="pulse-admin-form"><h3 id="pulse-form-title">עדכון חדש</h3>
@@ -14,7 +14,7 @@
         <label>מה המשמעות ליוצר?<textarea name="impact" maxlength="900"></textarea></label>
         <label>מה כדאי לנסות עכשיו?<textarea name="action" maxlength="600"></textarea></label>
         <label>קישור למקור<input name="url" type="url" dir="ltr" placeholder="https://..."></label>
-        <div class="pulse-admin-form-row"><label>תאריך<input name="publishedAt" type="date" required></label><label>תגית<input name="label" value="AIMA UPDATE"></label></div>
+        <div class="pulse-admin-form-row"><label>תאריך<input name="publishedAt" type="date" required></label><label>תגית<input name="label" value="A.I.M.A UPDATE"></label></div>
         <div class="pulse-admin-form-row"><label>סוג תוכן<select name="contentType"><option value="news">חדשות ועדכונים</option><option value="resource">קישור חשוב / משאב</option></select></label><label>סטטוס<select name="status"><option value="draft">טיוטה</option><option value="published">פרסום באתר</option></select></label></div>
         <label>סדר תצוגה<input name="position" type="number" value="0"></label>
         <div class="pulse-admin-actions"><button class="save" type="submit">שמירה</button><button class="save" id="pulse-cancel" type="button">ניקוי</button></div>
@@ -30,7 +30,7 @@
     editingId = null;
     editor().reset();
     editor().elements.publishedAt.value = new Date().toISOString().slice(0, 10);
-    editor().elements.label.value = "AIMA UPDATE";
+    editor().elements.label.value = "A.I.M.A UPDATE";
     editor().elements.contentType.value = "news";
     editor().elements.position.value = "0";
     document.querySelector("#pulse-form-title").textContent = "עדכון חדש";

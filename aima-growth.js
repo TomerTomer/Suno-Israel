@@ -1,4 +1,4 @@
-// AIMA growth layer: email sign-up (home + news) and share buttons on the Pulse lead.
+// A.I.M.A growth layer: email sign-up (home + news) and share buttons on the Pulse lead.
 // Same pattern as aima-static.js: waits for React hydration, then re-adds blocks if React removes them.
 (function () {
   var start = function () {
@@ -24,11 +24,11 @@
     var buildSub = function (source) {
       var s = document.createElement("section");
       s.className = "shell aima-sub"; s.setAttribute("data-aima-sub", "1");
-      s.innerHTML = '<div><span class="aima-eyebrow">AIMA UPDATES</span><h2>לא מפספסים עדכון.</h2><p>מייל קצר עם חדשות Suno, אמנים חדשים ואירועי הקהילה. בלי ספאם, ואפשר לבקש הסרה בכל עת.</p></div>' +
+      s.innerHTML = '<div><span class="aima-eyebrow">A.I.M.A UPDATES</span><h2>לא מפספסים עדכון.</h2><p>מייל קצר עם חדשות Suno, אמנים חדשים ואירועי הקהילה. בלי ספאם, ואפשר לבקש הסרה בכל עת.</p></div>' +
         '<form novalidate><input type="email" required autocomplete="email" dir="ltr" placeholder="המייל שלך" aria-label="כתובת מייל">' +
         '<input class="aima-hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">' +
         '<button type="submit">להרשמה ←</button>' +
-        '<label class="aima-consent"><input type="checkbox"><span>אני מאשר/ת קבלת עדכונים במייל מ-AIMA. המייל ישמש רק לשליחת עדכונים ואפשר להסיר אותו בכל עת. <a href="/privacy/index.html">פרטיות ועוגיות</a></span></label>' +
+        '<label class="aima-consent"><input type="checkbox"><span>אני מאשר/ת קבלת עדכונים במייל מ-A.I.M.A. המייל ישמש רק לשליחת עדכונים ואפשר להסיר אותו בכל עת. <a href="/privacy/index.html">פרטיות ועוגיות</a></span></label>' +
         '<p class="aima-msg" role="status" aria-live="polite"></p></form>';
       var form = s.querySelector("form"), msg = s.querySelector(".aima-msg"), btn = s.querySelector("button");
       form.addEventListener("submit", function (e) {
@@ -52,7 +52,7 @@
     var addPulseShare = function () {
       var links = document.querySelector("#aima-pulse .pulse-lead .pulse-links");
       if (!links || links.parentNode.querySelector(".aima-pulse-share")) return;
-      var title = (document.querySelector("#aima-pulse .pulse-lead h3") || {}).textContent || "AIMA Pulse";
+      var title = (document.querySelector("#aima-pulse .pulse-lead h3") || {}).textContent || "A.I.M.A Pulse";
       var wrap = document.createElement("div"); wrap.className = "aima-pulse-share";
       var urlFor = function () {
         var id = ""; try { var it = JSON.parse(localStorage.getItem("aima-pulse-lead-v1") || "null"); id = it && it.id ? String(it.id) : ""; } catch (e) {}
@@ -61,11 +61,11 @@
       var share = document.createElement("button"); share.type = "button"; share.textContent = "שיתוף ↗";
       share.onclick = function () {
         var url = urlFor();
-        if (navigator.share) { navigator.share({ title: title, text: title + " | AIMA", url: url }).catch(function (e) { if (e.name !== "AbortError") copy(url); }); return; }
+        if (navigator.share) { navigator.share({ title: title, text: title + " | A.I.M.A", url: url }).catch(function (e) { if (e.name !== "AbortError") copy(url); }); return; }
         copy(url).then(function () { share.textContent = "הקישור הועתק ✓"; setTimeout(function () { share.textContent = "שיתוף ↗"; }, 2000); });
       };
       var wa = document.createElement("button"); wa.type = "button"; wa.textContent = "שליחה בוואטסאפ";
-      wa.onclick = function () { window.open("https://wa.me/?text=" + encodeURIComponent(title + " | AIMA\n" + urlFor()), "_blank", "noopener"); };
+      wa.onclick = function () { window.open("https://wa.me/?text=" + encodeURIComponent(title + " | A.I.M.A\n" + urlFor()), "_blank", "noopener"); };
       wrap.append(share, wa); links.after(wrap);
     };
 
