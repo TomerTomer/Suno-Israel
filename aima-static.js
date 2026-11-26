@@ -106,8 +106,8 @@
   const text = (selector,value) => {const el=document.querySelector(selector);if(el&&el.textContent!==value)el.textContent=value;};
   const update = () => {
     const title=document.querySelector('.hero h1');
-    if(title && title.textContent !== 'מוזיקה חדשה.קהילה שיוצרת יחד.') title.innerHTML='מוזיקה חדשה.<br><em>קהילה שיוצרת יחד.</em>';
-    text('.hero-lede','עדכונים שכדאי להכיר, יוצרים שכדאי לשמוע ומקום להתחיל ממנו.');
+    if(title && title.textContent !== 'המקום שבומוזיקה חדשהמקבלת קול.') title.innerHTML='המקום שבו<br><em>מוזיקה חדשה</em><br>מקבלת קול.';
+    text('.hero-lede','הבית הישראלי ליוצרות וליוצרי מוזיקה עם AI. ללמוד, ליצור, לשתף, להכיר אמנים ולגלות עד כמה רחוק רעיון אחד יכול להגיע.');
     const first=document.querySelector('.hero-actions .primary');if(first&&first.textContent!=='מה חדש השבוע? ←')first.textContent='מה חדש השבוע? ←';
     const pulse=document.querySelector('#aima-pulse');
     if(pulse){
