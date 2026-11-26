@@ -414,6 +414,9 @@
           const button=document.createElement('button');button.type='button';button.textContent=label;button.dataset.filter=value;button.setAttribute('aria-pressed',String(value===activeFilter));
           button.onclick=()=>{activeFilter=value;document.querySelectorAll('.aima-news-toolbar button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.filter===value)));document.querySelectorAll('.aima-news-item').forEach(item=>item.hidden=value!=='all'&&item.dataset.category!==value);};toolbar.append(button);
         }
+        const expandAll=document.createElement('button');expandAll.type='button';expandAll.className='aima-expand-all';expandAll.textContent='פתיחת כל העדכונים';expandAll.setAttribute('aria-pressed','false');
+        expandAll.onclick=()=>{const on=expandAll.getAttribute('aria-pressed')!=='true';expandAll.setAttribute('aria-pressed',String(on));expandAll.textContent=on?'סגירת הכול':'פתיחת כל העדכונים';document.querySelectorAll('.aima-news-item').forEach(item=>{item.classList.toggle('expanded',on);const m=item.querySelector('button[aria-expanded]');if(m){m.setAttribute('aria-expanded',String(on));m.textContent=on?'פחות':'עוד על זה';}});};
+        toolbar.append(expandAll);
         list.before(toolbar);
       }
       for(const link of [...list.children].filter(x=>x.matches('a[href]'))){
@@ -677,4 +680,93 @@
   const apply = () => { addCard(); addFooterLink(); };
   apply();
   new MutationObserver(apply).observe(document.body, { childList: true, subtree: true });
+})();
+
+
+// 2026-11-26: steadier scrolling and one obvious entry to all Pulse updates.
+// (1) Wide-footer fix: the A.I.M.A wordmark was wider than a phone screen, so the whole page could pan sideways.
+// (2) Safari has no scroll anchoring, so anything inserted above the reader (guide strip, sign-up block, news
+//     toolbar, Pulse items) pushed the page. This keeps the reader's place when content above changes.
+// (3) A clear "all Pulse updates" button at the top and bottom of the homepage Pulse block.
+(() => {
+  const st = document.createElement('style');
+  st.id = 'aima-nov26';
+  st.textContent = 'html{overflow-x:clip}.footer-brand .brand-name{font-size:min(68px,14.5vw)!important}' +
+    '.aima-all-updates{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 28px;border-radius:999px;background:#10100f;color:#d8ff3e!important;font-weight:800;font-size:18px;line-height:1;text-decoration:none;white-space:nowrap;border:2px solid #10100f}' +
+    '.aima-all-updates:hover,.aima-all-updates:focus-visible{background:#ff3f73;border-color:#ff3f73;color:#fff!important}' +
+    '.aima-all-updates-top{margin-top:18px;grid-column:1/-1}' +
+    '.aima-all-updates-wrap{display:flex;justify-content:center;margin:28px 0 0}' +
+    '.aima-all-updates-wrap .aima-all-updates{width:100%;max-width:560px}' +
+    '.pulse-side-head a{display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border-radius:999px;background:#10100f;color:#d8ff3e!important;font-weight:800;text-decoration:none}' +
+    '@media(max-width:700px){.aima-all-updates-top{display:flex;width:100%}}' +
+    '.aima-news-toolbar .aima-expand-all{margin-inline-start:auto}';
+  document.head.append(st);
+
+  // (2) scroll anchoring for browsers without native support (iOS Safari)
+  const force = /[?&]aimaAnchor=1/.test(location.search);
+  const native = !force && window.CSS && CSS.supports && CSS.supports('overflow-anchor', 'auto');
+  if (!native) {
+    let a = null, savedDocTop = 0, raf = 0;
+    const skip = (el) => el.closest('header,.site-header,.utility-dock,.aima-news-status,.skip-link');
+    const pick = () => {
+      if (window.scrollY < 30) { a = null; return; }
+      const x = Math.round(innerWidth / 2);
+      let e = null;
+      for (const y of [190, 270, 350, 430]) {
+        const el = document.elementFromPoint(x, y);
+        if (el && el !== document.documentElement && el !== document.body && !skip(el)) { e = el; break; }
+      }
+      while (e && e.parentElement && e.parentElement !== document.body && e.getBoundingClientRect().height < 24) e = e.parentElement;
+      a = e;
+      savedDocTop = e ? e.getBoundingClientRect().top + window.scrollY : 0;
+    };
+    const adjust = () => {
+      raf = 0;
+      if (a && a.isConnected && window.scrollY > 30) {
+        const shift = (a.getBoundingClientRect().top + window.scrollY) - savedDocTop;
+        if (Math.abs(shift) > 2 && Math.abs(shift) < 6000) window.scrollBy(0, shift);
+      }
+      pick();
+    };
+    const schedule = () => { if (!raf) raf = requestAnimationFrame(adjust); };
+    window.addEventListener('scroll', () => { if (!raf) pick(); }, { passive: true });
+    new MutationObserver(schedule).observe(document.documentElement, { childList: true, subtree: true });
+    if (window.ResizeObserver) {
+      const ro = new ResizeObserver(schedule);
+      const watch = () => document.body && ro.observe(document.body);
+      if (document.body) watch(); else document.addEventListener('DOMContentLoaded', watch);
+    }
+  }
+
+  // (3) all-updates entry on the homepage
+  const home = location.pathname === '/' || (/\/index\.html$/.test(location.pathname) && location.pathname.split('/').length === 2);
+  if (!home) return;
+  const mk = (cls, label) => { const l = document.createElement('a'); l.className = cls; l.href = '/news/'; l.textContent = label; return l; };
+  const addCtas = () => {
+    const pulse = document.querySelector('#aima-pulse');
+    if (!pulse) return;
+    const head = pulse.querySelector('.pulse-heading');
+    if (head && !head.querySelector('.aima-all-updates')) head.append(mk('aima-all-updates aima-all-updates-top', 'כל עדכוני הפולס ←'));
+    const layout = pulse.querySelector('.pulse-layout');
+    if (layout && !pulse.querySelector('.aima-all-updates-wrap')) {
+      const w = document.createElement('div');
+      w.className = 'aima-all-updates-wrap';
+      w.append(mk('aima-all-updates', 'לכל עדכוני הפולס ←'));
+      layout.after(w);
+    }
+  };
+  const hydrated = () => {
+    const m = document.querySelector('main');
+    if (!m) return false;
+    for (const k in m) if (k.indexOf('__reactFiber$') === 0 || k.indexOf('__reactProps$') === 0) return true;
+    return false;
+  };
+  const t0 = Date.now();
+  const iv = setInterval(() => {
+    if (hydrated() || Date.now() - t0 > 60000) {
+      clearInterval(iv);
+      addCtas();
+      new MutationObserver(addCtas).observe(document.body, { childList: true, subtree: true });
+    }
+  }, 60);
 })();
