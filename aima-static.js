@@ -61,7 +61,24 @@
 
       const resourceGrid = document.querySelector(".resource-grid");
       if (resourceGrid && Array.isArray(data.resources)) {
-        data.resources.slice().reverse().forEach((item) => resourceGrid.insertAdjacentHTML("afterbegin", `<a class="resource-card featured" href="${safeHref(item.href)}" target="_blank" rel="noreferrer"><div class="resource-card-top"><span>${escapeHtml(item.category || "חדש")}</span><b>${escapeHtml(item.platform || "A.I.M.A")}</b></div><h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.description)}</p><div class="resource-card-bottom"><small>חדש מהסטודיו</small><strong>פתיחה ↗</strong></div></a>`));
+        data.resources.slice().reverse().forEach((item) => resourceGrid.insertAdjacentHTML("afterbegin", `<a class="resource-card featured aima-managed-resource" data-managed-category="${escapeHtml(item.category || "")}" href="${safeHref(item.href)}" target="_blank" rel="noreferrer"><div class="resource-card-top"><span>${escapeHtml(item.category || "חדש")}</span><b>${escapeHtml(item.platform || "A.I.M.A")}</b></div><h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.description)}</p><div class="resource-card-bottom"><small>חדש מהסטודיו</small><strong>פתיחה ↗</strong></div></a>`));
+        const managedCards = Array.from(resourceGrid.querySelectorAll(".aima-managed-resource"));
+        const filterRow = document.querySelector(".filter-row");
+        if (managedCards.length && filterRow) {
+          const searchInput = document.querySelector(".resource-search input");
+          const applyManagedFilter = () => {
+            const activeChip = (filterRow.querySelector("button.active")?.textContent || "הכל").trim();
+            const query = (searchInput?.value || "").trim().toLowerCase();
+            managedCards.forEach((card) => {
+              const categoryMatch = activeChip === "הכל" || (card.getAttribute("data-managed-category") || "").trim() === activeChip;
+              const queryMatch = !query || card.textContent.toLowerCase().includes(query);
+              card.style.display = categoryMatch && queryMatch ? "" : "none";
+            });
+          };
+          filterRow.querySelectorAll("button").forEach((button) => button.addEventListener("click", () => window.setTimeout(applyManagedFilter, 0)));
+          searchInput?.addEventListener("input", applyManagedFilter);
+          applyManagedFilter();
+        }
       }
 
       const newsAnchor = document.querySelector(".lead-story");
