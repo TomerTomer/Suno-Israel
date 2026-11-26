@@ -82,8 +82,9 @@
       }
 
       const newsAnchor = document.querySelector(".lead-story");
-      if (newsAnchor && Array.isArray(data.news) && data.news.length) {
-        const cards = data.news.map((item, index) => `<a href="${safeHref(item.href)}" target="_blank" rel="noreferrer"><span>${String(index + 1).padStart(2, "0")}</span><div><small>${escapeHtml(item.label || "A.I.M.A UPDATE")} · ${escapeHtml(item.date)}</small><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.description)}</p></div><b>↗</b></a>`).join("");
+      const managedNews = Array.isArray(data.news) ? data.news.filter((item) => item?.title && /^https?:\/\//i.test(item?.href || "") && (!item.expires || Date.now() <= Date.parse(item.expires + "T23:59:59+02:00"))) : [];
+      if (newsAnchor && managedNews.length && /^\/news\/?$/.test(window.location.pathname)) {
+        const cards = managedNews.map((item, index) => `<a href="${safeHref(item.href)}" target="_blank" rel="noreferrer"><span>${String(index + 1).padStart(2, "0")}</span><div><small>${escapeHtml(item.label || "A.I.M.A UPDATE")} · ${escapeHtml(item.date)}</small><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.description)}</p></div><b>↗</b></a>`).join("");
         newsAnchor.insertAdjacentHTML("afterend", `<section class="managed-news"><div class="news-section-head"><p class="eyebrow">FROM A.I.M.A HQ</p><h2>עדכוני הקהילה</h2></div><div class="news-list">${cards}</div></section>`);
       }
     })
