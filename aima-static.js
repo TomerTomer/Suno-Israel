@@ -62,7 +62,7 @@
       const resourceGrid = document.querySelector(".resource-grid");
       if (resourceGrid && Array.isArray(data.resources)) {
         data.resources.slice().reverse().forEach((item) => resourceGrid.insertAdjacentHTML("afterbegin", `<a class="resource-card featured aima-managed-resource" data-managed-category="${escapeHtml(item.category || "")}" href="${safeHref(item.href)}" target="_blank" rel="noreferrer"><div class="resource-card-top"><span>${escapeHtml(item.category || "חדש")}</span><b>${escapeHtml(item.platform || "A.I.M.A")}</b></div><h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.description)}</p><div class="resource-card-bottom"><small>חדש מהסטודיו</small><strong>פתיחה ↗</strong></div></a>`));
-        const managedCards = Array.from(resourceGrid.querySelectorAll(".aima-managed-resource"));
+        const managedCards = Array.from(document.querySelectorAll(".aima-managed-resource, .aima-resource-guide-entry"));
         const filterRow = document.querySelector(".filter-row");
         if (managedCards.length && filterRow) {
           const searchInput = document.querySelector(".resource-search input");
@@ -70,7 +70,8 @@
             const activeChip = (filterRow.querySelector("button.active")?.textContent || "הכל").trim();
             const query = (searchInput?.value || "").trim().toLowerCase();
             managedCards.forEach((card) => {
-              const categoryMatch = activeChip === "הכל" || (card.getAttribute("data-managed-category") || "").trim() === activeChip;
+              const cardCategory = (card.getAttribute("data-managed-category") || card.querySelector(".resource-card-top span")?.textContent || "").trim();
+              const categoryMatch = activeChip === "הכל" || cardCategory === activeChip;
               const queryMatch = !query || card.textContent.toLowerCase().includes(query);
               card.style.display = categoryMatch && queryMatch ? "" : "none";
             });
@@ -685,7 +686,7 @@
     grid.append(card);
   };
   const addFooterLink = () => {
-    const existing = document.querySelector('a[href*="open.spotify.com/playlist/4gUqKPnJOkbHm9edItaR88"]');
+    const existing = document.querySelector('.footer a[href*="open.spotify.com/playlist/4gUqKPnJOkbHm9edItaR88"]');
     if (!existing || existing.parentElement.querySelector('.aima-playlist-footer')) return;
     const link = document.createElement('a');
     link.className = 'aima-playlist-footer';
