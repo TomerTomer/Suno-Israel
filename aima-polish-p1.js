@@ -247,19 +247,18 @@
   const ORDER = [
     '.hero.shell', '.p1-week', '.ticker', '#aima-pulse', '.p1-wa', '#community-spotlight',
     '.r2-dest', '#resources', '.aima-guide-start', '.r2-artists', '.artists-section',
-    '.home-feature-story', '.manifesto', '.aima-join', '.r2-journey', 'footer.footer'
+    '.home-feature-story', '.manifesto', '.aima-join', '.r2-journey', '.aima-sub', 'footer.footer'
   ];
   const reorder = () => {
     const main = $('main');
     if (!main) return;
-    const nodes = ORDER.map((s) => $(s)).filter(Boolean);
-    if (nodes.length < 6) return;
-    let anchor = null;
-    for (let i = nodes.length - 1; i >= 0; i--) {
-      const n = nodes[i];
-      if (anchor && n.nextElementSibling !== anchor) main.insertBefore(n, anchor);
-      anchor = n;
-    }
+    const kids = Array.from(main.children);
+    const keyed = kids.map((k) => ({ k, oi: ORDER.findIndex((sel) => { try { return k.matches(sel); } catch (e) { return false; } }) }));
+    if (keyed.filter((x) => x.oi >= 0).length < 6) return;
+    let last = -1;
+    keyed.forEach((x) => { if (x.oi >= 0) last = x.oi; else x.oi = last + 0.5; });
+    keyed.sort((a, b) => a.oi - b.oi); /* stable sort */
+    keyed.forEach((x) => main.appendChild(x.k));
   };
 
   /* meta: PULSE name in description */
