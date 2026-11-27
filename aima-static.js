@@ -30,7 +30,7 @@ function __aimaAfterHydration(fn) {
 
   document.addEventListener("click", (event) => {
     const link = event.target.closest("a");
-    if (!link || link.target || link.origin !== location.origin || link.hash) return;
+    if (!link || link.target || link.origin !== location.origin || link.hash || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || link.hasAttribute('download')) return;
     event.preventDefault();
     location.href = link.href;
   }, true);

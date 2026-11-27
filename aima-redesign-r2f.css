@@ -136,3 +136,11 @@ body .manifesto{display:block}
 body .manifesto blockquote{font-size:clamp(28px,5vw,56px);line-height:1.2;font-weight:900;max-width:960px;margin-inline:auto}
 body .channel-more{display:inline-flex;align-items:center;min-height:44px;margin-top:16px;font-weight:800}
 body .hero h1 em{color:var(--r2-lime)!important;background:none!important;-webkit-text-fill-color:var(--r2-lime)}
+/* contrast: darker pink for text on light backgrounds (AA) */
+body .manifesto em,body .home-feature-story em,body .manifesto .eyebrow,body .r2-artists .eyebrow,body .channel-card .channel-top span{color:#c0134f!important}
+body .aima-join{background:#d6245f!important}
+body .aima-join p{opacity:1!important}
+body a.r2-mag-link{background:#d6245f}
+body .pulse-meta span,body .cookie-copy small{color:#c0134f!important}
+body a.r2-mag-link,body .pulse-community-link{background-color:#d6245f!important}
+body .pulse-community-link span{color:#fff!important}
