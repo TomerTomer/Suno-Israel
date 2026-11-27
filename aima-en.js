@@ -21,6 +21,8 @@
     'דלג לתוכן המרכזי': 'Skip to main content',
     'בית': 'Home', 'אמנים': 'Artists', 'משאבים': 'Resources', 'רדיו': 'Radio', 'אירועים': 'Events',
     'חדשות ועדכונים': 'PULSE', 'תמיכה בקהילה': 'Support the community', 'הצטרפות ↗': 'Join ↗', 'הצטרפות': 'Join',
+    'הבית הישראלי לאמני בינה מוזיקלית. ללמוד, ליצור, לשתף, להכיר ולגלות עד כמה רחוק רעיון אחד יכול להגיע.':
+      'The Israeli home for AI music artists. Learn, create, share, meet artists and discover how far one idea can go.',
     'הבית הישראלי ליוצרות וליוצרי מוזיקה עם AI. ללמוד, ליצור, לשתף, להכיר אמנים ולגלות עד כמה רחוק רעיון אחד יכול להגיע.':
       'The Israeli home for music creators with AI. Learn, create, share, meet artists, and see how far one idea can go.',
     'מה חדש השבוע?': "What's new this week?", 'מה חדש השבוע? ←': "What's new this week? →",

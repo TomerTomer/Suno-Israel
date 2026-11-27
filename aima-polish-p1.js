@@ -76,6 +76,9 @@
     if (sub && !sub.parentElement.querySelector('.p1-sub2')) {
       sub.after(el('p', 'p1-sub2', 'מאות יוצרים, קהילה אחת, מוזיקה חדשה שנולדת כאן.'));
     }
+    $$('.hero .hero-lede').forEach((x) => {
+      if (x.textContent.indexOf('לאמני בינה מוזיקלית') === -1) x.textContent = "הבית הישראלי לאמני בינה מוזיקלית. ללמוד, ליצור, לשתף, להכיר ולגלות עד כמה רחוק רעיון אחד יכול להגיע.";
+    });
     const stack = $('.hero .stack');
     if (stack && !stack.hasAttribute('aria-hidden')) stack.setAttribute('aria-hidden', 'true');
   };
