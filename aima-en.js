@@ -24,7 +24,7 @@
     'הבית הישראלי ליוצרות וליוצרי מוזיקה עם AI. ללמוד, ליצור, לשתף, להכיר אמנים ולגלות עד כמה רחוק רעיון אחד יכול להגיע.':
       'The Israeli home for music creators with AI. Learn, create, share, meet artists, and see how far one idea can go.',
     'מה חדש השבוע?': "What's new this week?", 'מה חדש השבוע? ←': "What's new this week? →",
-    'לגלות אמנים': 'Discover artists',
+    'גלו אמנים': 'Discover artists',
     'קהילה אחת, מאות סאונדים. כאן לא צריך לבחור בין טכנולוגיה לנשמה.': 'Technology and soul, no need to choose.\nHundreds of creators, one community, new music born here.',
     'קהילה אחת, מאות סאונדים.': 'Technology and soul, no need to choose.',
     'כאן לא צריך לבחור בין טכנולוגיה לנשמה.': 'Hundreds of creators, one community, new music born here.',
