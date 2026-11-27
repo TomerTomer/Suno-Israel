@@ -160,6 +160,13 @@
     if (kicker) kicker.lastChild && kicker.lastChild.nodeType === 3 && (kicker.lastChild.textContent = ' AI MUSIC ARTISTS ISRAEL');
   };
 
+  /* hydration resets <html dir/lang> from the Hebrew app config — enforce EN root attrs */
+  const rootAttrs = () => {
+    const h = document.documentElement;
+    if (h.getAttribute('dir') !== 'ltr') h.setAttribute('dir', 'ltr');
+    if (h.getAttribute('lang') !== 'en') h.setAttribute('lang', 'en');
+  };
+
   /* hero: EN sub-line + ZIK radio button (mirror the polished Hebrew homepage) */
   const heroExtras = () => {
     const h1 = $('.hero h1');
@@ -251,7 +258,7 @@
         while (n) { batch.push(n); n = walker.nextNode(); }
         batch.forEach(translateElement);
       }
-      headings(); heroExtras(); attrs(); toggle(); hebrewOnlyTags(); pulse(); reorder();
+      rootAttrs(); headings(); heroExtras(); attrs(); toggle(); hebrewOnlyTags(); pulse(); reorder();
     } catch (e) { /* never break the page */ }
   };
 
@@ -262,7 +269,7 @@
       clearInterval(iv);
       ensure();
       let q = false;
-      new MutationObserver(() => { if (q) return; q = true; requestAnimationFrame(() => { q = false; ensure(); }); }).observe(document.body, { childList: true, subtree: true });
+      new MutationObserver(() => { if (q) return; q = true; requestAnimationFrame(() => { q = false; ensure(); }); }).observe(document.documentElement, { attributes: true, attributeFilter: ['dir', 'lang'], childList: true, subtree: true });
     }
   }, 80);
 })();
