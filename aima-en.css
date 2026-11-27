@@ -55,3 +55,7 @@ body .site-header .header-cta{background:#d9ff3f!important;color:#0d0716!importa
 body .site-header .support-link{border:1.5px solid currentColor!important;background:transparent!important;border-radius:999px!important;font-weight:600;padding:0 16px;text-decoration:none!important}
 .site-header .header-cta,.site-header .support-link{min-height:44px;display:inline-flex;align-items:center}
 @media (max-width:720px){body .site-header .support-link{display:none!important}}
+
+/* EN: footer line separation, Join contrast under forced/auto dark, pulse lead never stays hidden */
+.footer-bottom>span:not(.footer-legal){display:block;margin-bottom:6px}
+.site-header .header-cta,.site-header .header-cta *{color:#0d0716!important;-webkit-text-fill-color:#0d0716!important}

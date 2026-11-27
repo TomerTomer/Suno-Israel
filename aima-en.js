@@ -281,3 +281,42 @@
     }
   }, 80);
 })();
+
+/* The EN page ships its Pulse lead in the HTML; aima-static.js (which lifts the Pulse guard) is not loaded here. */
+(function () {
+  /* EN page ships a build-time Pulse lead; aima-static.js (which refreshes it and lifts the guard) is not loaded here.
+     Refresh the lead from the same public feed; if that fails, hide the card instead of showing an old item as current. */
+  var root = document.documentElement;
+  var lift = function () { if (!root.classList.contains('aima-pulse-ready')) root.classList.add('aima-pulse-ready'); };
+  var done = false;
+  var fmt = function (d) { return String(d || '').split('-').reverse().join('.'); };
+  var setText = function (el, v) { if (el && v != null && el.textContent !== v) el.textContent = v; };
+  var show = function (el, on) { if (el) el.style.display = on ? '' : 'none'; };
+  var apply = function (item) {
+    var lead = document.querySelector('#aima-pulse .pulse-lead');
+    if (!lead) return false;
+    if (!item) { lead.style.display = 'none'; lift(); return true; }
+    setText(lead.querySelector('.pulse-meta span'), item.label || 'A.I.M.A UPDATE');
+    setText(lead.querySelector('.pulse-meta time'), fmt(item.publishedAt));
+    setText(lead.querySelector('h3'), item.title);
+    setText(lead.querySelector('.pulse-summary'), item.summary || '');
+    var impact = lead.querySelector('.pulse-impact'), action = lead.querySelector('.pulse-action');
+    show(impact, !!item.impact); show(action, !!item.action);
+    if (impact) setText(impact.querySelector('p'), item.impact || '');
+    if (action) setText(action.querySelector('p'), item.action || '');
+    var official = lead.querySelector('.pulse-links a[target="_blank"]');
+    if (official) { if (item.url) official.setAttribute('href', item.url); show(official, !!item.url); }
+    lift();
+    return true;
+  };
+  var tries = 0;
+  var load = function () {
+    fetch('/api/public/content?type=news&limit=1&fresh=' + Date.now(), { cache: 'no-store', headers: { accept: 'application/json' } })
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error('unavailable')); })
+      .then(function (d) { var it = d && Array.isArray(d.items) && d.items[0]; if (!it || !it.title) throw new Error('empty'); done = true; apply(it); })
+      .catch(function () { if (++tries < 3) setTimeout(load, 1500 * tries); else { done = true; apply(null); } });
+  };
+  load();
+  /* React may rewrite the root class or the card during hydration: keep re-applying only the guard lift once resolved */
+  try { new MutationObserver(function () { if (done) lift(); }).observe(root, { attributes: true, attributeFilter: ['class'] }); } catch (e) {}
+})();

@@ -155,3 +155,6 @@ body .site-header .support-link{border:1.5px solid currentColor!important;backgr
 
 /* ---- Pulse honest waiting state (item 1) ---- */
 .p1-pulse-wait{display:grid;gap:var(--p1-s2)}
+
+/* Join stays readable under forced/auto dark appearance */
+.site-header .header-cta,.site-header .header-cta *{color:#0d0716!important;-webkit-text-fill-color:#0d0716!important}
