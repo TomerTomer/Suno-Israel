@@ -203,8 +203,6 @@
   const spotlight = () => {
     const fs = $('.week-song-footer span');
     if (fs && fs.textContent.trim() === 'מתחלף אוטומטית בכל שבוע') fs.textContent = 'מתחלף אוטומטית כל יום שני';
-    const head = $('.spotlight-head p');
-    if (head && !head.dataset.p1) { head.dataset.p1 = '1'; head.textContent = head.textContent + ' אמן חדש נבחר כל חודש.'; }
     const nameEl = $('[data-monthly-artist] [data-field="artist-name"]');
     if (nameEl && nameEl.textContent.trim()) aotmName = nameEl.textContent.trim();
     if (aotmName) {
