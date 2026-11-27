@@ -200,7 +200,7 @@
     const s = el('section', 'r2-journey', null, { 'aria-labelledby': 'r2-j-h' });
     s.append(el('h2', null, 'עוד לא סיימתם? יש לאן להמשיך.', { id: 'r2-j-h' }), el('p', null, 'כל פינה כאן מובילה לפינה הבאה. בחרו את הקרובה אליכם.'));
     const row = el('div', 'r2-journey-row');
-    [['להאזין לרדיו ZIK', 'https://zikairadio.com/', 1], ['לדפדף במגזין PULSE', '/magazine/'], ['לגלות אמן חדש', '/artists/'], ['להתחיל ללמוד', '/guides.html'], ['להצטרף לחדרי הקהילה', '/community/']].forEach((x) => {
+    [['להאזין לרדיו ZIK', 'https://zikairadio.com/', 1], ['לדפדף במגזין PULSE', '/magazine/'], ['לגלות אמן חדש', '/artists/'], ['להתחיל ללמוד', '/guides.html'], ['להצטרף לקבוצות הקהילה', '/community/']].forEach((x) => {
       const a = el('a', null, x[0], { href: x[1] });
       if (x[2]) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
       row.append(a);

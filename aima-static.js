@@ -9,7 +9,7 @@ function __aimaAfterHydration(fn) {
   var go = function () {
     if (document.body) fn(); else document.addEventListener('DOMContentLoaded', fn);
   };
-  if (hydrated()) { go(); return; }
+  if (!document.getElementById('_R_') || hydrated()) { go(); return; }
   var t0 = Date.now();
   var iv = setInterval(function () { if (hydrated() || Date.now() - t0 > 60000) { clearInterval(iv); go(); } }, 60);
 }
@@ -148,7 +148,7 @@ function __aimaAfterHydration(fn) {
       const eyebrow=pulse.querySelector('.eyebrow');if(eyebrow&&eyebrow.textContent!=='A.I.M.A PULSE · העדכונים האחרונים')eyebrow.textContent='A.I.M.A PULSE · העדכונים האחרונים';
       const h=pulse.querySelector('h2');if(h&&h.textContent!=='מה חדש השבוע?')h.textContent='מה חדש השבוע?';
       const head=pulse.querySelector('.pulse-heading');
-      if(head){const p=head.querySelector(':scope > p');if(p&&p.textContent!=='העדכונים האחרונים שאושרו בקהילה. התאריך מופיע בכל עדכון; לא בכל שבוע מגיע עדכון חדש.')p.textContent='העדכונים האחרונים שאושרו בקהילה. התאריך מופיע בכל עדכון; לא בכל שבוע מגיע עדכון חדש.';}
+      if(head){const p=head.querySelector(':scope > p');if(p&&p.textContent!=='העדכונים האחרונים שאושרו בקהילה. מתעדכן כל יום ראשון, והתאריך מופיע בכל עדכון.')p.textContent='העדכונים האחרונים שאושרו בקהילה. מתעדכן כל יום ראשון, והתאריך מופיע בכל עדכון.';}
       if(!document.querySelector('.aima-guide-start')){const section=document.createElement('section');section.className='shell aima-guide-start';section.innerHTML='<p><strong>חדשים בסונו?</strong><br>רעיון ראשון, פרומפט וטיפים לעברית. מתחילים בלי ללכת לאיבוד.</p><a class="button primary" href="'+new URL('guides.html',root).href+'">איפה מתחילים ←</a>';pulse.before(section);}
     }
     const spot=document.querySelector('#community-spotlight');
@@ -845,4 +845,32 @@ __aimaAfterHydration(() => {
   };
   apply();
   new MutationObserver(apply).observe(document.documentElement, { childList: true, subtree: true });
+});
+
+// One-time wording pass (no observers): one name for each thing, groups instead of rooms, honest label for the song card.
+__aimaAfterHydration(() => {
+  const map = [
+    [/כל החדרים/g, 'כל הקבוצות'],
+    [/חדרי הקהילה/g, 'קבוצות הקהילה'],
+    [/לחדרי הקהילה/g, 'לקבוצות הקהילה'],
+    [/שאר החדרים/g, 'שאר הקבוצות'],
+    [/^NOW PLAYING$/, 'נבחר מהקהילה']
+  ];
+  const run = () => {
+    const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode: (n) => n.parentElement && !/^(SCRIPT|STYLE|NOSCRIPT|TEXTAREA)$/.test(n.parentElement.tagName) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT
+    });
+    const nodes = []; while (w.nextNode()) nodes.push(w.currentNode);
+    nodes.forEach((n) => {
+      let v = n.nodeValue, o = v;
+      const t = v.trim();
+      if (!t) return;
+      map.forEach(([re, to]) => { v = v.replace(re, to); });
+      if (t === 'חדשות ועדכונים' && n.parentElement.closest('nav, footer')) v = v.replace('חדשות ועדכונים', 'PULSE');
+      if (v !== o) n.nodeValue = v;
+    });
+  };
+  run();
+  setTimeout(run, 2500);
+  window.addEventListener('load', () => setTimeout(run, 800));
 });
