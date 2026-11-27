@@ -2,6 +2,7 @@
   'use strict';
   var D = window.AIMA_MAG;
   var FEED = '/api/public/content?type=news&limit=30';
+  var ARCHIVE = 'archive.json';
   var root = document.getElementById('mag');
   var PAGE = 6, STEP = 5;
 
@@ -132,7 +133,7 @@
   var stream = h('section', { class: 'mag-stream', 'aria-label': 'כל החדשות' });
   var sentinel = h('div', { class: 'mag-sentinel' });
   var more = h('button', { type: 'button', class: 'mag-loadmore', text: 'עוד חדשות' });
-  var end = h('p', { class: 'mag-end', text: 'זה סוף הגיליון. כתבות חדשות מצטרפות כאן מדי יום.' });
+  var end = h('p', { class: 'mag-end', text: 'זה סוף הארכיון. כתבות חדשות מצטרפות כאן מדי יום.' });
   var io;
 
   function reveal() {
@@ -159,14 +160,16 @@
     setTimeout(function () { paintMore(STEP); loading = false; }, 350);
   }
 
-  function compose(feed, stale) {
+  function compose(feed, stale, archiveItems) {
     var covered = {};
     D.cover.urls.forEach(function (u) { covered[u] = 1; });
     D.stories.forEach(function (s) { s.urls.forEach(function (u) { covered[u] = 1; }); });
     var list = [];
     D.stories.filter(function (s) { return !s.archive; }).forEach(function (s) { list.push({ iso: s.iso, rank: 1, build: function () { return module_(s); } }); });
+    var liveUrls = {};
     (feed || []).forEach(function (f) {
       if (!f || !f.url || covered[f.url]) return;
+      liveUrls[f.url] = 1;
       list.push({ iso: String(f.publishedAt || '').slice(0, 10), rank: 0, build: function () { return rawItem(f); } });
     });
     var V = list.filter(function (x) { return x.rank === 1; }), R = list.filter(function (x) { return x.rank === 0; });
@@ -181,6 +184,15 @@
     list = out.slice();
     var at = Math.min(3, out.length);
     out.splice(at, 0, { build: listen });
+    /* Older items that already rolled out of the live feed: kept by the daily archive job, shown below as unreviewed rows */
+    var old = (archiveItems || []).filter(function (a) { return a && a.url && !covered[a.url] && !liveUrls[a.url]; });
+    old.sort(function (a, b) { var x = String(a.publishedAt || ''), y = String(b.publishedAt || ''); return x < y ? 1 : x > y ? -1 : 0; });
+    if (old.length) {
+      out.push({ heading: 'ארכיון החדשות' });
+      for (var ai = 0; ai < old.length; ai += 2) {
+        out.push({ build: (function (p) { return function () { var d = h('div', { class: 'mag-pair' }); p.forEach(function (x) { d.appendChild(rawItem(x)); }); return d; }; })(old.slice(ai, ai + 2)) });
+      }
+    }
     var arch = D.stories.filter(function (s) { return s.archive; });
     if (arch.length) { out.push({ heading: 'מהארכיון של Suno' }); arch.forEach(function (s) { out.push({ build: function () { return module_(s); } }); }); }
     items = out;
@@ -189,8 +201,8 @@
     if (el) el.textContent = (stale ? 'גרסה שמורה · ' : 'גיליון ') + (fmt(latest) || '');
   }
 
-  function start(feed, stale) {
-    compose(feed, stale);
+  function start(feed, stale, archiveItems) {
+    compose(feed, stale, archiveItems);
     stream.textContent = '';
     stream.appendChild(rv(h('h2', { class: 'mag-h', text: 'עוד מהשבוע' })));
     stream.appendChild(sentinel); stream.appendChild(more); stream.appendChild(end);
@@ -211,10 +223,19 @@
   reveal.io = null;
   var cov = root.querySelectorAll('.mag-cover,.mag-numbers'); Array.prototype.forEach.call(cov, function (e) { e.classList.add('is-in'); });
 
-  var timer = setTimeout(function () { if (!started) { started = true; start(window.AIMA_SNAPSHOT || [], true); } }, 6000);
   var started = false;
+  var archP = fetch(ARCHIVE + '?fresh=' + Date.now(), { cache: 'no-store', headers: { accept: 'application/json' } })
+    .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error('archive')); })
+    .then(function (d) { return Array.isArray(d) ? d : (d && Array.isArray(d.items) ? d.items : []); })
+    .catch(function () { return []; });
+  function go(feedData, stale) {
+    if (started) return;
+    started = true; clearTimeout(timer);
+    archP.then(function (arch) { start(feedData, stale, arch); });
+  }
+  var timer = setTimeout(function () { go(window.AIMA_SNAPSHOT || [], true); }, 6000);
   fetch(FEED + '&fresh=' + Date.now(), { cache: 'no-store', headers: { accept: 'application/json' } })
     .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error('feed')); })
-    .then(function (d) { if (started) return; started = true; clearTimeout(timer); start(d && Array.isArray(d.items) ? d.items : [], false); })
-    .catch(function () { if (started) return; started = true; clearTimeout(timer); start(window.AIMA_SNAPSHOT || [], true); });
+    .then(function (d) { go(d && Array.isArray(d.items) ? d.items : [], false); })
+    .catch(function () { go(window.AIMA_SNAPSHOT || [], true); });
 })();
