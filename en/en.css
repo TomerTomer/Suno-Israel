@@ -4,3 +4,5 @@ html{scroll-padding-top:96px}body{margin:0}.skip{position:absolute;top:-100px}.s
 .en-foot{max-width:1180px;margin:0 auto;padding:40px 16px;font-size:14px}.en-foot p{margin:4px 0}.hero.shell,.r2-dest,.r2-artists,.r2-journey{direction:ltr;text-align:center}.r2-tile,.r2-card{text-align:left}
 .hero.shell{display:block}.hero.shell .hero-copy{max-width:none;margin-inline:auto}.hero-copy{text-align:center}.brand{gap:12px}.site-header .brand-lockup{display:flex}body{font-family:Assistant,sans-serif}
 body .r2-dest-grid.en-g4{grid-template-columns:repeat(4,1fr)}@media(max-width:1000px){body .r2-dest-grid.en-g4{grid-template-columns:1fr 1fr}}@media(max-width:640px){body .r2-dest-grid.en-g4{grid-template-columns:1fr}}.en-more{margin:14px 0 0;display:flex;flex-wrap:wrap;gap:10px;justify-content:center}.en-pulse .r2-tile h3,.en-pulse .r2-tile p{text-align:right}
+footer a{display:inline-block;padding-block:12px}
+.lang-toggle{min-height:44px;display:inline-flex;align-items:center;justify-content:center}

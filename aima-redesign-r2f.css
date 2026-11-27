@@ -125,3 +125,5 @@ body .r2-credit{font-size:15px;color:#fff;letter-spacing:.02em;margin:0;padding:
 /* hash links land below the sticky header */
 html{scroll-padding-top:96px}
 #aima-pulse{scroll-margin-top:96px}
+.footer a,footer a{display:inline-block;padding-block:10px}
+.lang-toggle,.header-cta{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
