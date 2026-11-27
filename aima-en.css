@@ -1,0 +1,41 @@
+/* A.I.M.A English homepage (/en/) — LTR direction fixes on top of the shared styles. */
+[dir="ltr"] body, [dir="ltr"] main{text-align:left}
+[dir="ltr"] .hero .hero-copy{text-align:start}
+[dir="ltr"] .hero .hero-actions{justify-content:flex-start}
+[dir="ltr"] .section-head,[dir="ltr"] .pulse-heading,[dir="ltr"] .spotlight-head{text-align:start}
+[dir="ltr"] .channel-card{text-align:start}
+[dir="ltr"] .manifesto{text-align:center}
+[dir="ltr"] .footer-grid{text-align:start}
+
+/* internal-link arrows flip with direction: → used for internal in the EN copy */
+.mobile-nav{
+  overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+  -webkit-mask-image:linear-gradient(to right,transparent 0,#000 32px,#000 calc(100% - 32px),transparent 100%);
+  mask-image:linear-gradient(to right,transparent 0,#000 32px,#000 calc(100% - 32px),transparent 100%);
+}
+.mobile-nav::-webkit-scrollbar{display:none}
+.mobile-nav a{white-space:nowrap;min-height:44px;display:inline-flex;align-items:center}
+.main-nav a{min-height:44px;display:inline-flex;align-items:center}
+
+/* language toggle (EN current) */
+.en-lang{display:inline-flex;align-items:center;gap:2px;border:1.5px solid #0d071626;border-radius:999px;padding:2px}
+.en-lang b,.en-lang a{padding:0 12px;border-radius:999px;font-size:14px;font-weight:700;min-height:44px;display:inline-flex;align-items:center}
+.en-lang b{background:#0d0716;color:#fff}
+.en-lang a{color:inherit}
+@media (max-width:720px){
+  .site-header{flex-wrap:wrap}
+  .en-lang{order:-1;margin-inline-end:auto}
+}
+
+/* "Hebrew only" tags on untranslated dynamic areas */
+.en-he-only{
+  display:inline-block;font-size:12px;font-weight:700;letter-spacing:.02em;
+  background:#0d071610;border-radius:999px;padding:4px 12px;margin:0 0 8px;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .ticker>div,.equalizer i,.orb,.floating-note{animation:none!important}
+}
+@media (max-width:720px){
+  .utility-dock{bottom:88px!important}
+}
