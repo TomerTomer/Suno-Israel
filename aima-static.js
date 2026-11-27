@@ -773,6 +773,12 @@
       w.append(mk('aima-all-updates', 'לכל עדכוני הפולס ←'));
       layout.after(w);
     }
+    const wrapEl = pulse.querySelector('.aima-all-updates-wrap');
+    if (wrapEl && !wrapEl.querySelector('.aima-magazine-link')) {
+      const mg = mk('aima-all-updates aima-magazine-link', 'המגזין המעוצב של PULSE ←');
+      mg.href = '/magazine/';
+      wrapEl.append(mg);
+    }
   };
   const hydrated = () => {
     const m = document.querySelector('main');
