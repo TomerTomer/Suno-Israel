@@ -281,7 +281,7 @@
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => {
         const items = (d && Array.isArray(d.items)) ? d.items : [];
-        const isSuno = (x) => /suno|סונו/i.test((x.title || '') + ' ' + (x.originalTitle || ''));
+        const isSuno = (x) => /suno|סונו/i.test((x.title || ''));
         const sun = items.find(isSuno);
         const it = sun || items[0];
         if (it && it.title) { weekData.news = Object.assign({}, it, { p1suno: !!sun }); weekStrip(); }

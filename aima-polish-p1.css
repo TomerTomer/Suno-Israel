@@ -141,7 +141,7 @@ body .site-header .support-link{border:1.5px solid currentColor!important;backgr
 .p1-lang b{background:var(--p1-ink);color:#fff}
 .p1-lang a{color:inherit}
 @media (max-width:720px){
-  .site-header{flex-wrap:wrap}
+  .site-header{flex-wrap:wrap;padding-inline:12px!important;box-sizing:border-box;max-width:100%}
   .p1-lang{order:-1;margin-inline-start:auto}
   .site-header .support-link{display:none!important}
   .site-header .header-cta{flex-shrink:0}
