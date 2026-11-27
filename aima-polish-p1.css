@@ -144,9 +144,11 @@ body .site-header .support-link{border:1.5px solid currentColor!important;backgr
   .site-header{flex-wrap:wrap;padding-inline:12px!important;box-sizing:border-box;max-width:100%}
   .p1-lang{order:-1;margin-inline-start:auto}
   .site-header .support-link{display:none!important}
-  .site-header .header-cta{flex-shrink:0;padding-inline:12px!important;font-size:14px!important;gap:4px}
+  .site-header .header-cta{flex-shrink:0;padding-inline:10px!important;font-size:13px!important;gap:3px}
   .site-header .header-actions{gap:6px!important;flex-wrap:nowrap}
-  .p1-lang b,.p1-lang a{padding:0 9px}
+  .p1-lang b,.p1-lang a{padding:0 7px}
+  .site-header .brand{max-width:168px;overflow:hidden}
+  .site-header .brand strong,.site-header .brand span{letter-spacing:.04em!important}
 }
 
 /* ---- item 10: second hero line under the manifesto sentence ---- */
