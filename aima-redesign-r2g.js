@@ -114,7 +114,7 @@
     if (sideHead && !sideHead.querySelector('.r2-mag-link')) sideHead.append(mk());
     const bottom = p.querySelector('.aima-all-updates-wrap');
     if (bottom && !bottom.querySelector('.aima-magazine-link, .r2-mag-link')) bottom.append(mk());
-    if (bottom && !bottom.querySelector('.r2-wa-link')) bottom.append(el('a', 'r2-mag-link r2-wa-link', 'העדכון השבועי ישר לוואטסאפ ←', { href: 'https://chat.whatsapp.com/Fszh7OgvNE082s4bOLvMuI?s=sh&p=i&iam=2', target: '_blank', rel: 'noopener noreferrer' }));
+    if (bottom && !bottom.querySelector('.r2-wa-link')) bottom.append(el('a', 'r2-mag-link r2-wa-link', 'לקבוצת הוואטסאפ של הקהילה ←', { href: 'https://chat.whatsapp.com/Fszh7OgvNE082s4bOLvMuI?s=sh&p=i&iam=2', target: '_blank', rel: 'noopener noreferrer' }));
   };
 
   /* weekly strip above PULSE (no event date: no verified upcoming event) */
@@ -135,19 +135,19 @@
     const sec = el('section', 'r2-artists', null, { id: 'r2-artists', 'aria-labelledby': 'r2-art-h' });
     const head = el('div', 'r2-art-head');
     const t = el('div'); t.append(el('p', 'eyebrow', 'OUR ARTISTS'));
-    const h2 = el('h2', null, null, { id: 'r2-art-h' }); h2.append(document.createTextNode('האמנים שלנו. '), el('em', null, 'בכל ביקור אמן חדש.')); t.append(h2);
+    const h2 = el('h2', null, null, { id: 'r2-art-h' }); h2.append(document.createTextNode('ארבעה יוצרים '), el('em', null, 'להתחיל איתם.')); t.append(h2);
     const ctl = el('div', 'r2-art-ctl');
     const bPrev = el('button', 'r2-btn', '→', { type: 'button', 'aria-label': 'האמן הקודם' });
     const bNext = el('button', 'r2-btn', '←', { type: 'button', 'aria-label': 'האמן הבא' });
     const bPlay = el('button', 'r2-btn', 'השהיה', { type: 'button', 'aria-pressed': 'false' });
     const bShuf = el('button', 'r2-btn', 'ערבוב חדש', { type: 'button' });
-    const all = el('a', 'r2-btn', 'לכל האמנים ←', { href: '/artists/' });
-    ctl.append(bPrev, bNext, bPlay, bShuf, all);
+    const all = el('a', 'r2-btn', 'ועוד ' + Math.max(0, artists.length - 4) + ' בספרייה ←', { href: '/artists/' });
+    ctl.append(bShuf, all);
     head.append(t, ctl);
     const track = el('div', 'r2-track', null, { role: 'region', 'aria-label': 'קרוסלת אמנים', tabindex: '0' });
     const draw = () => {
       track.textContent = '';
-      shuffle(pool).slice(0, 14).forEach((a) => {
+      shuffle(pool).slice(0, 4).forEach((a) => {
         const link = bestLink(a) || '/artists/';
         const ext = /^https?:/.test(link) && new URL(link, location.href).origin !== location.origin;
         const c = el('a', 'r2-card', null, { href: link });
@@ -176,7 +176,7 @@
     };
     bNext.onclick = () => move(1); bPrev.onclick = () => move(-1);
     bShuf.onclick = draw;
-    let paused = reduce, inView = false, timer = null, hover = false;
+    let paused = true, inView = false, timer = null, hover = false;
     const label = () => { bPlay.textContent = paused ? 'ניגון אוטומטי' : 'השהיה'; bPlay.setAttribute('aria-pressed', String(paused)); };
     label();
     bPlay.onclick = () => { paused = !paused; label(); };
