@@ -291,9 +291,9 @@ function __aimaAfterHydration(fn) {
     if (!hero) return;
     const box = document.createElement('section');
     box.className = 'aima-join';
-    box.innerHTML = '<div><h2>רוצים להירשם כאמן? מלאו את הטופס</h2><p>דקה אחת, והפרופיל שלכם מצטרף לספריית האמנים של הקהילה.</p></div>';
+    box.innerHTML = '<div><h2>יוצרים עם Suno? תיכנסו לספרייה.</h2><p>דקה אחת, והפרופיל שלכם נכנס לספרייה בעדכון היומי.</p></div>';
     const link = document.createElement('a');
-    link.href = FORM; link.target = '_blank'; link.rel = 'noreferrer'; link.textContent = 'לטופס ההרשמה ↗';
+    link.href = FORM; link.target = '_blank'; link.rel = 'noreferrer'; link.textContent = 'להוסיף אותי לספרייה ↗';
     box.append(link);
     hero.insertAdjacentElement('afterend', box);
   };
