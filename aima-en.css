@@ -37,7 +37,9 @@
   .ticker>div,.equalizer i,.orb,.floating-note{animation:none!important}
 }
 @media (max-width:720px){
-  .utility-dock{bottom:88px!important}
+  .utility-dock{bottom:calc(96px + env(safe-area-inset-bottom,0px))!important}
+  .utility-dock .utility-button{font-size:0!important;width:44px;height:44px;min-height:44px;padding:0!important;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;gap:0}
+  .utility-dock .utility-button span{font-size:22px;line-height:1}
 }
 
 /* EN hero: sub-line + ZIK button mirroring the Hebrew homepage */

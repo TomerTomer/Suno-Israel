@@ -82,6 +82,11 @@
 
   /* "השבוע באתר" strip above the fold: song of the week + latest update + next event, with real dates only */
   let weekData = { overrides: null, news: null };
+  const wrap = (a, arrow) => {
+    const box = el('span', 'p1-wk-t');
+    while (a.firstChild) box.append(a.firstChild);
+    a.append(box, el('span', 'p1-wk-a', arrow, { 'aria-hidden': 'true' }));
+  };
   const weekStrip = () => {
     const heroSec = $('.hero.shell');
     if (!heroSec) return;
@@ -97,13 +102,15 @@
       if (songs.length) {
         const song = songs[isoWeek(new Date()) % songs.length];
         const a = el('a', null, null, { href: song.href, target: '_blank', rel: 'noopener noreferrer' });
-        a.append(el('small', null, 'שיר השבוע · שבוע ' + isoWeek(new Date())), document.createTextNode(' ' + song.title + (song.artist ? ' — ' + song.artist : '') + ' ↗'));
+        a.append(el('small', null, 'שיר השבוע · שבוע ' + isoWeek(new Date())), document.createTextNode(song.title + (song.artist ? ' — ' + song.artist : '')));
+        wrap(a, '↗\uFE0E');
         s.append(a);
       }
     }
     if (weekData.news) {
       const a = el('a', null, null, { href: '/news/' });
-      a.append(el('small', null, 'עדכון אחרון · ' + fmtDate(weekData.news.publishedAt)), document.createTextNode(' ' + weekData.news.title + ' ←'));
+      a.append(el('small', null, (weekData.news.p1suno ? 'עדכון Suno אחרון · ' : 'חדש ב-PULSE · ') + fmtDate(weekData.news.publishedAt)), document.createTextNode(weekData.news.title));
+      wrap(a, '←');
       s.append(a);
     }
     const evs = ((weekData.overrides && weekData.overrides.events) || []).filter((x) => x && x.title);
@@ -115,7 +122,8 @@
       const ev0 = upcoming[0];
       const t = Date.parse(ev0.date || ev0.start || '');
       const ev = el('a', null, null, { href: ev0.href || '/events/' });
-      ev.append(el('small', null, 'אירוע קרוב' + (isNaN(t) ? '' : ' · ' + fmtDate(ev0.date || ev0.start))), document.createTextNode(' ' + ev0.title + ' ←'));
+      ev.append(el('small', null, 'אירוע קרוב' + (isNaN(t) ? '' : ' · ' + fmtDate(ev0.date || ev0.start))), document.createTextNode(ev0.title));
+      wrap(ev, '←');
       s.append(ev);
     }
   };
@@ -266,17 +274,29 @@
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => { weekData.overrides = d; weekStrip(); spotlight(); })
       .catch(() => {});
-    fetch('/api/public/content?type=news&limit=1', { cache: 'no-store', headers: { accept: 'application/json' } })
+    fetch('/api/public/content?type=news&limit=20', { cache: 'no-store', headers: { accept: 'application/json' } })
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => {
-        const it = d && Array.isArray(d.items) && d.items[0];
-        if (it && it.title) { weekData.news = it; weekStrip(); }
+        const items = (d && Array.isArray(d.items)) ? d.items : [];
+        const isSuno = (x) => /suno|סונו/i.test((x.title || '') + ' ' + (x.originalTitle || ''));
+        const sun = items.find(isSuno);
+        const it = sun || items[0];
+        if (it && it.title) { weekData.news = Object.assign({}, it, { p1suno: !!sun }); weekStrip(); }
       })
       .catch(() => {});
   };
 
+  const textArrows = () => {
+    const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    let n;
+    while ((n = w.nextNode())) {
+      const v = n.nodeValue;
+      if (v && v.indexOf('\u2197') > -1 && /\u2197(?!\uFE0E)/.test(v)) n.nodeValue = v.replace(/\u2197(?!\uFE0E)/g, '\u2197\uFE0E');
+    }
+  };
   const ensure = () => {
     try {
+      textArrows();
       meta(); headerFooter(); hero(); weekStrip(); pulse(); entries(); spotlight(); aria(); journey(); zikButton(); reorder();
     } catch (e) { /* never break the page */ }
   };
