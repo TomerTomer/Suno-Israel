@@ -207,11 +207,11 @@
 
   const ensure = () => {
     try {
-      const main = $('main');
-      if (main) {
-        const walker = document.createTreeWalker(main, NodeFilter.SHOW_ELEMENT);
+      const root = document.body;
+      if (root) {
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT);
         const batch = [];
-        let n = walker.currentNode;
+        let n = walker.nextNode();
         while (n) { batch.push(n); n = walker.nextNode(); }
         batch.forEach(translateElement);
       }
