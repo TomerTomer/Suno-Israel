@@ -1,3 +1,18 @@
+// Shared gate: run a callback only after React has hydrated <main> (editing server HTML earlier causes hydration error #418).
+function __aimaAfterHydration(fn) {
+  var hydrated = function () {
+    var m = document.querySelector('main');
+    if (!m) return false;
+    for (var k in m) if (k.indexOf('__reactFiber$') === 0 || k.indexOf('__reactProps$') === 0) return true;
+    return false;
+  };
+  var go = function () {
+    if (document.body) fn(); else document.addEventListener('DOMContentLoaded', fn);
+  };
+  if (hydrated()) { go(); return; }
+  var t0 = Date.now();
+  var iv = setInterval(function () { if (hydrated() || Date.now() - t0 > 60000) { clearInterval(iv); go(); } }, 60);
+}
 // Wait for React to finish hydrating before touching the page; editing server HTML earlier
 // makes React throw hydration error #418 and rebuild the page (resets Pulse to its built-in item).
 (function () {
@@ -670,7 +685,7 @@
 
 
 // Playlist: feature the community's Mediterranean Spotify playlist (ים תיכוני מושלם).
-(() => {
+__aimaAfterHydration(() => {
   const PLAYLIST_URL = 'https://open.spotify.com/playlist/2e6MFxC0UwNeccy14grw0W';
   const home = location.pathname === '/' || (/\/index\.html$/.test(location.pathname) && location.pathname.split('/').length === 2);
   const addCard = () => {
@@ -699,7 +714,7 @@
   const apply = () => { addCard(); addFooterLink(); };
   apply();
   new MutationObserver(apply).observe(document.body, { childList: true, subtree: true });
-})();
+});
 
 
 // 2026-11-26: steadier scrolling and one obvious entry to all Pulse updates.
@@ -802,7 +817,7 @@
 // 2026-11-27: brand lockup. Small "AI Music Artists" under the dotted A.I.M.A wordmark in the
 // site header, and the community tagline "קהילת סונו ישראל | AI Music Artists" in the footer
 // brand. Deliberately light so the header stays uncluttered (user request, 2026-11-27).
-(() => {
+__aimaAfterHydration(() => {
   const st = document.createElement('style');
   st.id = 'aima-brand-lockup';
   st.textContent =
@@ -830,4 +845,4 @@
   };
   apply();
   new MutationObserver(apply).observe(document.documentElement, { childList: true, subtree: true });
-})();
+});
