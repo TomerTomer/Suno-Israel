@@ -111,7 +111,7 @@
 
   function head() {
     return h('header', { class: 'mag-mast' },
-      h('div', { class: 'mag-mast-top' }, h('span', { text: 'A.I.M.A' }), h('span', { id: 'mag-issue', text: '' })),
+      h('div', { class: 'mag-mast-top' }, h('span', { class: 'mag-brand' }, 'A.I.M.A', h('small', { class: 'mag-brand-sub', text: 'AI Music Artists' })), h('span', { id: 'mag-issue', text: '' })),
       h('h1', null, 'PULSE', h('i', { text: '.' })),
       h('p', { class: 'mag-sub', text: 'חדשות מוזיקת ה-AI בעברית, עם מה שזה אומר ליוצרים. כתבות עם תמונה נבדקו מול המקור. שורות מסומנות "טרם נבדק" מגיעות אוטומטית מהפיד.' }));
   }
@@ -220,6 +220,23 @@
   root.appendChild(stream);
   root.appendChild(h('footer', { class: 'mag-foot' }, h('b', { text: 'A.I.M.A PULSE' }), h('span', { text: 'כתבות עם תמונה נבדקו מול המקור. תמונות לפי הקרדיט שליד כל אחת. שורות "טרם נבדק" מגיעות אוטומטית מהפיד ועדיין לא עברו בדיקה.' })));
   document.documentElement.classList.add('mag-js');
+
+  /* Brand lockup on this standalone page (aima-static.js is not loaded here):
+     subtitle under the header wordmark, community tagline in the footer. */
+  (function brandLockup() {
+    var name = document.querySelector('.site-header .brand > .brand-name');
+    if (name && name.parentElement && !name.parentElement.classList.contains('brand-lockup')) {
+      var wrap = h('span', { class: 'brand-lockup' });
+      name.parentElement.insertBefore(wrap, name);
+      wrap.appendChild(name);
+      wrap.appendChild(h('span', { class: 'brand-sub', text: 'AI Music Artists' }));
+    }
+    var fp = document.querySelector('.footer-brand p');
+    if (fp && fp.textContent.trim() === 'AI MUSIC ARTISTS ISRAEL') {
+      fp.textContent = 'קהילת סונו ישראל | AI Music Artists';
+      fp.classList.add('aima-footer-tag');
+    }
+  })();
   reveal.io = null;
   var cov = root.querySelectorAll('.mag-cover,.mag-numbers'); Array.prototype.forEach.call(cov, function (e) { e.classList.add('is-in'); });
 

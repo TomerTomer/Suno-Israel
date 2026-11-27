@@ -168,3 +168,10 @@
 .mag-pair { display: grid; gap: 14px; }
 @media (min-width: 820px) { .mag-pair { grid-template-columns: 1fr 1fr; gap: 18px; } .mag-pair .mag-raw { grid-template-columns: 56px 1fr; } }
 .mag-overlay > img { object-position: 52% 20%; }
+
+/* Brand lockup (aima-static.js is not loaded on this standalone page) */
+.site-header .brand-lockup { display: flex; flex-direction: column; align-items: flex-start; line-height: 1; }
+.site-header .brand-sub { font-size: 10px; font-weight: 700; letter-spacing: .22em; color: #585751; margin-top: 4px; white-space: nowrap; direction: ltr; text-align: left; }
+.footer-brand p.aima-footer-tag { letter-spacing: .06em; font-size: 12px; }
+.mag-brand { display: flex; flex-direction: column; align-items: flex-start; line-height: 1; }
+.mag-brand-sub { font-size: 9px; font-weight: 400; letter-spacing: .2em; opacity: .6; margin-top: 4px; direction: ltr; }

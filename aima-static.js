@@ -795,3 +795,37 @@
     }
   }, 60);
 })();
+
+
+// 2026-11-27: brand lockup. Small "AI Music Artists" under the dotted A.I.M.A wordmark in the
+// site header, and the community tagline "קהילת סונו ישראל | AI Music Artists" in the footer
+// brand. Deliberately light so the header stays uncluttered (user request, 2026-11-27).
+(() => {
+  const st = document.createElement('style');
+  st.id = 'aima-brand-lockup';
+  st.textContent =
+    '.site-header .brand-lockup{display:flex;flex-direction:column;align-items:flex-start;line-height:1}' +
+    '.site-header .brand-sub{font-size:10px;font-weight:700;letter-spacing:.22em;color:#585751;margin-top:4px;white-space:nowrap;direction:ltr;text-align:left}' +
+    '.footer-brand p.aima-footer-tag{letter-spacing:.06em;font-size:12px}';
+  document.head.append(st);
+  const apply = () => {
+    const name = document.querySelector('.site-header .brand > .brand-name');
+    if (name && name.parentElement && !name.parentElement.classList.contains('brand-lockup')) {
+      const wrap = document.createElement('span');
+      wrap.className = 'brand-lockup';
+      name.parentElement.insertBefore(wrap, name);
+      wrap.append(name);
+      const sub = document.createElement('span');
+      sub.className = 'brand-sub';
+      sub.textContent = 'AI Music Artists';
+      wrap.append(sub);
+    }
+    const fp = document.querySelector('.footer-brand p');
+    if (fp && fp.textContent.trim() === 'AI MUSIC ARTISTS ISRAEL') {
+      fp.textContent = 'קהילת סונו ישראל | AI Music Artists';
+      fp.classList.add('aima-footer-tag');
+    }
+  };
+  apply();
+  new MutationObserver(apply).observe(document.documentElement, { childList: true, subtree: true });
+})();
