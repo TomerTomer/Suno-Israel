@@ -16,3 +16,6 @@ footer a{padding-block:10px}
 .aima-join a,.aima-guide-start a.button{display:inline-flex;align-items:center;justify-content:center;min-height:54px;padding:0 28px;border-radius:999px;background:#111;color:#d8ff3e;font-weight:900;font-size:18px;text-decoration:none;white-space:nowrap}
 @media(max-width:700px){.aima-join,.aima-guide-start{flex-direction:column;align-items:flex-start;padding:22px}.aima-join a,.aima-guide-start a.button{width:100%;box-sizing:border-box}}
 .hero.shell{min-height:0!important}
+
+body .en-app{background:#10100f;padding:28px 0 8px;margin-top:40px}body .en-app .community-app-strip{margin-bottom:0}
+body .en-app h2{color:#fff;text-align:left}
