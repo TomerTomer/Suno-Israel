@@ -128,3 +128,10 @@ html{scroll-padding-top:96px}
 footer a{padding-block:7px}
 .lang-toggle,.header-cta{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
 .month-artist-copy h3{font-size:clamp(28px,2.6vw,40px);overflow-wrap:break-word;word-break:normal;hyphens:none;line-height:1.02}
+
+body .r2-week{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;justify-content:center;margin:0 auto;padding:14px 18px;max-width:1100px;font-weight:700;font-size:16px}
+body .r2-week strong{font-weight:900}
+body .r2-week a{color:inherit;text-decoration:underline;text-underline-offset:4px;min-height:44px;display:inline-flex;align-items:center}
+body .manifesto{display:block}
+body .manifesto blockquote{font-size:clamp(28px,5vw,56px);line-height:1.2;font-weight:900;max-width:960px;margin-inline:auto}
+body .channel-more{display:inline-flex;align-items:center;min-height:44px;margin-top:16px;font-weight:800}

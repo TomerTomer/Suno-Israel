@@ -58,11 +58,7 @@
     if (!h) return;
     const h1 = h.querySelector('h1');
     h.querySelectorAll('.r2-community').forEach((x) => x.remove());
-    if (h1 && !h.querySelector('.r2-sub')) {
-      const w = el('p', 'r2-sub');
-      w.append(el('b', null, 'קהילה'), document.createTextNode(' אחת, מאות קולות, ומוזיקה חדשה שנולדת כאן.'));
-      h1.after(w);
-    }
+    h.querySelectorAll('.r2-sub').forEach((x) => x.remove());
     const acts = h.querySelector('.hero-actions');
     if (acts && !acts.querySelector('.r2-radio')) {
       const a = el('a', 'button r2-radio', null, { href: 'https://zikairadio.com/', target: '_blank', rel: 'noopener noreferrer' });
@@ -71,7 +67,7 @@
     }
     const stat = h.querySelector('.r2-stat');
     if (artists && artists.length) {
-      if (!stat) { const p = el('p', 'r2-stat'); p.append(el('strong', null, String(artists.length)), document.createTextNode(' אמנים בספריית הקהילה, ורדיו, מגזין ומשאבים במקום אחד')); (h.querySelector('.hero-copy') || h).append(p); }
+      if (!stat) { const p = el('p', 'r2-stat'); p.append(el('strong', null, String(artists.length)), document.createTextNode(' אמנים בספרייה · רדיו 24/7')); (h.querySelector('.hero-copy') || h).append(p); }
     }
   };
 
@@ -100,7 +96,7 @@
       g.append(a);
     });
     s.append(hh, g);
-    h.after(s);
+    (document.querySelector('.manifesto') || h).after(s);
     reveal(s);
   };
 
@@ -118,7 +114,16 @@
     if (sideHead && !sideHead.querySelector('.r2-mag-link')) sideHead.append(mk());
     const bottom = p.querySelector('.aima-all-updates-wrap');
     if (bottom && !bottom.querySelector('.aima-magazine-link, .r2-mag-link')) bottom.append(mk());
-    if (bottom && !bottom.querySelector('.r2-wa-link')) bottom.append(el('a', 'r2-mag-link r2-wa-link', 'לקבוצת הוואטסאפ של הקהילה ←', { href: 'https://chat.whatsapp.com/Fszh7OgvNE082s4bOLvMuI?s=sh&p=i&iam=2', target: '_blank', rel: 'noopener noreferrer' }));
+    if (bottom && !bottom.querySelector('.r2-wa-link')) bottom.append(el('a', 'r2-mag-link r2-wa-link', 'העדכון השבועי ישר לוואטסאפ ←', { href: 'https://chat.whatsapp.com/Fszh7OgvNE082s4bOLvMuI?s=sh&p=i&iam=2', target: '_blank', rel: 'noopener noreferrer' }));
+  };
+
+  /* weekly strip above PULSE (no event date: no verified upcoming event) */
+  const week = () => {
+    const p = document.querySelector('#aima-pulse');
+    if (!p || document.querySelector('.r2-week')) return;
+    const w = el('p', 'r2-week');
+    w.append(el('strong', null, 'השבוע ב-A.I.M.A:'), el('a', null, 'עדכון Suno', { href: '#aima-pulse' }), el('a', null, 'שיר השבוע', { href: '#community-spotlight' }));
+    p.before(w);
   };
 
   /* artists carousel */
@@ -222,7 +227,7 @@
     c.append(el('bdi', null, '© 2026 A.I.M.A', { dir: 'ltr', style: 'white-space:nowrap' }));
     fb.prepend(c);
   };
-  const ensure = () => { try { meta(); credit(); hero(); dest(); pulse(); carousel(); journey(); document.querySelectorAll('.pulse-section,.spotlight-section,#resources,.manifesto').forEach(reveal); } catch (e) { /* never break the page */ } };
+  const ensure = () => { try { meta(); credit(); hero(); dest(); week(); pulse(); carousel(); journey(); document.querySelectorAll('.pulse-section,.spotlight-section,#resources,.manifesto').forEach(reveal); } catch (e) { /* never break the page */ } };
 
   const hydrated = () => { const m = document.querySelector('main'); if (!m) return false; for (const k in m) if (k.indexOf('__reactFiber$') === 0 || k.indexOf('__reactProps$') === 0) return true; return false; };
   const t0 = Date.now();
