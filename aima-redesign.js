@@ -15,7 +15,7 @@
     if (attrs) for (const k in attrs) e.setAttribute(k, attrs[k]);
     return e;
   };
-  const safeUrl = (u) => { try { const x = new URL(u, location.href); return /^https?:$/.test(x.protocol) ? x.href : ''; } catch (e) { return ''; } };
+  const safeUrl = (u) => { if (!u || !/^https?:\/\//i.test(String(u).trim())) return ''; try { const x = new URL(u, location.href); return /^https?:$/.test(x.protocol) ? x.href : ''; } catch (e) { return ''; } };
 
   /* scroll progress + reveal */
   const bar = el('div', 'r2-progress', null, { 'aria-hidden': 'true' });
@@ -88,7 +88,7 @@
     const items = [
       ['מה חדש השבוע', 'עדכוני Suno והמוזיקה עם AI, בעברית ברורה', '#aima-pulse', '#d9ff3f', '✦'],
       ['לגלות אמנים', n ? 'ספרייה של ' + n + ' אמנים מהקהילה. תנו לנו להפתיע אתכם' : 'ספריית האמנים של הקהילה. תנו לנו להפתיע אתכם', '/artists/', '#ff3d81', '♪'],
-      ['רדיו', 'ZIK ו-106FM: מאזינים למוזיקה החדשה של הקהילה', '/radio/', '#38f2c0', '◉'],
+      ['רדיו', 'ZIK, הרדיו הקהילתי, ותוכניות A.I.M.A עם גיא רפאל ב-106FM', '/radio/', '#38f2c0', '◉'],
       ['מגזין PULSE', 'המגזין המעוצב: כתבות, מספרים וציטוטים', '/magazine/', '#a678ff', '▤'],
       ['משאבים', 'מדריכים, כלים וטיפים לכל שלב ביצירה', '/resources/', '#ffb23f', '⚒']
     ];
