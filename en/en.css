@@ -7,3 +7,11 @@ body .r2-dest-grid.en-g4{grid-template-columns:repeat(4,1fr)}@media(max-width:10
 footer a{padding-block:10px}
 .lang-toggle{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
 .r2-journey>div,.r2-journey .r2-actions,.r2-journey nav{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}.r2-journey{text-align:center}
+
+.aima-join,.aima-guide-start{box-sizing:border-box;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;width:min(1100px,calc(100% - 32px));margin:24px auto;border-radius:22px;padding:26px 30px}
+.aima-join{background:#ff3f73;color:#fff}
+.aima-guide-start{background:#d8ff3e;color:#111;border:1px solid #111}
+.aima-join h2{margin:0 0 6px;font-size:clamp(24px,3.2vw,34px);line-height:1.15}
+.aima-join p,.aima-guide-start p{margin:0;font-size:17px;line-height:1.55}
+.aima-join a,.aima-guide-start a.button{display:inline-flex;align-items:center;justify-content:center;min-height:54px;padding:0 28px;border-radius:999px;background:#111;color:#d8ff3e;font-weight:900;font-size:18px;text-decoration:none;white-space:nowrap}
+@media(max-width:700px){.aima-join,.aima-guide-start{flex-direction:column;align-items:flex-start;padding:22px}.aima-join a,.aima-guide-start a.button{width:100%;box-sizing:border-box}}
