@@ -246,6 +246,9 @@
     if (!p) return;
     const eb = $('.pulse-heading .eyebrow', p);
     if (eb && /מתעדכן|PULSE/.test(eb.textContent)) eb.textContent = 'PULSE · UPDATED EVERY SUNDAY';
+    /* H2 mirrors the Hebrew homepage's retained single-line "מה חדש השבוע?" */
+    const h2 = $('h2', p);
+    if (h2 && /מה השתנה|מה חדש|What changed/.test(h2.textContent)) h2.textContent = "What's new this week?";
   };
 
   const ensure = () => {
