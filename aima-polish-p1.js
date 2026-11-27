@@ -128,22 +128,8 @@
         p.after(w);
       }
     }
-    /* honest guard: never show the baked-in 20.08.2026 fallback as if it were current */
-    clearTimeout(pulse._t);
-    pulse._t = setTimeout(() => {
-      const lead = $('#aima-pulse .pulse-lead');
-      const time = lead && lead.querySelector('.pulse-meta time');
-      if (time && time.textContent.trim() === '20.08.2026') {
-        lead.innerHTML = '';
-        const box = el('div', 'p1-pulse-wait');
-        box.append(
-          el('h3', null, 'העדכון השבועי עוד נטען.'),
-          el('p', null, 'אם זה נתקע, נסו רענון. הכתבות האחרונות תמיד מחכות בעמוד PULSE.'),
-          el('a', 'button primary', 'לעמוד PULSE ←', { href: '/news/' })
-        );
-        lead.append(box);
-      }
-    }, 6500);
+    /* note: the stale-fallback guard lives in aima-static.js (Pulse lead loader with retries,
+       last-good localStorage copy and an honest failure line) — verified live 2026-11-27. */
   };
 
   /* entries: 4 main cards with unique actions; the rest under "כל החדרים"; support/106FM/tips out of the grid */
@@ -165,7 +151,7 @@
           c.insertBefore(np, link);
         }
       }
-      else if (/payboxapp/.test(h) || /\/tips\//.test(h) || /\/radio\//.test(h) || /\/community\//.test(h)) c.classList.add('p1-hidden');
+      else if (/payboxapp/.test(h) || /\/tips\//.test(h) || /\/radio\//.test(h) || /\/community\//.test(h) || /open\.spotify\.com\/playlist/.test(h)) c.classList.add('p1-hidden');
     });
     if (!grid.parentElement.querySelector('.p1-rooms')) {
       const row = el('div', 'p1-rooms');
