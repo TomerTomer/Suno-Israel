@@ -141,7 +141,7 @@ function __aimaAfterHydration(fn) {
   const update = () => {
     const title=document.querySelector('.hero h1');
     if(title && title.textContent !== 'המקום שבומוזיקה חדשהמקבלת קול.') title.innerHTML='המקום שבו<br><em>מוזיקה חדשה</em><br>מקבלת קול.';
-    text('.hero-lede','הבית הישראלי ליוצרות וליוצרי מוזיקה עם AI. ללמוד, ליצור, לשתף, להכיר אמנים ולגלות עד כמה רחוק רעיון אחד יכול להגיע.');
+    text('.hero-lede','הבית הישראלי לאמני בינה מוזיקלית. ללמוד, ליצור, לשתף, להכיר ולגלות עד כמה רחוק רעיון אחד יכול להגיע.');
     const first=document.querySelector('.hero-actions .primary');if(first&&first.textContent!=='מה חדש השבוע? ←')first.textContent='מה חדש השבוע? ←';
     const pulse=document.querySelector('#aima-pulse');
     if(pulse){
