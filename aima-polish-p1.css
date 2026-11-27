@@ -147,7 +147,6 @@ body .site-header .support-link{border:1.5px solid currentColor!important;backgr
   .site-header .header-cta{flex-shrink:0;padding-inline:10px!important;font-size:13px!important;gap:3px}
   .site-header .header-actions{gap:6px!important;flex-wrap:nowrap}
   .p1-lang b,.p1-lang a{padding:0 7px}
-  .site-header .brand{max-width:168px;overflow:hidden}
   .site-header .brand strong,.site-header .brand span{letter-spacing:.04em!important}
 }
 
