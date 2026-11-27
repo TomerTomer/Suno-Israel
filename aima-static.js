@@ -875,3 +875,15 @@ __aimaAfterHydration(() => {
   setTimeout(run, 2500);
   window.addEventListener('load', () => setTimeout(run, 800));
 });
+
+// Language toggle: one link to the English home page, added once after hydration (no observers). Choice is stored on click.
+__aimaAfterHydration(() => {
+  const box = document.querySelector('.site-header .header-actions');
+  if (!box || box.querySelector('.lang-toggle')) return;
+  const a = document.createElement('a');
+  a.className = 'lang-toggle'; a.href = '/en/'; a.hreflang = 'en'; a.lang = 'en'; a.textContent = 'EN';
+  a.setAttribute('aria-label', 'English version');
+  a.style.cssText = 'font-size:13px;font-weight:800;border:1px solid currentColor;border-radius:999px;padding:6px 12px;text-decoration:none;direction:ltr';
+  a.addEventListener('click', () => { try { localStorage.setItem('aima-lang', 'en'); } catch (e) {} });
+  box.prepend(a);
+});
