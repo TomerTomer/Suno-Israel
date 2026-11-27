@@ -166,3 +166,6 @@ body .channel-card.violet{--cc:#a678ff}body .channel-card.orange{--cc:#ffb23f}bo
 body .channel-card:before{content:"";position:absolute;inset:auto -30% -55% -30%;height:60%;background:var(--cc);filter:blur(36px);opacity:.22;pointer-events:none}
 body .channel-card>*{position:relative}
 body .channel-card .channel-top b{width:48px;height:48px;border-radius:15px;font-size:21px;background:var(--cc)!important;color:#101010!important;-webkit-text-fill-color:#101010}
+
+/* 2026-11-27: remove decorative radio dot and bar row */
+body .r2-live,body .r2-eq{display:none!important}
