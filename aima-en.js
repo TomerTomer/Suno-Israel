@@ -109,6 +109,10 @@
     'אישור הכל': 'Accept all', 'רק חיוני': 'Essential only', 'התאמה אישית': 'Customize', 'שמירת הבחירה': 'Save my choice',
     'סגירת תפריט נגישות': 'Close accessibility menu',
     'מייסד הקהילה: תומר יאיר · כל הזכויות שמורות · ': 'Community founder: Tomer Yair · All rights reserved · ',
+    'האנשים שמאחורי': 'The people behind', 'הצלילים החדשים.': 'the new sounds.',
+    'בשבילך': 'For you', 'iPhone ודפדפן ↗': 'iPhone & browser ↗', 'ZIK ו-106FM': 'ZIK & 106FM',
+    'רותי חי Ruti Hai': 'Ruti Hai', 'משדר 24/7': 'Broadcasting 24/7', 'משדר 24/7 ': 'Broadcasting 24/7',
+    'האזנה לרדיו ZIK': 'Listen to ZIK radio',
   }));
 
   const norm = (t) => t.replace(/\s+/g, ' ').trim();
@@ -117,20 +121,22 @@
   const translateElement = (node) => {
     if (!(node instanceof Element)) return;
     if (node.closest('script,style')) return;
-    /* only translate elements whose children are inline (keeps structure safe) */
-    for (const c of node.children) if (!INLINE_OK.has(c.tagName)) return;
-    const key = norm(node.textContent);
-    if (!key) return;
-    const hit = MAP.get(key);
-    if (hit) {
-      node.innerHTML = '';
-      hit.split('\n').forEach((part, i) => {
-        if (i) node.append(document.createElement('br'));
-        node.append(document.createTextNode(part));
-      });
-      return;
+    /* full-textContent replace only when every child is inline (keeps structure safe) */
+    let allInline = true;
+    for (const c of node.children) if (!INLINE_OK.has(c.tagName)) { allInline = false; break; }
+    if (allInline) {
+      const key = norm(node.textContent);
+      const hit = key && MAP.get(key);
+      if (hit) {
+        node.innerHTML = '';
+        hit.split('\n').forEach((part, i) => {
+          if (i) node.append(document.createElement('br'));
+          node.append(document.createTextNode(part));
+        });
+        return;
+      }
     }
-    /* leaf elements: translate text children directly */
+    /* direct text-node children always get a chance (e.g. button with an SVG icon) */
     if (!node.children.length) return;
     for (const t of Array.from(node.childNodes)) {
       if (t.nodeType === 3) {
