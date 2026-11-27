@@ -102,10 +102,38 @@
       a.append(el('small', null, 'עדכון אחרון · ' + fmtDate(weekData.news.publishedAt)), document.createTextNode(' ' + weekData.news.title + ' ←'));
       s.append(a);
     }
-    const ev = el('a', null, null, { href: '/events/' });
-    ev.append(el('small', null, 'אירוע קרוב'), document.createTextNode(' המפגש הבא מתפרסם בקרוב ←'));
-    s.append(ev);
+    const evs = ((weekData.overrides && weekData.overrides.events) || []).filter((x) => x && x.title);
+    const upcoming = evs.filter((x) => {
+      const t = Date.parse(x.date || x.start || '');
+      return isNaN(t) ? true : t >= Date.now() - 864e5;
+    });
+    if (upcoming.length) {
+      const ev0 = upcoming[0];
+      const t = Date.parse(ev0.date || ev0.start || '');
+      const ev = el('a', null, null, { href: ev0.href || '/events/' });
+      ev.append(el('small', null, 'אירוע קרוב' + (isNaN(t) ? '' : ' · ' + fmtDate(ev0.date || ev0.start))), document.createTextNode(' ' + ev0.title + ' ←'));
+      s.append(ev);
+    }
   };
+
+  /* hreflang alternates: React head hydration drops them, keep them present */
+  const ensureHreflang = () => {
+    const head = document.head;
+    if (!head) return;
+    [['he', 'https://sunoisrael.com/'], ['en', 'https://sunoisrael.com/en/'], ['x-default', 'https://sunoisrael.com/']].forEach((pair) => {
+      if (!head.querySelector('link[rel="alternate"][hreflang="' + pair[0] + '"]')) {
+        const l = document.createElement('link');
+        l.rel = 'alternate'; l.hreflang = pair[0]; l.href = pair[1];
+        head.appendChild(l);
+      }
+    });
+  };
+  ensureHreflang();
+  if (window.MutationObserver && document.head) {
+    const hlObs = new MutationObserver(() => ensureHreflang());
+    hlObs.observe(document.head, { childList: true });
+    setTimeout(() => hlObs.disconnect(), 15000);
+  }
 
   /* PULSE section: weekly Sunday cadence, honest fallback, one name */
   const pulse = () => {
