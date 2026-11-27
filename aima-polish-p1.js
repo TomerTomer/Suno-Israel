@@ -224,23 +224,10 @@
     $$('.r2-journey a').forEach((a) => { if (a.textContent.trim() === 'להצטרף לחדרי הקהילה') a.textContent = 'לכל חדרי הקהילה'; });
   };
 
-  /* hero ZIK button: subtitle — "משדר 24/7" by default, "מושמע עכשיו" when the stream metadata route exists */
+  /* hero ZIK button: honest static subtitle. Now-playing was dropped: zikairadio's API sends no CORS headers, so the browser cannot read it and no server route exists. */
   const zikButton = () => {
     const b = $('.hero .r2-radio');
     if (b && !b.querySelector('.p1-now')) b.append(el('span', 'p1-now', 'משדר 24/7', { 'aria-live': 'polite' }));
-  };
-
-  const nowPlaying = () => {
-    fetch('/api/public/zik-now-playing', { cache: 'no-store', headers: { accept: 'application/json' } })
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error('no route'))))
-      .then((d) => {
-        if (!d || !d.title) return;
-        const txt = 'מושמע עכשיו: ' + d.title + (d.artist ? ' — ' + d.artist : '');
-        $$('.p1-now').forEach((x) => { x.textContent = txt; x.classList.add('live'); });
-      })
-      .catch(() => {
-        $$('.p1-now').forEach((x) => { x.textContent = 'משדר 24/7'; x.classList.remove('live'); });
-      });
   };
 
   /* section order (item 33): Hero → השבוע באתר/PULSE → אמן ושיר החודש → כניסות → אמנים → ציטוט → הרשמה לאמנים → שיר בקליק/פוטר */
@@ -282,8 +269,6 @@
         if (it && it.title) { weekData.news = it; weekStrip(); }
       })
       .catch(() => {});
-    nowPlaying();
-    setInterval(nowPlaying, 90000);
   };
 
   const ensure = () => {
