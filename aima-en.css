@@ -44,3 +44,6 @@
 .en-sub{margin:4px auto 16px;max-width:760px;color:#e9e1f7;font-weight:700;font-size:clamp(17px,2.2vw,24px);line-height:1.4;text-wrap:balance}
 .hero .button.en-zik{background:#d9ff3f!important;color:#0d0716!important;border:none!important;display:inline-flex;flex-direction:column;align-items:center;gap:2px;line-height:1.25;box-shadow:0 10px 24px -12px rgba(217,255,63,.55)}
 .hero .button.en-zik .en-zik-sub{font-size:.78em;font-weight:600;opacity:.85}
+/* EN page: hero is fully English — force LTR so punctuation and arrows sit right */
+[dir="ltr"] .hero{direction:ltr}
+[dir="ltr"] .hero .en-sub,[dir="ltr"] .hero .hero-actions a{unicode-bidi:isolate}
