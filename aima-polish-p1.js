@@ -72,6 +72,10 @@
         p.append(document.createElement('br'), document.createTextNode('מאות יוצרים, קהילה אחת, מוזיקה חדשה שנולדת כאן.'));
       }
     });
+    const sub = $('.hero .r2-sub');
+    if (sub && !sub.parentElement.querySelector('.p1-sub2')) {
+      sub.after(el('p', 'p1-sub2', 'מאות יוצרים, קהילה אחת, מוזיקה חדשה שנולדת כאן.'));
+    }
     const stack = $('.hero .stack');
     if (stack && !stack.hasAttribute('aria-hidden')) stack.setAttribute('aria-hidden', 'true');
   };
@@ -141,6 +145,8 @@
     if (!p) return;
     const eb = $('.pulse-heading .eyebrow', p);
     if (eb && eb.textContent.trim() !== 'PULSE · מתעדכן כל יום ראשון') eb.textContent = 'PULSE · מתעדכן כל יום ראשון';
+    const h2 = $('.pulse-heading h2', p);
+    if (h2 && h2.textContent.trim() !== 'מה חדש השבוע?') h2.textContent = 'מה חדש השבוע?';
     $$('p', p).forEach((x) => {
       if (x.textContent.indexOf('אנחנו בודקים את Suno מדי יום') === 0 || x.textContent.indexOf('העדכון הבא כבר בדרך.') === 0) {
         if (!x.dataset.p1) { x.dataset.p1 = '1'; x.textContent = 'העדכון הבא כבר בדרך. אוספים את מה שבאמת שווה להכיר, ומפרסמים כל יום ראשון.'; }

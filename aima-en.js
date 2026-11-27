@@ -109,6 +109,8 @@
     'אישור הכל': 'Accept all', 'רק חיוני': 'Essential only', 'התאמה אישית': 'Customize', 'שמירת הבחירה': 'Save my choice',
     'סגירת תפריט נגישות': 'Close accessibility menu',
     'מייסד הקהילה: תומר יאיר · כל הזכויות שמורות · ': 'Community founder: Tomer Yair · All rights reserved · ',
+    'לא בוחרים בין טכנולוגיה לנשמה.': 'Technology and soul, no need to choose.',
+    'מאות יוצרים, קהילה אחת, מוזיקה חדשה שנולדת כאן.': 'Hundreds of creators, one community, new music born here.',
     'האנשים שמאחורי': 'The people behind', 'הצלילים החדשים.': 'the new sounds.',
     'בשבילך': 'For you', 'iPhone ודפדפן ↗': 'iPhone & browser ↗', 'ZIK ו-106FM': 'ZIK & 106FM',
     'רותי חי Ruti Hai': 'Ruti Hai', 'משדר 24/7': 'Broadcasting 24/7', 'משדר 24/7 ': 'Broadcasting 24/7',
@@ -156,6 +158,40 @@
     }
     const kicker = $('.hero .kicker');
     if (kicker) kicker.lastChild && kicker.lastChild.nodeType === 3 && (kicker.lastChild.textContent = ' AI MUSIC ARTISTS ISRAEL');
+  };
+
+  /* hero: EN sub-line + ZIK radio button (mirror the polished Hebrew homepage) */
+  const heroExtras = () => {
+    const h1 = $('.hero h1');
+    if (h1 && !$('.hero .en-sub')) {
+      const p = el('p', 'en-sub', 'Technology and soul, no need to choose.');
+      p.append(document.createElement('br'), document.createTextNode('Hundreds of creators, one community, new music born here.'));
+      h1.after(p);
+    }
+    const acts = $('.hero .hero-actions');
+    if (acts && !acts.querySelector('.en-zik')) {
+      const a = el('a', 'button en-zik', null, { href: 'https://zikairadio.com/', target: '_blank', rel: 'noopener noreferrer' });
+      a.append(document.createTextNode('Listen to ZIK radio ↗'), el('span', 'en-zik-sub', 'Broadcasting 24/7'));
+      acts.append(a);
+    }
+  };
+
+  /* section order, same as the Hebrew homepage (item 33) */
+  const ORDER = [
+    '.hero.shell', '.p1-week', '.ticker', '#aima-pulse', '.p1-wa', '#community-spotlight',
+    '.r2-dest', '#resources', '.aima-guide-start', '.r2-artists', '.artists-section',
+    '.home-feature-story', '.manifesto', '.aima-join', '.r2-journey', '.aima-sub', 'footer.footer'
+  ];
+  const reorder = () => {
+    const main = $('main');
+    if (!main) return;
+    const kids = Array.from(main.children);
+    const keyed = kids.map((k) => ({ k, oi: ORDER.findIndex((sel) => { try { return k.matches(sel); } catch (e) { return false; } }) }));
+    if (keyed.filter((x) => x.oi >= 0).length < 6) return;
+    let last = -1;
+    keyed.forEach((x) => { if (x.oi >= 0) last = x.oi; else x.oi = last + 0.5; });
+    keyed.sort((a, b) => a.oi - b.oi);
+    keyed.forEach((x) => main.appendChild(x.k));
   };
 
   const ATTRS = [
@@ -215,7 +251,7 @@
         while (n) { batch.push(n); n = walker.nextNode(); }
         batch.forEach(translateElement);
       }
-      headings(); attrs(); toggle(); hebrewOnlyTags(); pulse();
+      headings(); heroExtras(); attrs(); toggle(); hebrewOnlyTags(); pulse(); reorder();
     } catch (e) { /* never break the page */ }
   };
 

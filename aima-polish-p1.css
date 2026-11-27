@@ -45,18 +45,18 @@ main p{line-height:1.6}
 .hero .hero-copy p:not(.kicker){color:#efeaf7}
 
 /* ---- item 17: one highlight style only — solid lime, no gradients on emphasized words ---- */
-.hero h1 em{background:none!important;-webkit-text-fill-color:currentColor;color:var(--p1-lime)!important;font-style:normal}
+body .hero.shell h1 em{background:none!important;-webkit-text-fill-color:currentColor!important;color:var(--p1-lime)!important;font-style:normal}
 .pulse-heading h2 em,.spotlight-head h2 em,.section-head h2 em{background:none!important;-webkit-text-fill-color:currentColor;color:var(--p1-lime)!important;font-style:normal}
 .manifesto blockquote em{background:none!important;-webkit-text-fill-color:currentColor;color:var(--p1-lime)!important;font-style:normal}
 
 /* ---- item 16: one button system. Primary = solid lime; secondary = outline; tertiary = text link ---- */
-.hero .r2-radio{
+body .hero .button.r2-radio{
   background:var(--p1-lime)!important;color:var(--p1-ink)!important;
   border:none!important;box-shadow:0 10px 24px -12px rgba(217,255,63,.55);
   display:inline-flex;flex-direction:column;align-items:center;gap:2px;line-height:1.25;
 }
-.hero .r2-radio .r2-live{background:var(--p1-pink)!important}
-.hero .r2-radio .p1-now{font-size:.78em;font-weight:600;opacity:.85}
+body .hero .button.r2-radio .r2-live{background:var(--p1-pink)!important}
+body .hero .button.r2-radio .p1-now{font-size:.78em;font-weight:600;opacity:.85}
 .site-header .header-cta{background:var(--p1-lime)!important;color:var(--p1-ink)!important;border:none!important;font-weight:700}
 .site-header .support-link{border:1.5px solid currentColor;background:transparent;font-weight:600}
 
@@ -138,7 +138,12 @@ main p{line-height:1.6}
 @media (max-width:720px){
   .site-header{flex-wrap:wrap}
   .p1-lang{order:-1;margin-inline-start:auto}
+  .site-header .support-link{display:none!important}
+  .site-header .header-cta{flex-shrink:0}
 }
+
+/* ---- item 10: second hero line under the manifesto sentence ---- */
+.p1-sub2{margin:0 auto 14px;max-width:760px;color:#e9e1f7;font-weight:600;font-size:clamp(16px,2vw,20px);line-height:1.45;text-wrap:balance}
 
 /* ---- Pulse honest waiting state (item 1) ---- */
 .p1-pulse-wait{display:grid;gap:var(--p1-s2)}
