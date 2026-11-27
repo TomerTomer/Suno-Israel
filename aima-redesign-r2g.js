@@ -66,13 +66,8 @@
     const acts = h.querySelector('.hero-actions');
     if (acts && !acts.querySelector('.r2-radio')) {
       const a = el('a', 'button r2-radio', null, { href: 'https://zikairadio.com/', target: '_blank', rel: 'noopener noreferrer' });
-      a.append(el('span', 'r2-live', null, { 'aria-hidden': 'true' }), document.createTextNode('האזנה לרדיו ZIK'));
+      a.append(document.createTextNode('האזנה לרדיו ZIK'));
       acts.append(a);
-    }
-    if (!h.querySelector('.r2-eq')) {
-      const eq = el('div', 'r2-eq', null, { 'aria-hidden': 'true' });
-      for (let i = 0; i < 28; i++) { const b = el('i'); b.style.setProperty('--h', (25 + Math.round(Math.abs(Math.sin(i * 1.7)) * 75)) + '%'); b.style.setProperty('--d', (i * 0.07).toFixed(2) + 's'); eq.append(b); }
-      (h.querySelector('.hero-copy') || h).append(eq);
     }
     const stat = h.querySelector('.r2-stat');
     if (artists && artists.length) {
@@ -123,6 +118,7 @@
     if (sideHead && !sideHead.querySelector('.r2-mag-link')) sideHead.append(mk());
     const bottom = p.querySelector('.aima-all-updates-wrap');
     if (bottom && !bottom.querySelector('.aima-magazine-link, .r2-mag-link')) bottom.append(mk());
+    if (bottom && !bottom.querySelector('.r2-wa-link')) bottom.append(el('a', 'r2-mag-link r2-wa-link', 'לקבוצת הוואטסאפ של הקהילה ←', { href: 'https://chat.whatsapp.com/Fszh7OgvNE082s4bOLvMuI?s=sh&p=i&iam=2', target: '_blank', rel: 'noopener noreferrer' }));
   };
 
   /* artists carousel */
