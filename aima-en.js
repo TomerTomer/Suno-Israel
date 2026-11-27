@@ -320,3 +320,57 @@
   /* React may rewrite the root class or the card during hydration: keep re-applying only the guard lift once resolved */
   try { new MutationObserver(function () { if (done) lift(); }).observe(root, { attributes: true, attributeFilter: ['class'] }); } catch (e) {}
 })();
+
+/* EN homepage: same "Where to start" tiles as the Hebrew homepage, and the same duplicate entrance cards hidden. */
+(function () {
+  if (!/^\/en\/?(index\.html)?$/.test(location.pathname)) return;
+  var el = function (tag, cls, text, attrs) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    if (attrs) for (var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  };
+  var items = [
+    ['What\u2019s new this week', 'Suno and AI music updates, explained clearly', '#aima-pulse', '#d9ff3f', '\u2726'],
+    ['Discover artists', 'The community\u2019s artist library. Let us surprise you', '/artists/', '#ff3d81', '\u266a'],
+    ['Radio', 'ZIK, the community radio, and A.I.M.A shows with Guy Rafael on 106FM', '/radio/', '#38f2c0', '\u25c9'],
+    ['PULSE magazine', 'The designed magazine: stories, numbers and quotes', '/magazine/', '#a678ff', '\u25a4'],
+    ['Resources', 'Guides, tools and tips for every stage of creating', '/resources/', '#ffb23f', '\u2692']
+  ];
+  var build = function () {
+    if (document.querySelector('.r2-dest')) return true;
+    var h = document.querySelector('.hero.shell');
+    if (!h) return false;
+    var s = el('section', 'r2-dest', null, { 'aria-labelledby': 'r2-dest-h' });
+    var hh = el('h2', null, 'Where to start', { id: 'r2-dest-h' });
+    hh.appendChild(el('small', null, 'Five ways into the community. Pick one, there is always a next step.'));
+    var g = el('div', 'r2-dest-grid');
+    items.forEach(function (it, i) {
+      var a = el('a', 'r2-tile', null, { href: it[2] });
+      a.style.setProperty('--c', it[3]);
+      a.appendChild(el('span', 'ic', it[4], { 'aria-hidden': 'true' }));
+      a.appendChild(el('span', 'n', '0' + (i + 1)));
+      a.appendChild(el('h3', null, it[0]));
+      a.appendChild(el('p', null, it[1]));
+      a.appendChild(el('span', 'go', 'Enter \u2192'));
+      if (it[2].charAt(0) === '#') a.addEventListener('click', function (e) {
+        var t = document.querySelector(it[2]);
+        if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); t.setAttribute('tabindex', '-1'); t.focus({ preventScroll: true }); }
+      });
+      g.appendChild(a);
+    });
+    s.appendChild(hh); s.appendChild(g);
+    h.parentNode.insertBefore(s, h.nextSibling);
+    return true;
+  };
+  var hide = function () {
+    document.querySelectorAll('.channel-card').forEach(function (c) {
+      var hr = c.getAttribute('href') || '';
+      if (/payboxapp|\/tips\/|\/radio\/|\/community\/|open\.spotify\.com\/playlist/.test(hr)) c.classList.add('p1-hidden');
+    });
+  };
+  var tick = function () { build(); hide(); };
+  var n = 0, iv = setInterval(function () { tick(); if (++n > 60) clearInterval(iv); }, 250);
+  try { new MutationObserver(function () { if (!document.querySelector('.r2-dest')) build(); hide(); }).observe(document.body, { childList: true, subtree: true }); } catch (e) {}
+})();

@@ -59,3 +59,16 @@ body .site-header .support-link{border:1.5px solid currentColor!important;backgr
 /* EN: footer line separation, Join contrast under forced/auto dark, pulse lead never stays hidden */
 .footer-bottom>span:not(.footer-legal){display:block;margin-bottom:6px}
 .site-header .header-cta,.site-header .header-cta *{color:#0d0716!important;-webkit-text-fill-color:#0d0716!important}
+
+/* EN: parity with HE homepage cards; collapse unused height in the Pulse lead */
+.channel-card.p1-hidden{display:none!important}
+#aima-pulse .pulse-lead{min-height:0!important}
+[dir="ltr"] .r2-dest h2,[dir="ltr"] .r2-tile{text-align:start}
+
+/* Entry cards: same language as the "where to start" tiles (colored icon tile, soft wash, one clear CTA) */
+body .channel-card{--cc:#d9ff3f;position:relative;overflow:hidden;background:#fff}
+body .channel-card.pink{--cc:#ff3d81}body .channel-card.mint{--cc:#38f2c0}body .channel-card.blue{--cc:#5aa9ff}
+body .channel-card.violet{--cc:#a678ff}body .channel-card.orange{--cc:#ffb23f}body .channel-card.lime{--cc:#d9ff3f}
+body .channel-card:before{content:"";position:absolute;inset:auto -30% -55% -30%;height:60%;background:var(--cc);filter:blur(36px);opacity:.22;pointer-events:none}
+body .channel-card>*{position:relative}
+body .channel-card .channel-top b{width:48px;height:48px;border-radius:15px;font-size:21px;background:var(--cc)!important;color:#101010!important;-webkit-text-fill-color:#101010}
