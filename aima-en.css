@@ -47,3 +47,9 @@
 /* EN page: hero is fully English — force LTR so punctuation and arrows sit right */
 [dir="ltr"] .hero{direction:ltr}
 [dir="ltr"] .hero .en-sub,[dir="ltr"] .hero .hero-actions a{unicode-bidi:isolate}
+
+/* header: same primary/outline pill system as the Hebrew homepage (EN loads only this sheet) */
+body .site-header .header-cta{background:#d9ff3f!important;color:#0d0716!important;border:none!important;border-radius:999px!important;font-weight:700}
+body .site-header .support-link{border:1.5px solid currentColor!important;background:transparent!important;border-radius:999px!important;font-weight:600;padding:0 16px;text-decoration:none!important}
+.site-header .header-cta,.site-header .support-link{min-height:44px;display:inline-flex;align-items:center}
+@media (max-width:720px){body .site-header .support-link{display:none!important}}

@@ -58,7 +58,7 @@ body .hero .button.r2-radio{
 body .hero .button.r2-radio .r2-live{background:var(--p1-pink)!important}
 body .hero .button.r2-radio .p1-now{font-size:.78em;font-weight:600;opacity:.85}
 .site-header .header-cta{background:var(--p1-lime)!important;color:var(--p1-ink)!important;border:none!important;font-weight:700}
-.site-header .support-link{border:1.5px solid currentColor;background:transparent;font-weight:600}
+body .site-header .support-link{border:1.5px solid currentColor!important;background:transparent!important;border-radius:999px!important;font-weight:600;padding:0 16px;text-decoration:none!important}
 
 /* ---- item 18: one icon style — uniform letter/symbol badges in entry cards ---- */
 .channel-card .channel-top b{

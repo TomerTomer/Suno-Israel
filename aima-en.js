@@ -227,6 +227,9 @@
 
   /* tag dynamic, untranslated Hebrew areas (item 44) */
   const hebrewOnlyTags = () => {
+    /* item 46: mark the retained Hebrew content containers for screen readers/SEO */
+    ['#aima-pulse .pulse-layout', '.spotlight-section .spotlight-grid', '.artists-section .featured-grid']
+      .forEach((sel) => { const c = $(sel); if (c) c.setAttribute('lang', 'he'); });
     [['#aima-pulse', 'News items are published in Hebrew · החדשות מוצגות בעברית'],
      ['.spotlight-section', 'Artist & song content in Hebrew · תוכן האמנים בעברית'],
      ['.artists-section', 'Artist content in Hebrew · תוכן האמנים בעברית']]
