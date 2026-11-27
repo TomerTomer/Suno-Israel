@@ -88,13 +88,13 @@
     const n = artists && artists.length ? artists.length : null;
     const items = [
       ['מה חדש השבוע', 'עדכוני Suno והמוזיקה עם AI, בעברית ברורה', '#aima-pulse', '#d9ff3f', '✦'],
-      ['לגלות אמנים', n ? 'ספרייה של ' + n + ' אמנים מהקהילה. תנו לנו להפתיע אתכם' : 'ספריית האמנים של הקהילה. תנו לנו להפתיע אתכם', '/artists/', '#ff3d81', '♪'],
+      ['גלו אמנים', n ? 'ספרייה של ' + n + ' אמנים מהקהילה. תנו לנו להפתיע אתכם' : 'ספריית האמנים של הקהילה. תנו לנו להפתיע אתכם', '/artists/', '#ff3d81', '♪'],
       ['רדיו', 'ZIK, הרדיו הקהילתי, ותוכניות A.I.M.A עם גיא רפאל ב-106FM', '/radio/', '#38f2c0', '◉'],
       ['מגזין PULSE', 'המגזין המעוצב: כתבות, מספרים וציטוטים', '/magazine/', '#a678ff', '▤'],
       ['משאבים', 'מדריכים, כלים וטיפים לכל שלב ביצירה', '/resources/', '#ffb23f', '⚒']
     ];
     const s = el('section', 'r2-dest', null, { 'aria-labelledby': 'r2-dest-h' });
-    const hh = el('h2', null, 'לאן מתחילים?', { id: 'r2-dest-h' });
+    const hh = el('h2', null, 'מאיפה מתחילים', { id: 'r2-dest-h' });
     hh.append(el('small', null, 'חמש דרכים להיכנס לקהילה. בחרו אחת, ותמיד יהיה צעד הבא.'));
     const g = el('div', 'r2-dest-grid');
     items.forEach((it, i) => {
@@ -134,7 +134,7 @@
     const sec = el('section', 'r2-artists', null, { id: 'r2-artists', 'aria-labelledby': 'r2-art-h' });
     const head = el('div', 'r2-art-head');
     const t = el('div'); t.append(el('p', 'eyebrow', 'OUR ARTISTS'));
-    const h2 = el('h2', null, null, { id: 'r2-art-h' }); h2.append(document.createTextNode('האמנים שלנו. '), el('em', null, 'בכל ביקור הרכב אחר.')); t.append(h2);
+    const h2 = el('h2', null, null, { id: 'r2-art-h' }); h2.append(document.createTextNode('האמנים שלנו. '), el('em', null, 'בכל ביקור אמן חדש.')); t.append(h2);
     const ctl = el('div', 'r2-art-ctl');
     const bPrev = el('button', 'r2-btn', '→', { type: 'button', 'aria-label': 'האמן הקודם' });
     const bNext = el('button', 'r2-btn', '←', { type: 'button', 'aria-label': 'האמן הבא' });
