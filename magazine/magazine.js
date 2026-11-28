@@ -113,7 +113,7 @@
     return h('header', { class: 'mag-mast' },
       h('div', { class: 'mag-mast-top' }, h('span', { class: 'mag-brand' }, 'A.I.M.A', h('small', { class: 'mag-brand-sub', text: 'AI Music Artists' })), h('span', { id: 'mag-issue', text: '' })),
       h('h1', null, 'PULSE', h('i', { text: '.' })),
-      h('p', { class: 'mag-sub', text: 'חדשות מוזיקת ה-AI בעברית, עם מה שזה אומר ליוצרים. כתבות עם תמונה נבדקו מול המקור. שורות מסומנות "טרם נבדק" מגיעות אוטומטית מהפיד.' }));
+      h('p', { class: 'mag-sub', text: 'מה קורה במוזיקת ה-AI, ומה זה משנה ליוצרים. בעברית, עם קישור למקור בכל כתבה.' }));
   }
   function cover() {
     var c = D.cover;

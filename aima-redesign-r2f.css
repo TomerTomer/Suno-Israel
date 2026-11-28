@@ -146,3 +146,9 @@ body a.r2-mag-link,body .pulse-community-link{background-color:#d6245f!important
 body .pulse-community-link span{color:#fff!important}
 body section.shell h2 em{color:#ec2c5b!important}
 body section.shell.home-feature-story h2 em{color:#c0134f!important}
+/* button affordance: small lift on hover, press on tap, clear keyboard focus (no motion with reduced-motion) */
+body .button,body .r2-btn,body .aima-join a,body .header-cta,body a.r2-mag-link{transition:transform .16s ease,box-shadow .16s ease,filter .16s ease}
+@media (hover:hover){body .button:hover,body .r2-btn:hover,body .aima-join a:hover,body .header-cta:hover,body a.r2-mag-link:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(16,16,15,.22);filter:brightness(1.04)}}
+body .button:active,body .r2-btn:active,body .aima-join a:active,body .header-cta:active,body a.r2-mag-link:active{transform:translateY(0) scale(.98);box-shadow:none}
+body .button:focus-visible,body .r2-btn:focus-visible,body .aima-join a:focus-visible,body .header-cta:focus-visible,body a.r2-mag-link:focus-visible{outline:3px solid #10100f;outline-offset:3px}
+@media (prefers-reduced-motion:reduce){body .button,body .r2-btn,body .aima-join a,body .header-cta,body a.r2-mag-link{transition:none}body .button:hover,body .r2-btn:hover,body .aima-join a:hover,body .header-cta:hover,body a.r2-mag-link:hover,body .button:active,body .r2-btn:active,body .aima-join a:active,body .header-cta:active,body a.r2-mag-link:active{transform:none}}
