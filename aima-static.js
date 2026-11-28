@@ -1,3 +1,18 @@
+// Shared gate: run a callback only after React has hydrated <main> (editing server HTML earlier causes hydration error #418).
+function __aimaAfterHydration(fn) {
+  var hydrated = function () {
+    var m = document.querySelector('main');
+    if (!m) return false;
+    for (var k in m) if (k.indexOf('__reactFiber$') === 0 || k.indexOf('__reactProps$') === 0) return true;
+    return false;
+  };
+  var go = function () {
+    if (document.body) fn(); else document.addEventListener('DOMContentLoaded', fn);
+  };
+  if (!document.getElementById('_R_') || hydrated()) { go(); return; }
+  var t0 = Date.now();
+  var iv = setInterval(function () { if (hydrated() || Date.now() - t0 > 60000) { clearInterval(iv); go(); } }, 60);
+}
 // Wait for React to finish hydrating before touching the page; editing server HTML earlier
 // makes React throw hydration error #418 and rebuild the page (resets Pulse to its built-in item).
 (function () {
@@ -15,7 +30,7 @@
 
   document.addEventListener("click", (event) => {
     const link = event.target.closest("a");
-    if (!link || link.target || link.origin !== location.origin || link.hash) return;
+    if (!link || link.target || link.origin !== location.origin || link.hash || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || link.hasAttribute('download')) return;
     event.preventDefault();
     location.href = link.href;
   }, true);
@@ -120,25 +135,25 @@
   const home = location.pathname === '/' || /\/index\.html$/.test(location.pathname) && location.pathname.split('/').length === 2;
   if (!home) return;
   const style = document.createElement('style');
-  style.textContent = `.hero{display:block!important;padding-top:45px!important;padding-bottom:25px!important;min-height:0!important}.hero-copy{max-width:850px}.hero-stage,.hero-proof,.ticker,.home-feature-story,.artists-section,.manifesto,.community-app-strip{display:none!important}.hero h1{font-size:clamp(38px,5vw,62px)!important;line-height:1.1!important}.hero-lede{max-width:750px}.pulse-section{padding-top:35px!important;padding-bottom:35px!important}.spotlight-section{padding-top:35px!important;padding-bottom:35px!important}.spotlight-head h2{font-size:clamp(32px,4vw,48px)!important}.pulse-layout{grid-template-columns:1fr!important}.pulse-sidebar{display:none!important}.pulse-lead{max-width:100%}.pulse-section .section-head{margin-bottom:25px!important}.aima-guide-start{display:flex;justify-content:space-between;align-items:center;gap:20px;background:#d8ff3e;border-radius:18px;padding:22px;margin-top:20px;margin-bottom:35px}.aima-guide-start p{margin:0}.aima-guide-start a{white-space:nowrap}.aima-home-note{font-size:15px;line-height:1.7;color:#585751;margin:16px 0 0}.mobile-nav{overflow-x:auto!important}@media(max-width:700px){.aima-guide-start{flex-direction:column;align-items:flex-start}.hero{padding-top:28px!important}.site-header nav{overflow-x:auto}}.channel-card{background:#fff!important;border:1px solid #10100f24!important;border-radius:22px!important;min-height:0!important;padding:24px!important;color:#10100f}.channel-card:hover{transform:translateY(-4px)!important;box-shadow:none!important;border-color:#ff3f73!important}.channel-card .channel-top span{color:#ff3f73}.channel-card .channel-top b{border-color:#10100f24!important}.channel-card h3{font-size:26px!important;letter-spacing:0!important;margin:auto 0 12px!important}.channel-card p{color:#585751;min-height:0!important;margin:0 0 18px!important}.channel-card .card-link{border-top-color:#10100f24!important}.month-artist-visual{background:#10100f!important}.week-player{background:radial-gradient(circle at 75% 10%,#ff3f73 0 12%,#0000 42%),linear-gradient(145deg,#282726,#111)!important}`;
+  style.textContent = `.hero{display:block!important;padding-top:45px!important;padding-bottom:25px!important;min-height:0!important}.hero-copy{max-width:850px}.hero-stage,.hero-proof,.ticker,.artists-section{display:none!important}.hero h1{font-size:clamp(38px,5vw,62px)!important;line-height:1.1!important}.hero-lede{max-width:750px}.pulse-section{padding-top:35px!important;padding-bottom:35px!important}.spotlight-section{padding-top:35px!important;padding-bottom:35px!important}.spotlight-head h2{font-size:clamp(32px,4vw,48px)!important}.pulse-layout{grid-template-columns:1fr!important}.pulse-sidebar{display:none!important}.pulse-lead{max-width:100%}.pulse-section .section-head{margin-bottom:25px!important}.aima-guide-start{display:flex;justify-content:space-between;align-items:center;gap:20px;background:#d8ff3e;border-radius:18px;padding:22px;margin-top:20px;margin-bottom:35px}.aima-guide-start p{margin:0}.aima-guide-start a{white-space:nowrap}.aima-home-note{font-size:15px;line-height:1.7;color:#585751;margin:16px 0 0}.mobile-nav{overflow-x:auto!important}@media(max-width:700px){.aima-guide-start{flex-direction:column;align-items:flex-start}.hero{padding-top:28px!important}.site-header nav{overflow-x:auto}}.channel-card{background:#fff!important;border:1px solid #10100f24!important;border-radius:22px!important;min-height:0!important;padding:24px!important;color:#10100f}.channel-card:hover{transform:translateY(-4px)!important;box-shadow:none!important;border-color:#ff3f73!important}.channel-card .channel-top span{color:#ff3f73}.channel-card .channel-top b{border-color:#10100f24!important}.channel-card h3{font-size:26px!important;letter-spacing:0!important;margin:auto 0 12px!important}.channel-card p{color:#585751;min-height:0!important;margin:0 0 18px!important}.channel-card .card-link{border-top-color:#10100f24!important}.month-artist-visual{background:#10100f!important}.week-player{background:radial-gradient(circle at 75% 10%,#ff3f73 0 12%,#0000 42%),linear-gradient(145deg,#282726,#111)!important}`;
   document.head.append(style);
   const text = (selector,value) => {const el=document.querySelector(selector);if(el&&el.textContent!==value)el.textContent=value;};
   const update = () => {
     const title=document.querySelector('.hero h1');
-    if(title && title.textContent !== 'המקום שבומוזיקה חדשהמקבלת קול.') title.innerHTML='המקום שבו<br><em>מוזיקה חדשה</em><br>מקבלת קול.';
-    text('.hero-lede','הבית הישראלי ליוצרות וליוצרי מוזיקה עם AI. ללמוד, ליצור, לשתף, להכיר אמנים ולגלות עד כמה רחוק רעיון אחד יכול להגיע.');
+    if(title && title.textContent !== 'המוזיקה החדשה של ישראלנולדת כאן.') title.innerHTML='המוזיקה החדשה של ישראל<br><em>נולדת כאן.</em>';
+    text('.hero-lede','הקהילה של כל מי שיוצר מוזיקה עם AI בישראל: עדכוני Suno בעברית, פרומפטים שעובדים, רדיו 24/7 ואמנים להאזנה עכשיו.');
     const first=document.querySelector('.hero-actions .primary');if(first&&first.textContent!=='מה חדש השבוע? ←')first.textContent='מה חדש השבוע? ←';
     const pulse=document.querySelector('#aima-pulse');
     if(pulse){
-      const eyebrow=pulse.querySelector('.eyebrow');if(eyebrow&&eyebrow.textContent!=='A.I.M.A PULSE · העדכונים האחרונים')eyebrow.textContent='A.I.M.A PULSE · העדכונים האחרונים';
+      const eyebrow=pulse.querySelector('.eyebrow');if(eyebrow&&eyebrow.textContent!=='A.I.M.A PULSE · מתעדכן כל יום ראשון')eyebrow.textContent='A.I.M.A PULSE · מתעדכן כל יום ראשון';
       const h=pulse.querySelector('h2');if(h&&h.textContent!=='מה חדש השבוע?')h.textContent='מה חדש השבוע?';
       const head=pulse.querySelector('.pulse-heading');
-      if(head){const p=head.querySelector(':scope > p');if(p&&p.textContent!=='העדכונים האחרונים שאושרו בקהילה. התאריך מופיע בכל עדכון; לא בכל שבוע מגיע עדכון חדש.')p.textContent='העדכונים האחרונים שאושרו בקהילה. התאריך מופיע בכל עדכון; לא בכל שבוע מגיע עדכון חדש.';}
-      if(!document.querySelector('.aima-guide-start')){const section=document.createElement('section');section.className='shell aima-guide-start';section.innerHTML='<p><strong>חדשים בסונו?</strong><br>רעיון ראשון, פרומפט וטיפים לעברית. מתחילים בלי ללכת לאיבוד.</p><a class="button primary" href="'+new URL('guides.html',root).href+'">איפה מתחילים ←</a>';pulse.before(section);}
+      if(head){const p=head.querySelector(':scope > p');if(p&&p.textContent!=='עדכוני Suno בעברית פשוטה: מה קרה, מה זה אומר לכם, ומה כדאי לנסות.')p.textContent='עדכוני Suno בעברית פשוטה: מה קרה, מה זה אומר לכם, ומה כדאי לנסות.';}
+      if(!document.querySelector('.aima-guide-start')){const section=document.createElement('section');section.className='shell aima-guide-start';section.innerHTML='<p><strong>חדשים ב-Suno?</strong><br>מתחילים מכאן. רעיון, פרומפט ושיר ראשון, בעברית.</p><a class="button primary" href="'+new URL('guides.html',root).href+'">איפה מתחילים ←</a>';pulse.before(section);}
     }
     const spot=document.querySelector('#community-spotlight');
-    if(spot){const h=spot.querySelector('h2');if(h&&h.textContent!=='האמן שבמרכז. שיר השבוע.')h.textContent='האמן שבמרכז. שיר השבוע.';
-      if(!spot.querySelector('.aima-home-note')){const p=document.createElement('p');p.className='aima-home-note';p.textContent='כאן מוצגים אמן החודש ושיר שמתחלף אוטומטית מתוך רשימת הקהילה. בחירה שבועית לפי הצבעות עדיין לא פעילה, ולכן לא מוצג מנצח בהצבעה.';(spot.querySelector('.shell')||spot).append(p);}
+    if(spot){const h=spot.querySelector('h2');if(h&&h.textContent!=='מי שמנגן לנו עכשיו.')h.textContent='מי שמנגן לנו עכשיו.';
+      
     }
   };
   update();new MutationObserver(update).observe(document.body,{childList:true,subtree:true});
@@ -276,9 +291,9 @@
     if (!hero) return;
     const box = document.createElement('section');
     box.className = 'aima-join';
-    box.innerHTML = '<div><h2>רוצים להירשם כאמן? מלאו את הטופס</h2><p>דקה אחת, והפרופיל שלכם מצטרף לספריית האמנים של הקהילה.</p></div>';
+    box.innerHTML = '<div><h2>יוצרים עם Suno? תיכנסו לספרייה.</h2><p>ממלאים טופס קצר ומגישים את הפרופיל.</p></div>';
     const link = document.createElement('a');
-    link.href = FORM; link.target = '_blank'; link.rel = 'noreferrer'; link.textContent = 'לטופס ההרשמה ↗';
+    link.href = FORM; link.target = '_blank'; link.rel = 'noreferrer'; link.textContent = 'להוסיף אותי לספרייה ↗';
     box.append(link);
     hero.insertAdjacentElement('afterend', box);
   };
@@ -670,7 +685,7 @@
 
 
 // Playlist: feature the community's Mediterranean Spotify playlist (ים תיכוני מושלם).
-(() => {
+__aimaAfterHydration(() => {
   const PLAYLIST_URL = 'https://open.spotify.com/playlist/2e6MFxC0UwNeccy14grw0W';
   const home = location.pathname === '/' || (/\/index\.html$/.test(location.pathname) && location.pathname.split('/').length === 2);
   const addCard = () => {
@@ -699,7 +714,7 @@
   const apply = () => { addCard(); addFooterLink(); };
   apply();
   new MutationObserver(apply).observe(document.body, { childList: true, subtree: true });
-})();
+});
 
 
 // 2026-11-26: steadier scrolling and one obvious entry to all Pulse updates.
@@ -802,7 +817,7 @@
 // 2026-11-27: brand lockup. Small "AI Music Artists" under the dotted A.I.M.A wordmark in the
 // site header, and the community tagline "קהילת סונו ישראל | AI Music Artists" in the footer
 // brand. Deliberately light so the header stays uncluttered (user request, 2026-11-27).
-(() => {
+__aimaAfterHydration(() => {
   const st = document.createElement('style');
   st.id = 'aima-brand-lockup';
   st.textContent =
@@ -830,4 +845,47 @@
   };
   apply();
   new MutationObserver(apply).observe(document.documentElement, { childList: true, subtree: true });
-})();
+});
+
+// One-time wording pass (no observers): one name for each thing, groups instead of rooms, honest label for the song card.
+__aimaAfterHydration(() => {
+  const map = [
+    [/כל החדרים/g, 'כל הקבוצות'],
+    [/חדרי הקהילה/g, 'קבוצות הקהילה'],
+    [/לחדרי הקהילה/g, 'לקבוצות הקהילה'],
+    [/שאר החדרים/g, 'שאר הקבוצות'],
+    [/הבית הישראלי ליוצרות וליוצרי מוזיקה עם AI\. ללמוד, ליצור, לשתף, להכיר אמנים ולגלות/, 'הבית הישראלי לאמני בינה מוזיקלית. ללמוד, ליצור, לשתף, להכיר ולגלות'],
+    [/^לגלות אמנים$/, 'גלו אמנים'],
+    [/^לאן מתחילים$/, 'מאיפה מתחילים'],
+    [/^NOW PLAYING$/, 'נבחר מהקהילה']
+  ];
+  const run = () => {
+    const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode: (n) => n.parentElement && !/^(SCRIPT|STYLE|NOSCRIPT|TEXTAREA)$/.test(n.parentElement.tagName) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT
+    });
+    const nodes = []; while (w.nextNode()) nodes.push(w.currentNode);
+    nodes.forEach((n) => {
+      let v = n.nodeValue, o = v;
+      const t = v.trim();
+      if (!t) return;
+      map.forEach(([re, to]) => { v = v.replace(re, to); });
+      if (t === 'חדשות ועדכונים' && n.parentElement.closest('nav, footer')) v = v.replace('חדשות ועדכונים', 'PULSE');
+      if (v !== o) n.nodeValue = v;
+    });
+  };
+  run();
+  setTimeout(run, 2500);
+  window.addEventListener('load', () => setTimeout(run, 800));
+});
+
+// Language toggle: one link to the English home page, added once after hydration (no observers). Choice is stored on click.
+__aimaAfterHydration(() => {
+  const box = document.querySelector('.site-header .header-actions');
+  if (!box || box.querySelector('.lang-toggle')) return;
+  const a = document.createElement('a');
+  a.className = 'lang-toggle'; a.href = '/en/'; a.hreflang = 'en'; a.lang = 'en'; a.textContent = 'EN';
+  a.setAttribute('aria-label', 'English version');
+  a.style.cssText = 'font-size:13px;font-weight:800;border:1px solid currentColor;border-radius:999px;padding:6px 12px;text-decoration:none;direction:ltr';
+  a.addEventListener('click', () => { try { localStorage.setItem('aima-lang', 'en'); } catch (e) {} });
+  box.prepend(a);
+});

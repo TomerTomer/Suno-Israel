@@ -58,25 +58,16 @@
     if (!h) return;
     const h1 = h.querySelector('h1');
     h.querySelectorAll('.r2-community').forEach((x) => x.remove());
-    if (h1 && !h.querySelector('.r2-sub')) {
-      const w = el('p', 'r2-sub');
-      w.append(el('b', null, 'קהילה'), document.createTextNode(' אחת, מאות קולות, ומוזיקה חדשה שנולדת כאן.'));
-      h1.after(w);
-    }
+    h.querySelectorAll('.r2-sub').forEach((x) => x.remove());
     const acts = h.querySelector('.hero-actions');
     if (acts && !acts.querySelector('.r2-radio')) {
       const a = el('a', 'button r2-radio', null, { href: 'https://zikairadio.com/', target: '_blank', rel: 'noopener noreferrer' });
-      a.append(el('span', 'r2-live', null, { 'aria-hidden': 'true' }), document.createTextNode('האזנה לרדיו ZIK'));
+      a.append(document.createTextNode('האזנה לרדיו ZIK'));
       acts.append(a);
-    }
-    if (!h.querySelector('.r2-eq')) {
-      const eq = el('div', 'r2-eq', null, { 'aria-hidden': 'true' });
-      for (let i = 0; i < 28; i++) { const b = el('i'); b.style.setProperty('--h', (25 + Math.round(Math.abs(Math.sin(i * 1.7)) * 75)) + '%'); b.style.setProperty('--d', (i * 0.07).toFixed(2) + 's'); eq.append(b); }
-      (h.querySelector('.hero-copy') || h).append(eq);
     }
     const stat = h.querySelector('.r2-stat');
     if (artists && artists.length) {
-      if (!stat) { const p = el('p', 'r2-stat'); p.append(el('strong', null, String(artists.length)), document.createTextNode(' אמנים בספריית הקהילה, ורדיו, מגזין ומשאבים במקום אחד')); (h.querySelector('.hero-copy') || h).append(p); }
+      if (!stat) { const p = el('p', 'r2-stat'); p.append(el('strong', null, String(artists.length)), document.createTextNode(' אמנים בספרייה · רדיו 24/7')); (h.querySelector('.hero-copy') || h).append(p); }
     }
   };
 
@@ -105,7 +96,7 @@
       g.append(a);
     });
     s.append(hh, g);
-    h.after(s);
+    (document.querySelector('.manifesto') || h).after(s);
     reveal(s);
   };
 
@@ -123,6 +114,16 @@
     if (sideHead && !sideHead.querySelector('.r2-mag-link')) sideHead.append(mk());
     const bottom = p.querySelector('.aima-all-updates-wrap');
     if (bottom && !bottom.querySelector('.aima-magazine-link, .r2-mag-link')) bottom.append(mk());
+    if (bottom && !bottom.querySelector('.r2-wa-link')) bottom.append(el('a', 'r2-mag-link r2-wa-link', 'לקבוצת הוואטסאפ של הקהילה ←', { href: 'https://chat.whatsapp.com/Fszh7OgvNE082s4bOLvMuI?s=sh&p=i&iam=2', target: '_blank', rel: 'noopener noreferrer' }));
+  };
+
+  /* weekly strip above PULSE (no event date: no verified upcoming event) */
+  const week = () => {
+    const p = document.querySelector('#aima-pulse');
+    if (!p || document.querySelector('.r2-week')) return;
+    const w = el('p', 'r2-week');
+    w.append(el('strong', null, 'השבוע ב-A.I.M.A:'), el('a', null, 'עדכון Suno', { href: '#aima-pulse' }), el('a', null, 'שיר השבוע', { href: '#community-spotlight' }));
+    p.before(w);
   };
 
   /* artists carousel */
@@ -134,19 +135,19 @@
     const sec = el('section', 'r2-artists', null, { id: 'r2-artists', 'aria-labelledby': 'r2-art-h' });
     const head = el('div', 'r2-art-head');
     const t = el('div'); t.append(el('p', 'eyebrow', 'OUR ARTISTS'));
-    const h2 = el('h2', null, null, { id: 'r2-art-h' }); h2.append(document.createTextNode('האמנים שלנו. '), el('em', null, 'בכל ביקור אמן חדש.')); t.append(h2);
+    const h2 = el('h2', null, null, { id: 'r2-art-h' }); h2.append(document.createTextNode('ארבעה יוצרים '), el('em', null, 'להתחיל איתם.')); t.append(h2);
     const ctl = el('div', 'r2-art-ctl');
     const bPrev = el('button', 'r2-btn', '→', { type: 'button', 'aria-label': 'האמן הקודם' });
     const bNext = el('button', 'r2-btn', '←', { type: 'button', 'aria-label': 'האמן הבא' });
     const bPlay = el('button', 'r2-btn', 'השהיה', { type: 'button', 'aria-pressed': 'false' });
     const bShuf = el('button', 'r2-btn', 'ערבוב חדש', { type: 'button' });
-    const all = el('a', 'r2-btn', 'לכל האמנים ←', { href: '/artists/' });
-    ctl.append(bPrev, bNext, bPlay, bShuf, all);
+    const all = el('a', 'r2-btn', 'ועוד ' + Math.max(0, artists.length - 4) + ' בספרייה ←', { href: '/artists/' });
+    ctl.append(bShuf, all);
     head.append(t, ctl);
     const track = el('div', 'r2-track', null, { role: 'region', 'aria-label': 'קרוסלת אמנים', tabindex: '0' });
     const draw = () => {
       track.textContent = '';
-      shuffle(pool).slice(0, 14).forEach((a) => {
+      shuffle(pool).slice(0, 4).forEach((a) => {
         const link = bestLink(a) || '/artists/';
         const ext = /^https?:/.test(link) && new URL(link, location.href).origin !== location.origin;
         const c = el('a', 'r2-card', null, { href: link });
@@ -175,7 +176,7 @@
     };
     bNext.onclick = () => move(1); bPrev.onclick = () => move(-1);
     bShuf.onclick = draw;
-    let paused = reduce, inView = false, timer = null, hover = false;
+    let paused = true, inView = false, timer = null, hover = false;
     const label = () => { bPlay.textContent = paused ? 'ניגון אוטומטי' : 'השהיה'; bPlay.setAttribute('aria-pressed', String(paused)); };
     label();
     bPlay.onclick = () => { paused = !paused; label(); };
@@ -200,7 +201,7 @@
     const s = el('section', 'r2-journey', null, { 'aria-labelledby': 'r2-j-h' });
     s.append(el('h2', null, 'עוד לא סיימתם? יש לאן להמשיך.', { id: 'r2-j-h' }), el('p', null, 'כל פינה כאן מובילה לפינה הבאה. בחרו את הקרובה אליכם.'));
     const row = el('div', 'r2-journey-row');
-    [['להאזין לרדיו ZIK', 'https://zikairadio.com/', 1], ['לדפדף במגזין PULSE', '/magazine/'], ['לגלות אמן חדש', '/artists/'], ['להתחיל ללמוד', '/guides.html'], ['להצטרף לחדרי הקהילה', '/community/']].forEach((x) => {
+    [['להאזין לרדיו ZIK', 'https://zikairadio.com/', 1], ['לדפדף במגזין PULSE', '/magazine/'], ['לגלות אמן חדש', '/artists/'], ['להתחיל ללמוד', '/guides.html'], ['להצטרף לקבוצות הקהילה', '/community/']].forEach((x) => {
       const a = el('a', null, x[0], { href: x[1] });
       if (x[2]) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
       row.append(a);
@@ -226,7 +227,7 @@
     c.append(el('bdi', null, '© 2026 A.I.M.A', { dir: 'ltr', style: 'white-space:nowrap' }));
     fb.prepend(c);
   };
-  const ensure = () => { try { meta(); credit(); hero(); dest(); pulse(); carousel(); journey(); document.querySelectorAll('.pulse-section,.spotlight-section,#resources,.manifesto').forEach(reveal); } catch (e) { /* never break the page */ } };
+  const ensure = () => { try { meta(); credit(); hero(); dest(); week(); pulse(); carousel(); journey(); document.querySelectorAll('.pulse-section,.spotlight-section,#resources,.manifesto').forEach(reveal); } catch (e) { /* never break the page */ } };
 
   const hydrated = () => { const m = document.querySelector('main'); if (!m) return false; for (const k in m) if (k.indexOf('__reactFiber$') === 0 || k.indexOf('__reactProps$') === 0) return true; return false; };
   const t0 = Date.now();

@@ -121,3 +121,34 @@ body .r2-credit{display:block;width:100%;flex:1 1 100%;font-weight:800;text-alig
 body .footer-bottom{flex-wrap:wrap;row-gap:12px}
 body .r2-dup-c{display:none!important}
 body .r2-credit{font-size:15px;color:#fff;letter-spacing:.02em;margin:0;padding:0 0 4px}
+
+/* hash links land below the sticky header */
+html{scroll-padding-top:96px}
+#aima-pulse{scroll-margin-top:96px}
+footer a{padding-block:7px}
+.lang-toggle,.header-cta{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+.month-artist-copy h3{font-size:clamp(28px,2.6vw,40px);overflow-wrap:break-word;word-break:normal;hyphens:none;line-height:1.02}
+
+body .r2-week{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;justify-content:center;margin:0 auto;padding:14px 18px;max-width:1100px;font-weight:700;font-size:16px}
+body .r2-week strong{font-weight:900}
+body .r2-week a{color:inherit;text-decoration:underline;text-underline-offset:4px;min-height:44px;display:inline-flex;align-items:center}
+body .manifesto{display:block}
+body .manifesto blockquote{font-size:clamp(28px,5vw,56px);line-height:1.2;font-weight:900;max-width:960px;margin-inline:auto}
+body .channel-more{display:inline-flex;align-items:center;min-height:44px;margin-top:16px;font-weight:800}
+body .hero h1 em{color:var(--r2-lime)!important;background:none!important;-webkit-text-fill-color:var(--r2-lime)}
+/* contrast: darker pink for text on light backgrounds (AA) */
+body .manifesto em,body .home-feature-story em,body .manifesto .eyebrow,body .r2-artists .eyebrow,body .channel-card .channel-top span{color:#c0134f!important}
+body .aima-join{background:#d6245f!important}
+body .aima-join p{opacity:1!important}
+body a.r2-mag-link{background:#d6245f}
+body .pulse-meta span,body .cookie-copy small{color:#c0134f!important}
+body a.r2-mag-link,body .pulse-community-link{background-color:#d6245f!important}
+body .pulse-community-link span{color:#fff!important}
+body section.shell h2 em{color:#ec2c5b!important}
+body section.shell.home-feature-story h2 em{color:#c0134f!important}
+/* button affordance: small lift on hover, press on tap, clear keyboard focus (no motion with reduced-motion) */
+body .button,body .r2-btn,body .aima-join a,body .header-cta,body a.r2-mag-link{transition:transform .16s ease,box-shadow .16s ease,filter .16s ease}
+@media (hover:hover){body .button:hover,body .r2-btn:hover,body .aima-join a:hover,body .header-cta:hover,body a.r2-mag-link:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(16,16,15,.22);filter:brightness(1.04)}}
+body .button:active,body .r2-btn:active,body .aima-join a:active,body .header-cta:active,body a.r2-mag-link:active{transform:translateY(0) scale(.98);box-shadow:none}
+body .button:focus-visible,body .r2-btn:focus-visible,body .aima-join a:focus-visible,body .header-cta:focus-visible,body a.r2-mag-link:focus-visible{outline:3px solid #10100f;outline-offset:3px}
+@media (prefers-reduced-motion:reduce){body .button,body .r2-btn,body .aima-join a,body .header-cta,body a.r2-mag-link{transition:none}body .button:hover,body .r2-btn:hover,body .aima-join a:hover,body .header-cta:hover,body a.r2-mag-link:hover,body .button:active,body .r2-btn:active,body .aima-join a:active,body .header-cta:active,body a.r2-mag-link:active{transform:none}}

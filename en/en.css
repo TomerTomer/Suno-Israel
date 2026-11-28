@@ -1,0 +1,21 @@
+html{scroll-padding-top:96px}body{margin:0}.skip{position:absolute;top:-100px}.skip:focus{top:8px;left:8px;background:#fff;padding:10px;z-index:30}
+.site-header,.main-nav,.header-actions,.mobile-nav{direction:ltr}.lang-toggle{font-size:13px;font-weight:800;border:1px solid currentColor;border-radius:999px;padding:6px 12px;text-decoration:none}
+.en-note{margin:10px 0 0;font-size:14px;opacity:.85}body .r2-dest-grid.en-g3{grid-template-columns:repeat(3,1fr)}@media(max-width:1000px){body .r2-dest-grid.en-g3{grid-template-columns:1fr}}
+.en-foot{max-width:1180px;margin:0 auto;padding:40px 16px;font-size:14px}.en-foot p{margin:4px 0}.hero.shell,.r2-dest,.r2-artists,.r2-journey{direction:ltr;text-align:center}.r2-tile,.r2-card{text-align:left}
+.hero.shell{display:block}.hero.shell .hero-copy{max-width:none;margin-inline:auto}.hero-copy{text-align:center}.brand{gap:12px}.site-header .brand-lockup{display:flex}body{font-family:Assistant,sans-serif}
+body .r2-dest-grid.en-g4{grid-template-columns:repeat(4,1fr)}@media(max-width:1000px){body .r2-dest-grid.en-g4{grid-template-columns:1fr 1fr}}@media(max-width:640px){body .r2-dest-grid.en-g4{grid-template-columns:1fr}}.en-more{margin:14px 0 0;display:flex;flex-wrap:wrap;gap:10px;justify-content:center}.en-pulse .r2-tile h3,.en-pulse .r2-tile p{text-align:right}
+footer a{padding-block:10px}
+.lang-toggle{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+.r2-journey>div,.r2-journey .r2-actions,.r2-journey nav{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}.r2-journey{text-align:center}
+
+.aima-join,.aima-guide-start{box-sizing:border-box;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;width:min(1100px,calc(100% - 32px));margin:24px auto;border-radius:22px;padding:26px 30px}
+.aima-join{background:#ff3f73;color:#fff}
+.aima-guide-start{background:#d8ff3e;color:#111;border:1px solid #111}
+.aima-join h2{margin:0 0 6px;font-size:clamp(24px,3.2vw,34px);line-height:1.15}
+.aima-join p,.aima-guide-start p{margin:0;font-size:17px;line-height:1.55}
+.aima-join a,.aima-guide-start a.button{display:inline-flex;align-items:center;justify-content:center;min-height:54px;padding:0 28px;border-radius:999px;background:#111;color:#d8ff3e;font-weight:900;font-size:18px;text-decoration:none;white-space:nowrap}
+@media(max-width:700px){.aima-join,.aima-guide-start{flex-direction:column;align-items:flex-start;padding:22px}.aima-join a,.aima-guide-start a.button{width:100%;box-sizing:border-box}}
+.hero.shell{min-height:0!important}
+
+body .en-app{background:#10100f;padding:28px 0 8px;margin-top:40px}body .en-app .community-app-strip{margin-bottom:0}
+body .en-app h2{color:#fff;text-align:left}
